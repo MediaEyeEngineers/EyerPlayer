@@ -14,6 +14,8 @@ namespace EyerPlayer {
         decoder->Init(&stream);
 
         streamId = stream.streamIndex;
+
+        isReadFinish = 0;
     }
 
     AVDecoderThread::~AVDecoderThread()
@@ -44,6 +46,12 @@ namespace EyerPlayer {
             delete decoder;
             decoder = nullptr;
         }
+    }
+
+    int AVDecoderThread::SetReadFinishFlag()
+    {
+        isReadFinish = 1;
+        return 0;
     }
 
     int AVDecoderThread::PushPkt(Eyer::EyerAVPacket * pkt)
@@ -101,7 +109,14 @@ namespace EyerPlayer {
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
 
-            if(decoderQueue->Size() >= 10){
+            if(isReadFinish){
+                // Read 线程已经读取完毕了，如果 这时候所有的 packet 用完了，那么可以退出主循环，进行末尾解码
+                if(pktQueue.Size() <= 0){
+                    break;
+                }
+            }
+
+            if(decoderQueue->Size() >= 5){
                 // qDebug() << "Stream Id: " << streamId << " Decoder Thread Block!!" << endl;
                 continue;
             }
@@ -135,7 +150,13 @@ namespace EyerPlayer {
         }
 
         int ret = decoder->SendPacket(nullptr);
-        while(1){
+        while(!stopFlag){
+            Eyer::EyerTime::EyerSleep(1000);
+
+            if(decoderQueue->Size() >= 10){
+                continue;
+            }
+
             Eyer::EyerAVFrame * frame = new Eyer::EyerAVFrame();
             ret = decoder->RecvFrame(frame);
 
@@ -150,7 +171,7 @@ namespace EyerPlayer {
             decoderQueue->Push(frame);
         }
 
-        qDebug() << "Decoder Thread Stop" << endl;
+        qDebug() << "Decoder Thread Stop " << streamId << endl;
 
         SetStoping();
     }

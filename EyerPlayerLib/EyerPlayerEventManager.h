@@ -24,7 +24,7 @@ namespace EyerPlayer {
         long long GenId();
 
     signals:
-        void onOpen(int status, long long requestId);
+        void onOpen(int status, long long requestId, MediaInfo * info);
         void onStop(int status, long long requestId);
         void onUpdateUI(int streamId, void * frame);
 
@@ -33,8 +33,6 @@ namespace EyerPlayer {
     private:
         AVFrameQueueManager * queueManager = nullptr;
 
-
-        PlayCtrThread * playCtrThread = nullptr;
         AVReaderThread * readerThread = nullptr;
 
         std::atomic_int stopFlag {0};

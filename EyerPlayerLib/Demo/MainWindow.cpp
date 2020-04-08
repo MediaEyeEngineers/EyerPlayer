@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // player->SetURL("/Users/lichi/Downloads/big_buck_bunny_1080p_surround.avi");
     // player->SetURL("/Users/lichi/Downloads/time_clock_1h_1920x1080_60fps.mp4");
     player->SetURL("/Users/lichi/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
-    // player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
+    player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
 
     // player->SetURL("/home/redknot/Videos/bbb_sunflower_2160p_60fps_normal.mp4");
 
@@ -27,12 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->video_progress_slider->setRange(0,1000);
     ui->video_progress_slider->setValue(0);
+
+    player->Open(this);
 }
 
 MainWindow::~MainWindow()
 {
     if(player != nullptr){
-        qDebug() << "Delete" << endl;
         delete player;
         player = nullptr;
     }
@@ -41,7 +42,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "Close" << endl;
+    if(player != nullptr){
+        player->Stop(nullptr);
+    }
 }
 
 void MainWindow::ClickOpen()
@@ -55,12 +58,20 @@ void MainWindow::ClickStop()
     player->Stop(this);
 }
 
-int MainWindow::onOpen(EyerPlayer::EventOpenStatus status, EyerPlayer::VideoInfo & videoInfo)
+int MainWindow::onOpen(EyerPlayer::EventOpenStatus status, EyerPlayer::MediaInfo & mediaInfo)
 {
     if(status == EyerPlayer::EventOpenStatus::OPEN_STATUS_SUCCESS){
         ui->log_label->setText("Open Success");
 
-        qDebug() << "" << endl;
+        for(int i=0;i<mediaInfo.GetStreamCount();i++){
+            EyerPlayer::StreamInfo info;
+            mediaInfo.GetStream(i, info);
+
+            ui->time_end->setText(QString::number(info.duration, 'f', 2));
+            ui->time_start->setText(QString::number(0.0, 'f', 2));
+
+            qDebug() << "Info:" << info.duration << endl;
+        }
     }
     if(status == EyerPlayer::EventOpenStatus::OPEN_STATUS_FAIL){
         ui->log_label->setText("Open Fail");
