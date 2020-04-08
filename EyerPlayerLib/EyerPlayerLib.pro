@@ -38,7 +38,8 @@ SOURCES += \
         EventTag.cpp \
         PlayCtrThread.cpp \
         StreamInfo.cpp \
-        AudioPlayThread.cpp
+        AudioPlayThread.cpp \
+        MediaInfo.cpp
 
 HEADERS += \
         EyerPlayerConstant.h \
@@ -129,6 +130,7 @@ LIBS += -L../Lib3rd/ffmpeg_install/lib/ -lavdevice
 LIBS += -L../Lib3rd/ffmpeg_install/lib/ -lavfilter
 LIBS += -L../Lib3rd/ffmpeg_install/lib/ -lavformat
 LIBS += -L../Lib3rd/ffmpeg_install/lib/ -lavutil
+LIBS += -L../Lib3rd/ffmpeg_install/lib/ -lswresample
 
 unix {
     target.path = /usr/lib

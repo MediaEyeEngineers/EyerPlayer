@@ -15,12 +15,11 @@ namespace EyerPlayer {
 
     int EyerPlayerView::Init(){
 
-        // EyerLog("EyerPlayerView Init\n");
-
         QSurfaceFormat format;
         format.setDepthBufferSize(24);
         format.setStencilBufferSize(8);
         format.setVersion(3, 3);
+        // format.setOption()
         format.setProfile(QSurfaceFormat::CoreProfile);
         QSurfaceFormat::setDefaultFormat(format);
 
@@ -39,25 +38,12 @@ namespace EyerPlayer {
 
         playerViewPrivate->audioPlayThread  = new AudioPlayThread(playerViewPrivate->eventManager->eventQueue, playerViewPrivate->frameQueueManager);
 
-        connect(playerViewPrivate->eventManager, SIGNAL(onOpen(int, long long)),    this, SLOT(onOpen(int, long long)),         Qt::AutoConnection);
-        connect(playerViewPrivate->eventManager, SIGNAL(onStop(int, long long)),    this, SLOT(onStop(int, long long)),         Qt::AutoConnection);
-        connect(playerViewPrivate->eventManager, SIGNAL(onUpdateUI(int, void *)),   this, SLOT(onUpdateUI(int, void *)),        Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onOpen(int, long long, MediaInfo *)),       this, SLOT(onOpen(int, long long, MediaInfo *)),            Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onStop(int, long long)),                    this, SLOT(onStop(int, long long)),                         Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onUpdateUI(int, void *)),                   this, SLOT(onUpdateUI(int, void *)),                        Qt::AutoConnection);
 
         playerViewPrivate->eventManager->start();
         playerViewPrivate->audioPlayThread->Detach();
-
-
-
-        QAudioFormat audioFormat;
-        audioFormat.setSampleRate(48000);
-        audioFormat.setChannelCount(2);
-        audioFormat.setSampleSize(16);
-        audioFormat.setCodec("audio/pcm");
-        audioFormat.setByteOrder(QAudioFormat::LittleEndian);
-        audioFormat.setSampleType(QAudioFormat::SignedInt);
-
-        audioOutput = new QAudioOutput(audioFormat, this);
-        streamOut = audioOutput->start();
     }
 
     EyerPlayerView::~EyerPlayerView()
@@ -129,27 +115,6 @@ namespace EyerPlayer {
 
     void EyerPlayerView::paintGL()
     {
-        // Find player video frame queue
-        AVFrameQueue * playerVideoFrameQueue = nullptr;
-        playerViewPrivate->frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
-        if(playerVideoFrameQueue == nullptr){
-            return;
-        }
-
-        while(playerVideoFrameQueue->Size() > 5){
-            Eyer::EyerAVFrame * f = nullptr;
-            playerVideoFrameQueue->FrontPop(&f);
-            if(f != nullptr){
-                delete f;
-            }
-        }
-
-        Eyer::EyerAVFrame * f = nullptr;
-        playerVideoFrameQueue->FrontPop(&f);
-        if(f == nullptr){
-            return;
-        }
-
         makeCurrent();
 #ifdef Q_OS_OSX
         glViewport(0, 0, width * 2, height * 2);
@@ -157,8 +122,21 @@ namespace EyerPlayer {
         glViewport(0, 0, width, height);
 #endif
 
-
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Find player video frame queue
+        AVFrameQueue * playerVideoFrameQueue = nullptr;
+        playerViewPrivate->frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
+        if(playerVideoFrameQueue == nullptr){
+            return;
+        }
+
+        Eyer::EyerAVFrame * f = nullptr;
+        playerVideoFrameQueue->FrontPop(&f);
+        if(f == nullptr){
+            // playerViewPrivate->videoRender->Draw();
+            return;
+        }
 
         playerViewPrivate->videoRender->Viewport(width, height);
         playerViewPrivate->videoRender->SetFrame(f);
@@ -185,8 +163,11 @@ namespace EyerPlayer {
         delete f;
 
         if(playerVideoFrameQueue->Size() > 0){
-            update();
+
         }
+
+        glFlush();
+        glFinish();
     }
 
 
@@ -200,7 +181,9 @@ namespace EyerPlayer {
     {
         long long requestId = playerViewPrivate->eventManager->GenId();
 
-        playerViewPrivate->openCBmap->insert(std::pair<long long, EyerPlayerOpenCB *>(requestId, openCB));
+        if(openCB != nullptr){
+            playerViewPrivate->openCBmap->insert(std::pair<long long, EyerPlayerOpenCB *>(requestId, openCB));
+        }
 
         EventOpenRequest * event = new EventOpenRequest();
         event->SetFrom(EventTag::PLAYER);
@@ -227,7 +210,9 @@ namespace EyerPlayer {
     {
         long long requestId = playerViewPrivate->eventManager->GenId();
 
-        playerViewPrivate->stopCBmap->insert(std::pair<long long, EyerPlayerStopCB *>(requestId, stopCB));
+        if(stopCB != nullptr){
+            playerViewPrivate->stopCBmap->insert(std::pair<long long, EyerPlayerStopCB *>(requestId, stopCB));
+        }
 
         EventStopRequest * event = new EventStopRequest();
         event->SetFrom(EventTag::PLAYER);
@@ -240,16 +225,19 @@ namespace EyerPlayer {
     }
 
 
-    void EyerPlayerView::onOpen(int status, long long requestId)
+    void EyerPlayerView::onOpen(int status, long long requestId, MediaInfo * info)
     {
+        // qDebug() << "Stream Count : " << info->GetStreamCount() << endl;
         std::map<long long, EyerPlayerOpenCB *>::iterator iter = playerViewPrivate->openCBmap->find(requestId);
         if(iter != playerViewPrivate->openCBmap->end()) {
-            VideoInfo videoInfo;
-            iter->second->onOpen((EventOpenStatus)status, videoInfo);
+            MediaInfo mediaInfo = *info;
+            iter->second->onOpen((EventOpenStatus)status, mediaInfo);
         }
         else{
 
         }
+
+        delete info;
     }
 
     void EyerPlayerView::onStop(int status, long long requestId)
@@ -276,42 +264,5 @@ namespace EyerPlayer {
             playerVideoFrameQueue->Push((Eyer::EyerAVFrame *)frame);
             update();
         }
-
-        /*
-        if(streamId == 1){
-            Eyer::EyerAVFrame * f = (Eyer::EyerAVFrame *)frame;
-            qDebug() << f->timePts << endl;
-
-            AVFrameQueue * playerAudioFrameQueue = nullptr;
-            playerViewPrivate->frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_AUDIO, &playerAudioFrameQueue);
-            if(playerAudioFrameQueue != nullptr){
-                playerAudioFrameQueue->Push(f);
-            }
-
-            if(playerAudioFrameQueue != nullptr){
-                if(streamOut->isWritable()){
-                    Eyer::EyerAVFrame * f = nullptr;
-                    playerAudioFrameQueue->FrontPop(&f);
-                    if(f != nullptr){
-                        int len = f->GetAudioPackedData(nullptr);
-                        unsigned char * data = (unsigned char *)malloc(len);
-                        f->GetAudioPackedData(data);
-
-                        int alreadyWrited = 0;
-                        while(alreadyWrited < len){
-                            int ret = streamOut->write((char *)data + alreadyWrited, len - alreadyWrited);
-                            alreadyWrited += ret;
-                        }
-
-                        // qDebug() << ret << endl;
-
-                        free(data);
-
-                        delete f;
-                    }
-                }
-            }
-        }
-        */
     }
 }

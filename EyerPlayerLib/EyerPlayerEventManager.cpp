@@ -9,7 +9,6 @@ namespace EyerPlayer {
     {
         eventQueue = new Eyer::EyerEventQueue();
         queueManager = _queueManager;
-        playCtrThread = new PlayCtrThread(eventQueue, queueManager);
     }
 
     EyerPlayerEventManager::~EyerPlayerEventManager()
@@ -18,12 +17,6 @@ namespace EyerPlayer {
             readerThread->Stop();
             delete readerThread;
             readerThread = nullptr;
-        }
-
-        if(playCtrThread != nullptr){
-            playCtrThread->Stop();
-            delete playCtrThread;
-            playCtrThread = nullptr;
         }
 
         if(eventQueue != nullptr){
@@ -44,7 +37,6 @@ namespace EyerPlayer {
             if(event != nullptr){
                 if(event->GetType() == EventType::OPENRequest){
                     EventOpenRequest * openRequest = (EventOpenRequest *)event;
-                    // qDebug() << "OPENRequest: " << openRequest->url.str << endl;
                     if(readerThread != nullptr){
                         EventOpenResponse * event = new EventOpenResponse();
                         event->SetFrom(EventTag::EVENT_MANAGER);
@@ -54,7 +46,6 @@ namespace EyerPlayer {
                         eventQueue->Push(event);
                     }
                     else{
-                        playCtrThread->Detach();
                         readerThread = new AVReaderThread(openRequest->url, eventQueue, openRequest->GetRequestId(), queueManager);
                         readerThread->Detach();
                     }
@@ -67,8 +58,6 @@ namespace EyerPlayer {
                         delete readerThread;
                         readerThread = nullptr;
 
-                        playCtrThread->Stop();
-
                         EventStopResponse * event = new EventStopResponse();
                         event->SetFrom(EventTag::EVENT_MANAGER);
                         event->SetTo(EventTag::EVENT_MANAGER);
@@ -77,8 +66,6 @@ namespace EyerPlayer {
                         eventQueue->Push(event);
                     }
                     else{
-                        playCtrThread->Stop();
-
                         EventStopResponse * event = new EventStopResponse();
                         event->SetFrom(EventTag::EVENT_MANAGER);
                         event->SetTo(EventTag::EVENT_MANAGER);
@@ -96,7 +83,8 @@ namespace EyerPlayer {
 
                 if(event->GetType() == EventType::OPENResponse){
                     EventOpenResponse * openResponse = (EventOpenResponse *)event;
-                    emit onOpen(openResponse->status, openResponse->GetRequestId());
+                    MediaInfo * info = new MediaInfo(openResponse->mediaInfo);
+                    emit onOpen(openResponse->status, openResponse->GetRequestId(), info);
                 }
 
                 if(event->GetType() == EventType::STOPResponse){

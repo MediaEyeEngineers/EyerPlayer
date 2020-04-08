@@ -33,6 +33,8 @@ namespace EyerPlayer {
 
         std::vector<AVDecoderThread *> decodeThreadList;
 
+        PlayCtrThread * playerCtr = nullptr;
+
         AVFrameQueueManager * queueManager = nullptr;
     };
 
@@ -50,15 +52,18 @@ namespace EyerPlayer {
         int GetFrameQueueSize();
 
         int HasNewFrame();
+
+
+        int SetReadFinishFlag();
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         Eyer::EyerAVDecoder * decoder = nullptr;
         int streamId = -1;
 
+        std::atomic_int isReadFinish {0};
+
         Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;
-
-         AVFrameQueueManager * queueManager = nullptr;
-
+        AVFrameQueueManager * queueManager = nullptr;
         StreamInfo streamInfo;
     };
 
@@ -66,13 +71,16 @@ namespace EyerPlayer {
     class PlayCtrThread : public Eyer::EyerThread
     {
     public:
-        PlayCtrThread(Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager);
+        PlayCtrThread(Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager, int recommendVideoIndex, int recommendAudioIndex);
         ~PlayCtrThread();
 
         virtual void Run();
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         AVFrameQueueManager * queueManager = nullptr;
+
+        int recommendVideoIndex = -1;
+        int recommendAudioIndex = -1;
     };
 
 

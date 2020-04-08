@@ -47,6 +47,7 @@ namespace EyerPlayer {
         }
 
         EventOpenStatus status = EventOpenStatus::OPEN_STATUS_SUCCESS;
+        MediaInfo mediaInfo;
     };
 
 
@@ -90,8 +91,6 @@ namespace EyerPlayer {
         EventStopStatus status = EventStopStatus::STOP_STATUS_SUCCESS;
     };
 
-
-
     class EventUpdateUIRequest : public Eyer::EyerEvent
     {
     public:
@@ -113,8 +112,6 @@ namespace EyerPlayer {
         int streamId = -1;
         Eyer::EyerAVFrame * frame = nullptr;
     };
-
-
 
     class EventUpdateAudioRequest : public Eyer::EyerEvent
     {

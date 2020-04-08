@@ -16,10 +16,23 @@ public:
 
 namespace EyerPlayer {
 
+    class StreamInfo;
 
-    class VideoInfo
+    class MediaInfo
     {
+    public:
+        MediaInfo();
+        MediaInfo(MediaInfo & mediaInfo);
+        ~MediaInfo();
 
+        MediaInfo & operator = (MediaInfo & mediaInfo);
+
+        int AddStreamInfo(StreamInfo & streamInfo);
+
+        int GetStreamCount();
+        int GetStream(int index, StreamInfo & streamInfo);
+    private:
+        std::vector<StreamInfo *> streamList;
     };
 
     enum StreamType
@@ -73,7 +86,7 @@ namespace EyerPlayer {
     class EYERPLAYERLIBSHARED_EXPORT EyerPlayerOpenCB : public EyerPlayerCB
     {
     public:
-        virtual int onOpen(EventOpenStatus status, VideoInfo & videoInfo) = 0;
+        virtual int onOpen(EventOpenStatus status, MediaInfo & videoInfo) = 0;
     };
 
     class EYERPLAYERLIBSHARED_EXPORT EyerPlayerStopCB : public EyerPlayerCB
@@ -100,8 +113,6 @@ namespace EyerPlayer {
         int Pause();
         int Stop(EyerPlayerStopCB * stopCB);
 
-
-
     protected:
         virtual void initializeGL();
         virtual void resizeGL(int w, int h);
@@ -117,11 +128,8 @@ namespace EyerPlayer {
 
         EyerPlayerViewPrivate * playerViewPrivate = nullptr;
 
-        QAudioOutput * audioOutput = nullptr;
-        QIODevice * streamOut = nullptr;
-
     private slots:
-        void onOpen(int status, long long requestId);
+        void onOpen(int status, long long requestId, MediaInfo * info);
         void onStop(int status, long long requestId);
 
         void onUpdateUI(int streamId, void * frame);

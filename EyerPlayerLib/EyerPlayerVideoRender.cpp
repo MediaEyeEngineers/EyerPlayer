@@ -143,34 +143,36 @@ namespace EyerPlayer {
 
     int EyerPlayerVideoRender::Draw()
     {
-        int w = frame->GetWidth();
-        int h = frame->GetHeight();
+        if(frame != nullptr){
+            int w = frame->GetWidth();
+            int h = frame->GetHeight();
 
-        unsigned char * y = (unsigned char *)malloc(w * h);
-        unsigned char * u = (unsigned char *)malloc(w * h);
-        unsigned char * v = (unsigned char *)malloc(w * h);
+            unsigned char * y = (unsigned char *)malloc(w * h);
+            unsigned char * u = (unsigned char *)malloc(w * h);
+            unsigned char * v = (unsigned char *)malloc(w * h);
 
-        frame->GetYData(y);
-        frame->GetUData(u);
-        frame->GetVData(v);
+            frame->GetYData(y);
+            frame->GetUData(u);
+            frame->GetVData(v);
 
-        // frame->GetInfo();
+            // frame->GetInfo();
 
-        yT->SetDataRedChannel(y, w, h);
-        uT->SetDataRedChannel(u, w / 2, h / 2);
-        vT->SetDataRedChannel(v, w / 2, h / 2);
+            yT->SetDataRedChannel(y, w, h);
+            uT->SetDataRedChannel(u, w / 2, h / 2);
+            vT->SetDataRedChannel(v, w / 2, h / 2);
 
-        frameDraw->PutTexture("y", yT, 0);
-        frameDraw->PutTexture("u", uT, 1);
-        frameDraw->PutTexture("v", vT, 2);
+            frameDraw->PutTexture("y", yT, 0);
+            frameDraw->PutTexture("u", uT, 1);
+            frameDraw->PutTexture("v", vT, 2);
+
+            free(y);
+            free(u);
+            free(v);
+        }
 
         frameDraw->PutMatrix4fv("mvp", mvp);
 
         frameDraw->Draw();
-
-        free(y);
-        free(u);
-        free(v);
 
         return 0;
     }

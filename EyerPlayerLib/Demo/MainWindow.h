@@ -18,7 +18,7 @@ public:
 
     void closeEvent(QCloseEvent *event);
 
-    virtual int onOpen(EyerPlayer::EventOpenStatus status, EyerPlayer::VideoInfo & videoInfo);
+    virtual int onOpen(EyerPlayer::EventOpenStatus status, EyerPlayer::MediaInfo & videoInfo);
     virtual int onStop(EyerPlayer::EventStopStatus status);
 
 public slots:
