@@ -66,7 +66,12 @@ namespace Eyer
 //                          int flags);
 //        int ret = 0;
 //        int ret = av_seek_frame(piml->formatCtx, streamIndex, timestamp, AVSEEK_FLAG_BACKWARD);
-        int ret = avformat_seek_file(piml->formatCtx, -1, INT64_MIN, timestamp, INT64_MAX, 0);
+        int ret = -1;
+//        if (timestamp < 1) {
+//            ret = avformat_seek_file(piml->formatCtx, streamIndex, INT64_MIN, timestamp, INT64_MAX, 0);
+//        } else {
+            ret = av_seek_frame(piml->formatCtx, streamIndex, timestamp, AVSEEK_FLAG_BACKWARD);
+//        }
         qDebug() << "[CYL Debug] av_seek_frame timestamp:" << timestamp;
 //        qDebug() << "[CYL Debug] av_seek_frame ret:" << ret;
 
