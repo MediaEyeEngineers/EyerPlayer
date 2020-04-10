@@ -84,14 +84,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="btn_play">
         <property name="text">
          <string>Play</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="btn_pause">
         <property name="text">
          <string>Pause</string>
         </property>

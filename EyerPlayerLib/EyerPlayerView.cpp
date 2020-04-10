@@ -41,6 +41,7 @@ namespace EyerPlayer {
         connect(playerViewPrivate->eventManager, SIGNAL(onOpen(int, long long, MediaInfo *)),       this, SLOT(onOpen(int, long long, MediaInfo *)),            Qt::AutoConnection);
         connect(playerViewPrivate->eventManager, SIGNAL(onStop(int, long long)),                    this, SLOT(onStop(int, long long)),                         Qt::AutoConnection);
         connect(playerViewPrivate->eventManager, SIGNAL(onUpdateUI(int, void *)),                   this, SLOT(onUpdateUI(int, void *)),                        Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onProgress(double)),                        this, SLOT(onProgress(double)),                             Qt::AutoConnection);
 
         playerViewPrivate->eventManager->start();
         playerViewPrivate->audioPlayThread->Detach();
@@ -135,36 +136,45 @@ namespace EyerPlayer {
         playerVideoFrameQueue->FrontPop(&f);
         if(f == nullptr){
             // playerViewPrivate->videoRender->Draw();
-            return;
+            // return;
         }
 
-        playerViewPrivate->videoRender->Viewport(width, height);
-        playerViewPrivate->videoRender->SetFrame(f);
 
         Eyer::EyerMat4x4 ortho;
         ortho.SetOrtho(-width / 2.0, width / 2.0, height / 2.0, -height / 2.0, 0.0, 1000.0f);
+
 
         Eyer::EyerAVCropUtil cropUtil;
         int imageW = 200;
         int imageH = 200;
 
-        cropUtil.GetCrop(width / 2, height / 2, f->GetWidth(), f->GetHeight(), imageW, imageH, Eyer::EyerAVCropType::FIT_CENTER);
+        if(f != nullptr){
+            playerViewPrivate->videoWidth = f->GetWidth();
+            playerViewPrivate->videoHeight = f->GetHeight();
+        }
 
+        cropUtil.GetCrop(width, height, playerViewPrivate->videoWidth, playerViewPrivate->videoHeight, imageW, imageH, Eyer::EyerAVCropType::FIT_CENTER);
 
         Eyer::EyerMat4x4 scale;
-        scale.SetScale(imageW, imageH, 1.0);
+        scale.SetScale(imageW / 2, imageH / 2, 1.0);
+
+        if(playerViewPrivate->videoWidth <= 0){
+            scale.SetScale(0.0, 0.0, 1.0);
+        }
 
         Eyer::EyerMat4x4 mvp = ortho * scale;
 
+        playerViewPrivate->videoRender->Viewport(width, height);
+        playerViewPrivate->videoRender->SetFrame(f);
         playerViewPrivate->videoRender->SetMVP(mvp);
 
         playerViewPrivate->videoRender->Draw();
 
-        delete f;
-
-        if(playerVideoFrameQueue->Size() > 0){
-
+        if(f != nullptr){
+            delete f;
+            f = nullptr;
         }
+
 
         glFlush();
         glFinish();
@@ -198,11 +208,26 @@ namespace EyerPlayer {
 
     int EyerPlayerView::Play()
     {
+        long long requestId = playerViewPrivate->eventManager->GenId();
+        EventPlayRequest * event = new EventPlayRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        playerViewPrivate->eventManager->PushEvent(event);
+
         return 0;
     }
 
     int EyerPlayerView::Pause()
     {
+        long long requestId = playerViewPrivate->eventManager->GenId();
+        EventPauseRequest * event = new EventPauseRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        playerViewPrivate->eventManager->PushEvent(event);
         return 0;
     }
 
@@ -221,6 +246,27 @@ namespace EyerPlayer {
 
         playerViewPrivate->eventManager->PushEvent(event);
 
+        return 0;
+    }
+
+    int EyerPlayerView::Seek(double time)
+    {
+        long long requestId = playerViewPrivate->eventManager->GenId();
+
+        EventSeekRequest * event = new EventSeekRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+        event->time = time;
+
+        playerViewPrivate->eventManager->PushEvent(event);
+
+        return 0;
+    }
+
+    int EyerPlayerView::SetProgressCB(EyerPlayerProgressCB * _progressCB)
+    {
+        progressCB = _progressCB;
         return 0;
     }
 
@@ -253,16 +299,13 @@ namespace EyerPlayer {
 
     void EyerPlayerView::onUpdateUI(int streamId, void * frame)
     {
-        if(streamId == 0){
-            AVFrameQueue * playerVideoFrameQueue = nullptr;
-            playerViewPrivate->frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
-            if(playerVideoFrameQueue == nullptr){
-                return;
-            }
+        update();
+    }
 
-            Eyer::EyerAVFrame * f = (Eyer::EyerAVFrame *)frame;
-            playerVideoFrameQueue->Push((Eyer::EyerAVFrame *)frame);
-            update();
+    void EyerPlayerView::onProgress(double playTime)
+    {
+        if(progressCB != nullptr){
+            progressCB->onProgress(playTime);
         }
     }
 }

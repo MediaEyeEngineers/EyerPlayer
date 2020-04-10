@@ -31,6 +31,10 @@ namespace EyerPlayer {
 
         int GetStreamCount();
         int GetStream(int index, StreamInfo & streamInfo);
+
+
+        double duration = 0.0;
+
     private:
         std::vector<StreamInfo *> streamList;
     };
@@ -95,6 +99,12 @@ namespace EyerPlayer {
         virtual int onStop(EventStopStatus status) = 0;
     };
 
+    class EYERPLAYERLIBSHARED_EXPORT EyerPlayerProgressCB : public EyerPlayerCB
+    {
+    public:
+        virtual int onProgress(double playTime) = 0;
+    };
+
     class EyerPlayerViewPrivate;
 
     class EYERPLAYERLIBSHARED_EXPORT EyerPlayerView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
@@ -113,6 +123,10 @@ namespace EyerPlayer {
         int Pause();
         int Stop(EyerPlayerStopCB * stopCB);
 
+        int SetProgressCB(EyerPlayerProgressCB * progressCB);
+
+        int Seek(double time);
+
     protected:
         virtual void initializeGL();
         virtual void resizeGL(int w, int h);
@@ -128,11 +142,13 @@ namespace EyerPlayer {
 
         EyerPlayerViewPrivate * playerViewPrivate = nullptr;
 
+        EyerPlayerProgressCB * progressCB = nullptr;
+
     private slots:
         void onOpen(int status, long long requestId, MediaInfo * info);
         void onStop(int status, long long requestId);
-
         void onUpdateUI(int streamId, void * frame);
+        void onProgress(double playTime);
     };
 }
 

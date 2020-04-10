@@ -30,6 +30,8 @@ namespace EyerPlayer {
             return *this;
         }
 
+        duration = mediaInfo.duration;
+
         for(int i=0; i<mediaInfo.streamList.size(); i++){
             StreamInfo * info = mediaInfo.streamList[i];
             if(info != nullptr){

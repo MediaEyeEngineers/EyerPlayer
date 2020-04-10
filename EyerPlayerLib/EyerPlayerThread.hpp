@@ -22,9 +22,14 @@ namespace EyerPlayer {
     class AVReaderThread : public Eyer::EyerThread
     {
     public:
-        AVReaderThread(Eyer::EyerString url, Eyer::EyerEventQueue * eventQueue, long long openEventId, AVFrameQueueManager * _queueManager);
+        AVReaderThread(Eyer::EyerString url, Eyer::EyerEventQueue * eventQueue, long long openEventId, AVFrameQueueManager * _queueManager, double seekTime);
         ~AVReaderThread();
         virtual void Run();
+
+        int Play();
+        int Pause();
+
+        Eyer::EyerString GetURL();
 
     private:
         Eyer::EyerString url;
@@ -36,6 +41,8 @@ namespace EyerPlayer {
         PlayCtrThread * playerCtr = nullptr;
 
         AVFrameQueueManager * queueManager = nullptr;
+
+        double seekTime = 0.0;
     };
 
     class AVDecoderThread : public Eyer::EyerThread
@@ -71,7 +78,7 @@ namespace EyerPlayer {
     class PlayCtrThread : public Eyer::EyerThread
     {
     public:
-        PlayCtrThread(Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager, int recommendVideoIndex, int recommendAudioIndex);
+        PlayCtrThread(Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager, int recommendVideoIndex, int recommendAudioIndex, double seekTime);
         ~PlayCtrThread();
 
         virtual void Run();
@@ -81,6 +88,9 @@ namespace EyerPlayer {
 
         int recommendVideoIndex = -1;
         int recommendAudioIndex = -1;
+
+        double playerProgressPts = 0.0;
+        double startPlayerPts = 0.0;
     };
 
 

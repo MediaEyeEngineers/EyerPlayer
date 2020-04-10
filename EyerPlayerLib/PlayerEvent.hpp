@@ -133,6 +133,104 @@ namespace EyerPlayer {
 
         Eyer::EyerAVFrame * frame = nullptr;
     };
+
+
+
+
+
+
+
+
+
+    class EventPlayRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventPlayRequest()
+        {
+
+        }
+
+        ~EventPlayRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::PLAYRequest;
+        }
+    };
+    class EventPauseRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventPauseRequest()
+        {
+
+        }
+
+        ~EventPauseRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::PAUSERequest;
+        }
+    };
+
+
+
+
+
+
+
+
+    class EventProgressRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventProgressRequest()
+        {
+
+        }
+
+        ~EventProgressRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::PROGRESSRequest;
+        }
+
+        double playTime = 0.0f;
+    };
+
+
+
+
+
+    class EventSeekRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventSeekRequest()
+        {
+
+        }
+
+        ~EventSeekRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SEEKRequest;
+        }
+
+        double time = 0.0f;
+    };
 }
 
 #endif // EYERPLAYERLIB_PLAYER_EVENT_H

@@ -21,7 +21,8 @@ namespace EyerPlayer {
         EyerPlayerVideoRender * videoRender = nullptr;
 
 
-
+        int videoWidth = 0;
+        int videoHeight = 0;
     };
 }
 
