@@ -135,10 +135,13 @@ namespace EyerPlayer {
 
         //// Return Event
         //// <===============Init End===============>
+        ///
+        /*
+        for(int i=0;i<streamCount;i++){
+            reader.SeekFrame(i, seekTime);
+        }
+        */
 
-//        for(int i=0;i<streamCount;i++){
-//            reader.SeekFrame(recommendVideoIndex, seekTime);
-//        }
         reader.SeekFrame(recommendVideoIndex, seekTime);
 
         while(!stopFlag){
