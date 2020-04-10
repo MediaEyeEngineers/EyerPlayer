@@ -10,8 +10,28 @@ QT       -= gui
 
 TARGET = EyerPlayerLib
 
+
+
+######## 编译库的时候，把这个加上，把 Demo 的注释了 ########
 # TEMPLATE = lib
+
+
+######## 加上以下这些可以编译 Demo ########
 TEMPLATE = app
+
+SOURCES += \
+        Demo/main.cpp \
+        Demo/MainWindow.cpp
+
+HEADERS += \
+        Demo/MainWindow.h
+
+FORMS += \
+        Demo/MainWindow.ui
+######## 加上以上这些可以编译 Demo ########
+
+
+
 
 DEFINES += EYERPLAYERLIB_LIBRARY
 
@@ -50,17 +70,7 @@ HEADERS += \
         EyerPlayerViewPrivate.h \
         PlayerEvent.hpp \
         PlayerTypedef.hpp \
-        eyerplayerlib_global.h 
-
-SOURCES += \
-        Demo/main.cpp \
-        Demo/MainWindow.cpp
-
-HEADERS += \
-        Demo/MainWindow.h
-
-FORMS += \
-        Demo/MainWindow.ui
+        eyerplayerlib_global.h
 
 
 HEADERS += EyerCore/*.hpp
