@@ -4,6 +4,7 @@ extern "C"{
 #include <libavformat/avformat.h>
 }
 
+#include <QDebug>
 #include "EyerAVReaderPrivate.hpp"
 #include "EyerAVPacketPrivate.hpp"
 #include "EyerAVStreamPrivate.hpp"
@@ -48,8 +49,31 @@ namespace Eyer
         }
 
         // TODO 判断文件是否打开成功
-
-        int ret = av_seek_frame(piml->formatCtx, streamIndex, timestamp, AVSEEK_FLAG_BACKWARD);
+        /**
+         * Seek to the keyframe at timestamp.
+         * 'timestamp' in 'stream_index'.
+         *
+         * @param s media file handle
+         * @param stream_index If stream_index is (-1), a default
+         * stream is selected, and timestamp is automatically converted
+         * from AV_TIME_BASE units to the stream specific time_base.
+         * @param timestamp Timestamp in AVStream.time_base units
+         *        or, if no stream is specified, in AV_TIME_BASE units.
+         * @param flags flags which select direction and seeking mode
+         * @return >= 0 on success
+         */
+//        int av_seek_frame(AVFormatContext *s, int stream_index, int64_t timestamp,
+//                          int flags);
+//        int ret = 0;
+//        int ret = av_seek_frame(piml->formatCtx, streamIndex, timestamp, AVSEEK_FLAG_BACKWARD);
+        int ret = -1;
+//        if (timestamp < 1) {
+//            ret = avformat_seek_file(piml->formatCtx, streamIndex, INT64_MIN, timestamp, INT64_MAX, 0);
+//        } else {
+            ret = av_seek_frame(piml->formatCtx, streamIndex, timestamp, AVSEEK_FLAG_BACKWARD);
+//        }
+        qDebug() << "[CYL Debug] av_seek_frame timestamp:" << timestamp;
+//        qDebug() << "[CYL Debug] av_seek_frame ret:" << ret;
 
         return ret;
     }

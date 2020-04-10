@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     player = new EyerPlayer::EyerPlayerView(this);
     // player->SetURL("/Users/lichi/Downloads/big_buck_bunny_1080p_surround.avi");
     // player->SetURL("/Users/lichi/Downloads/time_clock_1h_1920x1080_60fps.mp4");
-    player->SetURL("/Users/lichi/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
-    player->SetURL("/Users/lichi/Downloads/nezha.mp4");
+
+//    player->SetURL("/Users/lichi/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
+    player->SetURL("/Users/numberwolf/Downloads/1080pCaton.mkv");
+
     // player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
 
     player->SetProgressCB(this);

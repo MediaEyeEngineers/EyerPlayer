@@ -3,6 +3,11 @@
 #include "PlayerEvent.hpp"
 #include <QDebug>
 
+extern "C"{
+#include <libavutil/common.h>
+#include <libavutil/error.h>
+}
+
 namespace EyerPlayer {
     AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream & stream, StreamInfo & _streamInfo,Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _queueManager)
     {
@@ -125,23 +130,26 @@ namespace EyerPlayer {
             pktQueue.FrontPop(&pkt);
             if(pkt != nullptr){
                 int ret = decoder->SendPacket(pkt);
-                if(ret){
-                    continue;
+                qDebug() << "[CYL Debug decoder->SendPacket] ret:" << ret << endl;
+                if(ret) {
+                    qDebug() << "[CYL Debug decoder->SendPacket] ret is AVERROR(EAGAIN)" << endl;
+                    // continue;
                 }
 
-                while(1){
+                while(ret >= 0) {
                     Eyer::EyerAVFrame * frame = new Eyer::EyerAVFrame();
                     ret = decoder->RecvFrame(frame);
 
-                    if(ret){
+                    if (ret == AVERROR(EAGAIN)  || AVERROR_EOF == ret) {
+                        qDebug() << "[CYL Debug decoder->RecvFrame] ret == AVERROR(EAGAIN)" << ret << endl;
                         delete frame;
                         break;
                     }
-
                     double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
                     frame->timePts = t;
-
+                    qDebug() << "timePts:" << t << endl;
                     decoderQueue->Push(frame);
+                    //delete frame;
                 }
             }
             if(pkt != nullptr){
@@ -149,27 +157,27 @@ namespace EyerPlayer {
             }
         }
 
-        int ret = decoder->SendPacket(nullptr);
-        while(!stopFlag){
-            Eyer::EyerTime::EyerSleep(1000);
+//        int ret = decoder->SendPacket(nullptr);
+//        while(!stopFlag){
+//            Eyer::EyerTime::EyerSleep(1000);
 
-            if(decoderQueue->Size() >= 5){
-                continue;
-            }
+//            if(decoderQueue->Size() >= 5){
+//                continue;
+//            }
 
-            Eyer::EyerAVFrame * frame = new Eyer::EyerAVFrame();
-            ret = decoder->RecvFrame(frame);
+//            Eyer::EyerAVFrame * frame = new Eyer::EyerAVFrame();
+//            ret = decoder->RecvFrame(frame);
 
-            if(ret){
-                delete frame;
-                break;
-            }
+//            if(ret){
+//                delete frame;
+//                break;
+//            }
 
-            double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
-            frame->timePts = t;
+//            double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
+//            frame->timePts = t;
 
-            decoderQueue->Push(frame);
-        }
+//            decoderQueue->Push(frame);
+//        }
 
         qDebug() << "Decoder Thread Stop " << streamId << endl;
 
