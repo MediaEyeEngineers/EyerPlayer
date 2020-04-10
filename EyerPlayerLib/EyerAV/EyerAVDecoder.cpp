@@ -1,6 +1,5 @@
 #include "EyerAV.hpp"
 
-#include <QDebug>
 #include "EyerAVStreamPrivate.hpp"
 #include "EyerAVDecoderPrivate.hpp"
 #include "EyerAVPacketPrivate.hpp"
@@ -72,7 +71,6 @@ namespace Eyer
     {
         // TODO 判断解码器是否打开
         int ret = avcodec_receive_frame(piml->codecContext, frame->piml->frame);
-        qDebug() << "[CYL Debug] avcodec_receive_frame ret:" << ret;
         return ret;
     }
 }
