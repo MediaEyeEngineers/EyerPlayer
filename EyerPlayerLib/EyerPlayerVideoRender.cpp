@@ -155,20 +155,19 @@ namespace EyerPlayer {
             frame->GetUData(u);
             frame->GetVData(v);
 
-            // frame->GetInfo();
-
             yT->SetDataRedChannel(y, w, h);
             uT->SetDataRedChannel(u, w / 2, h / 2);
             vT->SetDataRedChannel(v, w / 2, h / 2);
 
-            frameDraw->PutTexture("y", yT, 0);
-            frameDraw->PutTexture("u", uT, 1);
-            frameDraw->PutTexture("v", vT, 2);
 
             free(y);
             free(u);
             free(v);
         }
+
+        frameDraw->PutTexture("y", yT, 0);
+        frameDraw->PutTexture("u", uT, 1);
+        frameDraw->PutTexture("v", vT, 2);
 
         frameDraw->PutMatrix4fv("mvp", mvp);
 

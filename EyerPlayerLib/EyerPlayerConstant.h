@@ -34,6 +34,20 @@ namespace EyerPlayer {
 
         static const int UPDATEAUDIORequest        = 104;
         static const int UPDATEAUDIOResponse       = 204;
+
+
+        static const int PLAYRequest                = 105;
+        static const int PLAYResponse               = 205;
+
+        static const int PAUSERequest               = 106;
+        static const int PAUSEResponse              = 206;
+
+        static const int PROGRESSRequest               = 107;
+        static const int PROGRESSResponse                = 207;
+
+        static const int SEEKRequest               = 108;
+        static const int SEEKResponse                = 208;
+
     };
 }
 

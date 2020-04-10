@@ -5,12 +5,13 @@
 #include <QDebug>
 
 namespace EyerPlayer {
-    AVReaderThread::AVReaderThread(Eyer::EyerString _url,Eyer::EyerEventQueue * _eventQueue, long long _openEventId,  AVFrameQueueManager * _queueManager)
+    AVReaderThread::AVReaderThread(Eyer::EyerString _url,Eyer::EyerEventQueue * _eventQueue, long long _openEventId,  AVFrameQueueManager * _queueManager, double _seekTime)
     {
         queueManager = _queueManager;
         url = _url;
         eventQueue = _eventQueue;
         openEventId = _openEventId;
+        seekTime = _seekTime;
     }
 
     AVReaderThread::~AVReaderThread()
@@ -22,6 +23,29 @@ namespace EyerPlayer {
         }
     }
 
+    int AVReaderThread::Play()
+    {
+        if(playerCtr != nullptr){
+            if(!playerCtr->IsRunning()){
+                playerCtr->Detach();
+            }
+        }
+        return 0;
+    }
+
+    int AVReaderThread::Pause()
+    {
+        if(playerCtr != nullptr){
+            playerCtr->Stop();
+        }
+        return 0;
+    }
+
+    Eyer::EyerString AVReaderThread::GetURL()
+    {
+        return url;
+    }
+
     void AVReaderThread::Run()
     {
         SetRunning();
@@ -29,7 +53,7 @@ namespace EyerPlayer {
         int recommendVideoIndex = 0;
         int recommendAudioIndex = 1;
 
-        playerCtr = new PlayCtrThread(eventQueue, queueManager, recommendVideoIndex, recommendAudioIndex);
+        playerCtr = new PlayCtrThread(eventQueue, queueManager, recommendVideoIndex, recommendAudioIndex, seekTime);
         playerCtr->Detach();
 
         //// <===============Init Start===============>
@@ -56,6 +80,8 @@ namespace EyerPlayer {
         }
 
         streamCount = reader.GetStreamCount();
+
+        mediaInfo.duration = reader.GetDuration();
 
         for(int i=0;i<streamCount;i++){
             Eyer::EyerAVStream stream;
@@ -111,7 +137,7 @@ namespace EyerPlayer {
         //// <===============Init End===============>
 
         for(int i=0;i<streamCount;i++){
-            // reader.SeekFrame(i, 600.0);
+            reader.SeekFrame(i, seekTime);
         }
 
         while(!stopFlag){

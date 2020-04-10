@@ -27,6 +27,7 @@ namespace EyerPlayer {
         void onOpen(int status, long long requestId, MediaInfo * info);
         void onStop(int status, long long requestId);
         void onUpdateUI(int streamId, void * frame);
+        void onProgress(double playTime);
 
     public:
         Eyer::EyerEventQueue * eventQueue = nullptr;

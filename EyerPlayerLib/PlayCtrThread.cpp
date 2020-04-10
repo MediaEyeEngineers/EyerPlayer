@@ -4,12 +4,14 @@
 #include <QDebug>
 
 namespace EyerPlayer {
-    PlayCtrThread::PlayCtrThread(Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _queueManager, int _recommendVideoIndex, int _recommendAudioIndex)
+    PlayCtrThread::PlayCtrThread(Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _queueManager, int _recommendVideoIndex, int _recommendAudioIndex, double seekTime)
     {
         recommendVideoIndex = _recommendVideoIndex;
         recommendAudioIndex = _recommendAudioIndex;
         eventQueue = _eventQueue;
         queueManager = _queueManager;
+
+        startPlayerPts = seekTime;
     }
 
     PlayCtrThread::~PlayCtrThread()
@@ -21,9 +23,12 @@ namespace EyerPlayer {
     {
         SetRunning();
 
-        double startPlayerPts = 0.0;
-        double playerPts = 0.0;
+        qDebug() << "Player THREAD Start" << endl;
+
+
         long long startTime = Eyer::EyerTime::GetTime();
+
+        double lastUpdateProgressTime = 0.0;
 
         AVFrameQueue * videoQueue = nullptr;
         AVFrameQueue * audioQueue1 = nullptr;
@@ -52,35 +57,61 @@ namespace EyerPlayer {
 
             long long nowTime = Eyer::EyerTime::GetTime();
             double dTime = (nowTime - startTime) / 1000.0;
-            playerPts = startPlayerPts + dTime;
+            playerProgressPts = startPlayerPts + dTime;
 
             if(videoFrame == nullptr){
                 videoQueue->FrontPop(&videoFrame);
             }
 
-            if(videoFrame != nullptr){
-                double pts = videoFrame->timePts;
-
-                if(pts <= playerPts){
-                    EventUpdateUIRequest * event = new EventUpdateUIRequest();
-                    event->SetFrom(EventTag::EVENT_PLAYER_CTR);
-                    event->SetTo(EventTag::EVENT_MANAGER);
-                    event->SetRequestId(eventQueue->GetEventId());
-                    event->streamId = 0;
-                    event->frame = videoFrame;
-                    eventQueue->Push(event);
-
-                    videoFrame = nullptr;
-                }
-            }
-
-            // 协助对 Video Frame 进行丢帧
             AVFrameQueue * playerVideoFrameQueue = nullptr;
             queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
             if(playerVideoFrameQueue == nullptr){
                 return;
             }
 
+            if(lastUpdateProgressTime <= 0.0){
+                EventProgressRequest * progressEvent = new EventProgressRequest();
+                progressEvent->SetFrom(EventTag::EVENT_PLAYER_CTR);
+                progressEvent->SetTo(EventTag::EVENT_MANAGER);
+                progressEvent->SetRequestId(eventQueue->GetEventId());
+                progressEvent->playTime = playerProgressPts;
+                eventQueue->Push(progressEvent);
+
+                lastUpdateProgressTime = playerProgressPts;
+            }
+            if(playerProgressPts - lastUpdateProgressTime >= 0.5){
+                EventProgressRequest * progressEvent = new EventProgressRequest();
+                progressEvent->SetFrom(EventTag::EVENT_PLAYER_CTR);
+                progressEvent->SetTo(EventTag::EVENT_MANAGER);
+                progressEvent->SetRequestId(eventQueue->GetEventId());
+                progressEvent->playTime = playerProgressPts;
+                eventQueue->Push(progressEvent);
+
+                lastUpdateProgressTime = playerProgressPts;
+            }
+
+
+            if(videoFrame != nullptr){
+                double pts = videoFrame->timePts;
+
+                // qDebug() << "Video PTS:" << pts << "===Player Pts" << playerProgressPts;
+
+                if(pts <= playerProgressPts){
+                    EventUpdateUIRequest * event = new EventUpdateUIRequest();
+                    event->SetFrom(EventTag::EVENT_PLAYER_CTR);
+                    event->SetTo(EventTag::EVENT_MANAGER);
+                    event->SetRequestId(eventQueue->GetEventId());
+                    event->streamId = 0;
+                    event->frame = nullptr;
+                    eventQueue->Push(event);
+
+                    playerVideoFrameQueue->Push(videoFrame);
+
+                    videoFrame = nullptr;
+                }
+            }
+
+            // 协助对 Video Frame 进行丢帧
             while(playerVideoFrameQueue->Size() > 5){
                 Eyer::EyerAVFrame * f = nullptr;
                 playerVideoFrameQueue->FrontPop(&f);
@@ -89,14 +120,16 @@ namespace EyerPlayer {
                 }
             }
 
-
             if(audioFrame == nullptr){
                 audioQueue1->FrontPop(&audioFrame);
             }
 
             if(audioFrame != nullptr){
                 double pts = audioFrame->timePts;
-                if(pts <= playerPts){
+
+                // qDebug() << "Audio PTS:" << pts << "===Player Pts" << playerProgressPts;
+
+                if(pts <= playerProgressPts){
                     AVFrameQueue * playerAudioFrameQueue = nullptr;
                     queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_AUDIO, &playerAudioFrameQueue);
                     if(playerAudioFrameQueue != nullptr){
@@ -106,6 +139,10 @@ namespace EyerPlayer {
                 }
             }
         }
+
+        startPlayerPts = playerProgressPts;
+
+        qDebug() << "Player THREAD End" << endl;
 
         SetStoping();
     }

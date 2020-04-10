@@ -46,7 +46,7 @@ namespace EyerPlayer {
                         eventQueue->Push(event);
                     }
                     else{
-                        readerThread = new AVReaderThread(openRequest->url, eventQueue, openRequest->GetRequestId(), queueManager);
+                        readerThread = new AVReaderThread(openRequest->url, eventQueue, openRequest->GetRequestId(), queueManager, 0.0);
                         readerThread->Detach();
                     }
                 }
@@ -75,6 +75,38 @@ namespace EyerPlayer {
                     }
                 }
 
+                if(event->GetType() == EventType::PLAYRequest){
+                    EventPlayRequest * playRequest = (EventPlayRequest *)event;
+                    if(readerThread != nullptr){
+                        readerThread->Play();
+                    }
+                }
+
+                if(event->GetType() == EventType::PAUSERequest){
+                    EventPauseRequest * pauseRequest = (EventPauseRequest *)event;
+                    if(readerThread != nullptr){
+                        readerThread->Pause();
+                    }
+                }
+
+                if(event->GetType() == EventType::SEEKRequest){
+                    EventSeekRequest * seekRequest = (EventSeekRequest *)event;
+
+                    Eyer::EyerString url;
+
+                    if(readerThread != nullptr){
+                        readerThread->Stop();
+
+                        url = readerThread->GetURL();
+
+                        delete readerThread;
+                        readerThread = nullptr;
+                    }
+
+                    readerThread = new AVReaderThread(url, eventQueue, -1, queueManager, seekRequest->time);
+                    readerThread->Detach();
+                }
+
                 if(event->GetType() == EventType::UPDATEUIRequest){
                     EventUpdateUIRequest * updateUIRequest = (EventUpdateUIRequest *)event;
                     Eyer::EyerAVFrame * frame = updateUIRequest->frame;
@@ -90,6 +122,11 @@ namespace EyerPlayer {
                 if(event->GetType() == EventType::STOPResponse){
                     EventStopResponse * stopResponse = (EventStopResponse *)event;
                     emit onStop(stopResponse->status, stopResponse->GetRequestId());
+                }
+
+                if(event->GetType() == EventType::PROGRESSRequest){
+                    EventProgressRequest * progressEvent = (EventProgressRequest *)event;
+                    emit onProgress(progressEvent->playTime);
                 }
 
                 delete event;

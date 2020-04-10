@@ -153,7 +153,7 @@ namespace EyerPlayer {
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
 
-            if(decoderQueue->Size() >= 10){
+            if(decoderQueue->Size() >= 5){
                 continue;
             }
 
