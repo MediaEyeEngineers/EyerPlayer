@@ -11,6 +11,7 @@ namespace Eyer
     {
     public:
         AVCodecContext * codecContext = nullptr;
+        int isHW = 0;
     };
 }
 

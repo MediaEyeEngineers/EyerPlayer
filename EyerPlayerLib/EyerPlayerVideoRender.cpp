@@ -3,6 +3,9 @@
 #include "EyerGLShader/ShaderH.hpp"
 #include <QDebug>
 
+#undef main
+#define SHADER_MAIN_FUN main
+
 namespace EyerPlayer {
 
     EyerPlayerVideoRender::EyerPlayerVideoRender(EyerGLContext * _ctx)
@@ -35,7 +38,7 @@ namespace EyerPlayer {
 
             uniform mat4 mvp;
 
-            void main(){
+            void SHADER_MAIN_FUN(){
                 outCoor = coor;
                 gl_Position = mvp * vec4(pos * 1.0, 1.0);
             }
@@ -46,17 +49,16 @@ namespace EyerPlayer {
             uniform sampler2D y;
             uniform sampler2D u;
             uniform sampler2D v;
+            uniform sampler2D uv;
+
+            uniform int pix_fmt;
 
             in vec3 outCoor;
-            void main(){
+            void SHADER_MAIN_FUN(){
                 vec2 t = vec2(outCoor.x, 1.0 - outCoor.y);
 
                 vec3 yuv;
                 vec3 rgb;
-
-                yuv.x = texture(y, t).r;
-                yuv.y = texture(u, t).r - 0.5;
-                yuv.z = texture(v, t).r - 0.5;
 
                 mat3 kBt709VideoRangeYUV2RGBMatrix = mat3(  1.164, 1.164, 1.164,
                                                             0.0, -0.213, 2.112,
@@ -74,11 +76,16 @@ namespace EyerPlayer {
                                                             0.0, -0.343, 1.765,
                                                             1.4, -0.711, 0.0);
 
-                /*
-                rgb = mat3( 1,       1,         1,
-                            0,       -0.39465,  2.03211,
-                            1.13983, -0.58060,  0) * yuv;
-                            */
+                if(101 == pix_fmt){
+                    yuv.x = texture(y, t).r;
+                    yuv.y = texture(u, t).r - 0.5;
+                    yuv.z = texture(v, t).r - 0.5;
+                }
+                else if(105 == pix_fmt){
+                    yuv.x = texture(y, t).r;
+                    yuv.y = texture(uv, t).r - 0.5;
+                    yuv.z = texture(uv, t).g - 0.5;
+                }
 
                 rgb = kBt709VideoRangeYUV2RGBMatrix * yuv;
 
@@ -100,9 +107,10 @@ namespace EyerPlayer {
         frameDraw->SetVAO(vao);
 
 
-        yT = new Eyer::EyerGLTexture(ctx);
-        uT = new Eyer::EyerGLTexture(ctx);
-        vT = new Eyer::EyerGLTexture(ctx);
+        yT      = new Eyer::EyerGLTexture(ctx);
+        uT      = new Eyer::EyerGLTexture(ctx);
+        vT      = new Eyer::EyerGLTexture(ctx);
+        uvT     = new Eyer::EyerGLTexture(ctx);
     }
 
     EyerPlayerVideoRender::~EyerPlayerVideoRender()
@@ -127,6 +135,10 @@ namespace EyerPlayer {
             delete vT;
             vT = nullptr;
         }
+        if(uvT != nullptr){
+            delete uvT;
+            uvT = nullptr;
+        }
     }
 
     int EyerPlayerVideoRender::SetFrame(Eyer::EyerAVFrame * f)
@@ -147,31 +159,70 @@ namespace EyerPlayer {
             int w = frame->GetWidth();
             int h = frame->GetHeight();
 
-            unsigned char * y = (unsigned char *)malloc(w * h);
-            unsigned char * u = (unsigned char *)malloc(w * h);
-            unsigned char * v = (unsigned char *)malloc(w * h);
+            if(frame->GetPixFormat() == Eyer::EyerAVPixelFormat::Eyer_AV_PIX_FMT_YUV420P){
+                unsigned char * y = (unsigned char *)malloc(w * h);
+                unsigned char * u = (unsigned char *)malloc(w * h);
+                unsigned char * v = (unsigned char *)malloc(w * h);
+                memset(y, 0, w * h);
+                memset(u, 0, w * h);
+                memset(v, 0, w * h);
 
-            frame->GetYData(y);
-            frame->GetUData(u);
-            frame->GetVData(v);
+                frame->GetYData(y);
+                frame->GetUData(u);
+                frame->GetVData(v);
 
-            yT->SetDataRedChannel(y, w, h);
-            uT->SetDataRedChannel(u, w / 2, h / 2);
-            vT->SetDataRedChannel(v, w / 2, h / 2);
+                yT->SetDataRedChannel(y, w, h);
+                uT->SetDataRedChannel(u, w / 2, h / 2);
+                vT->SetDataRedChannel(v, w / 2, h / 2);
+
+                free(y);
+                free(u);
+                free(v);
 
 
-            free(y);
-            free(u);
-            free(v);
+            }
+            if(frame->GetPixFormat() == Eyer::EyerAVPixelFormat::Eyer_AV_PIX_FMT_YUVNV12){
+                unsigned char * y  = (unsigned char *)malloc(w * h);
+                unsigned char * uv = (unsigned char *)malloc(w * h);
+                memset(y,   0, w * h);
+                memset(uv,  0, w * h);
+
+                frame->GetYData(y);
+                frame->GetUVData(uv);
+
+                yT->SetDataRedChannel(y, w, h);
+                uvT->SetDataRGChannel(uv, w / 2, h / 2);
+
+                free(y);
+                free(uv);
+            }
+
+            frameDraw->PutUniform1i("pix_fmt", (int)frame->GetPixFormat());
         }
 
         frameDraw->PutTexture("y", yT, 0);
         frameDraw->PutTexture("u", uT, 1);
         frameDraw->PutTexture("v", vT, 2);
+        frameDraw->PutTexture("uv", uvT, 3);
 
         frameDraw->PutMatrix4fv("mvp", mvp);
 
         frameDraw->Draw();
+
+
+
+
+
+        /*
+
+        if(frame->GetPixFormat() == Eyer::EyerAVPixelFormat::Eyer_AV_PIX_FMT_YUVNV12){
+            if(frame != nullptr){
+                int w = frame->GetWidth();
+                int h = frame->GetHeight();
+            }
+        }
+
+        */
 
         return 0;
     }

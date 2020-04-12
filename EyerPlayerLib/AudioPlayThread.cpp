@@ -35,14 +35,6 @@ namespace EyerPlayer {
                 continue;
             }
 
-            while(playerAudioFrameQueue->Size() > 5){
-                Eyer::EyerAVFrame * f = nullptr;
-                playerAudioFrameQueue->FrontPop(&f);
-                if(f != nullptr){
-                    delete f;
-                }
-            }
-
             Eyer::EyerAVFrame * f = nullptr;
             playerAudioFrameQueue->FrontPop(&f);
             if(f != nullptr){
@@ -65,12 +57,12 @@ namespace EyerPlayer {
                         fmt.setSampleType(QAudioFormat::Float);
                     }
 
-                    f->GetInfo();
+                    // f->GetInfo();
 
                     QAudioDeviceInfo info = QAudioDeviceInfo::defaultOutputDevice();
                     if (!info.isFormatSupported(fmt)) {
                         qDebug()<<"default format not supported try to use nearest";
-                        fmt = info.nearestFormat(fmt);
+                        // fmt = info.nearestFormat(fmt);
                     }
 
                     out = new QAudioOutput(fmt);
@@ -84,6 +76,9 @@ namespace EyerPlayer {
 
                 int alreadyWrited = 0;
                 while(alreadyWrited < len){
+                    if(stopFlag){
+                        break;
+                    }
                     int ret = io->write((char *)data + alreadyWrited, len - alreadyWrited);
                     alreadyWrited += ret;
                 }

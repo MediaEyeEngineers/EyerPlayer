@@ -146,7 +146,7 @@ namespace Eyer
 
             piml->codecContext = avcodec_alloc_context3(codec);
 
-            avcodec_copy_context(piml->codecContext, stream->piml->codecContext);
+            avcodec_parameters_to_context(piml->codecContext, stream->piml->codecpar);
         }
         if(streamType == EyerAVStreamType::STREAM_TYPE_VIDEO){
             // 初始化 H264 编码器
@@ -162,7 +162,7 @@ namespace Eyer
 
             piml->codecContext = avcodec_alloc_context3(codec);
 
-            avcodec_copy_context(piml->codecContext, stream->piml->codecContext);
+            avcodec_parameters_to_context(piml->codecContext, stream->piml->codecpar);
             /*
             piml->codecContext->time_base.den = 90000;
             piml->codecContext->time_base.num = 1;

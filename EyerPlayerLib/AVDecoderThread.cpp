@@ -4,18 +4,18 @@
 #include <QDebug>
 
 namespace EyerPlayer {
-    AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream & stream, StreamInfo & _streamInfo,Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _queueManager)
+    AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream & stream, StreamInfo & _streamInfo,Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _queueManager, double _startTme)
     {
         streamInfo = _streamInfo;
 
         queueManager = _queueManager;
         eventQueue = _eventQueue;
         decoder = new Eyer::EyerAVDecoder();
-        decoder->Init(&stream);
+        decoder->InitHW(&stream);
 
         streamId = stream.streamIndex;
-
         isReadFinish = 0;
+        startTme = _startTme;
     }
 
     AVDecoderThread::~AVDecoderThread()
@@ -96,7 +96,7 @@ namespace EyerPlayer {
     {
         SetRunning();
 
-        qDebug() << "Stream Id: " << streamId << " Decoder Thread Start" << endl;
+        // qDebug() << "Stream Id: " << streamId << " Decoder Thread Start" << endl;
 
         Eyer::EyerString queueKey = Eyer::EyerString(EventTag::FRAME_QUEUE_DECODER_VIDEO) + Eyer::EyerString::Number(streamId);
 
@@ -116,7 +116,7 @@ namespace EyerPlayer {
                 }
             }
 
-            if(decoderQueue->Size() >= 5){
+            if(decoderQueue->Size() >= 15){
                 // qDebug() << "Stream Id: " << streamId << " Decoder Thread Block!!" << endl;
                 continue;
             }
@@ -141,6 +141,11 @@ namespace EyerPlayer {
                     double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
                     frame->timePts = t;
 
+                    if(frame->timePts < startTme){
+                        delete frame;
+                        break;
+                    }
+
                     decoderQueue->Push(frame);
                 }
             }
@@ -153,7 +158,7 @@ namespace EyerPlayer {
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
 
-            if(decoderQueue->Size() >= 5){
+            if(decoderQueue->Size() >= 15){
                 continue;
             }
 
@@ -168,10 +173,15 @@ namespace EyerPlayer {
             double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
             frame->timePts = t;
 
+            if(frame->timePts < startTme){
+                delete frame;
+                break;
+            }
+
             decoderQueue->Push(frame);
         }
 
-        qDebug() << "Decoder Thread Stop " << streamId << endl;
+        // qDebug() << "Decoder Thread Stop " << streamId << endl;
 
         SetStoping();
     }

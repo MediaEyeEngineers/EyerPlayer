@@ -23,7 +23,7 @@ namespace EyerPlayer {
     {
         SetRunning();
 
-        qDebug() << "Player THREAD Start" << endl;
+        // qDebug() << "Player THREAD Start" << endl;
 
 
         long long startTime = Eyer::EyerTime::GetTime();
@@ -49,6 +49,13 @@ namespace EyerPlayer {
             }
         }
 
+
+        AVFrameQueue * playerAudioFrameQueue = nullptr;
+        queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_AUDIO, &playerAudioFrameQueue);
+
+        AVFrameQueue * playerVideoFrameQueue = nullptr;
+        queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
+
         Eyer::EyerAVFrame * videoFrame = nullptr;
         Eyer::EyerAVFrame * audioFrame = nullptr;
 
@@ -63,11 +70,6 @@ namespace EyerPlayer {
                 videoQueue->FrontPop(&videoFrame);
             }
 
-            AVFrameQueue * playerVideoFrameQueue = nullptr;
-            queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
-            if(playerVideoFrameQueue == nullptr){
-                return;
-            }
 
             if(lastUpdateProgressTime <= 0.0){
                 EventProgressRequest * progressEvent = new EventProgressRequest();
@@ -112,7 +114,7 @@ namespace EyerPlayer {
             }
 
             // 协助对 Video Frame 进行丢帧
-            while(playerVideoFrameQueue->Size() > 5){
+            while(playerVideoFrameQueue->Size() > 3){
                 Eyer::EyerAVFrame * f = nullptr;
                 playerVideoFrameQueue->FrontPop(&f);
                 if(f != nullptr){
@@ -130,19 +132,32 @@ namespace EyerPlayer {
                 // qDebug() << "Audio PTS:" << pts << "===Player Pts" << playerProgressPts;
 
                 if(pts <= playerProgressPts){
-                    AVFrameQueue * playerAudioFrameQueue = nullptr;
-                    queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_AUDIO, &playerAudioFrameQueue);
                     if(playerAudioFrameQueue != nullptr){
                         playerAudioFrameQueue->Push(audioFrame);
                         audioFrame = nullptr;
                     }
                 }
             }
+
+            // 协助对 Audio Frame 进行丢帧
+            while(playerAudioFrameQueue->Size() > 3){
+                Eyer::EyerAVFrame * f = nullptr;
+                playerAudioFrameQueue->FrontPop(&f);
+                if(f != nullptr){
+                    delete f;
+                }
+            }
+
+
+
+            // qDebug() << "Player Audio: " << playerAudioFrameQueue->Size() << endl;
+            // qDebug() << "Player Video: " << playerVideoFrameQueue->Size() << endl;
+
         }
 
         startPlayerPts = playerProgressPts;
 
-        qDebug() << "Player THREAD End" << endl;
+        // qDebug() << "Player THREAD End" << endl;
 
         SetStoping();
     }

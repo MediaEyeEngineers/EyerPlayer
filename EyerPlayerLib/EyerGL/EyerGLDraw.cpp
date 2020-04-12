@@ -63,6 +63,13 @@ namespace Eyer
         return 0;
     }
 
+    int EyerGLDraw::PutUniform1i(EyerString uniform, int val)
+    {
+        program->UseProgram();
+        program->PutUniform1i(uniform, val);
+        return 0;
+    }
+
     int EyerGLDraw::SetVAO(EyerGLVAO * _vao)
     {
         vao = _vao;

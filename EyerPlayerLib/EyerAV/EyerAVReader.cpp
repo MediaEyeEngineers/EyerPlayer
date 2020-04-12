@@ -116,17 +116,17 @@ namespace Eyer
         if(index < 0){
             return -1;
         }
-        if(index >= GetStreamCount()){
+        if(index >= GetStreamCount()) {
             return -1;
         }
 
         double duration = piml->formatCtx->streams[index]->duration * 1.0 * piml->formatCtx->streams[index]->time_base.num / piml->formatCtx->streams[index]->time_base.den;
-
         stream.SetDuration(duration);
 
         stream.streamIndex = piml->formatCtx->streams[index]->index;
         stream.piml->type = EyerAVStreamType::STREAM_TYPE_UNKNOW;
-        avcodec_copy_context(stream.piml->codecContext, piml->formatCtx->streams[index]->codec);
+
+        avcodec_parameters_copy(stream.piml->codecpar, piml->formatCtx->streams[index]->codecpar);
 
         return 0;
     }
