@@ -57,11 +57,11 @@ namespace Eyer
         
         AVStream * avStream = avformat_new_stream(piml->formatCtx, encoder->piml->codecContext->codec);
 
-        avcodec_copy_context(avStream->codec, encoder->piml->codecContext);
+        avcodec_parameters_from_context(avStream->codecpar, encoder->piml->codecContext);
 
         avStream->time_base = encoder->piml->codecContext->time_base;
+        avStream->codecpar->codec_tag = 0;
 
-        avStream->codec->codec_tag = 0;
         encoder->piml->codecContext->codec_tag = 0;
         
         return avStream->index;
@@ -114,7 +114,7 @@ namespace Eyer
 
     int EyerAVWriter::WriteHand()
     {
-        avformat_write_header(piml->formatCtx, nullptr);
+        int ret = avformat_write_header(piml->formatCtx, nullptr);
         return 0;
     }
 }

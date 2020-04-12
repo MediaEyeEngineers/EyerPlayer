@@ -222,8 +222,7 @@ namespace Eyer
         in vec3 outCoor;
         void main(){
             vec2 TexCoords = vec2(outCoor.x, 1.0 - outCoor.y);
-            vec3 rgb = texture(imageTex, TexCoords).rgb;
-            color = vec4(rgb, 1.0);
+            color = texture(imageTex, TexCoords);
         }
     );
 }

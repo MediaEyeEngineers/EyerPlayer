@@ -112,13 +112,13 @@ namespace EyerPlayer {
             mediaInfo.AddStreamInfo(streamInfo);
 
             if(stream.streamIndex == recommendVideoIndex){
-                AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager);
+                AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager, seekTime);
                 avdecoder->Detach();
 
                 decodeThreadList.push_back(avdecoder);
             }
             if(stream.streamIndex == recommendAudioIndex){
-                AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager);
+                AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager, seekTime);
                 avdecoder->Detach();
 
                 decodeThreadList.push_back(avdecoder);
@@ -136,11 +136,11 @@ namespace EyerPlayer {
         //// Return Event
         //// <===============Init End===============>
         ///
-        /*
+
         for(int i=0;i<streamCount;i++){
-            reader.SeekFrame(i, seekTime);
+            // reader.SeekFrame(i, seekTime);
         }
-        */
+
 
         reader.SeekFrame(recommendVideoIndex, seekTime);
 

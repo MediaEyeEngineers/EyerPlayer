@@ -7,14 +7,14 @@ namespace Eyer
     EyerAVStream::EyerAVStream()
     {
         piml = new EyerAVStreamPrivate();
-        piml->codecContext = avcodec_alloc_context3(nullptr);
+        piml->codecpar = avcodec_parameters_alloc();
     }
     
     EyerAVStream::~EyerAVStream()
     {
-        if(piml->codecContext != nullptr){
-            avcodec_free_context(&piml->codecContext);
-            piml->codecContext = nullptr;
+        if(piml->codecpar != nullptr){
+            avcodec_parameters_free(&piml->codecpar);
+            piml->codecpar = nullptr;
         }
         if(piml != nullptr){
             delete piml;
@@ -24,10 +24,10 @@ namespace Eyer
 
     EyerAVStreamType EyerAVStream::GetStreamType()
     {
-        if(piml->codecContext->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){
             return EyerAVStreamType::STREAM_TYPE_VIDEO;
         }
-        if(piml->codecContext->codec_type == AVMediaType::AVMEDIA_TYPE_AUDIO){
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_AUDIO){
             return EyerAVStreamType::STREAM_TYPE_AUDIO;
         }
 
@@ -47,11 +47,11 @@ namespace Eyer
 
     int EyerAVStream::GetWidth()
     {
-        return piml->codecContext->width;
+        return piml->codecpar->width;
     }
 
     int EyerAVStream::GetHeight()
     {
-        return piml->codecContext->height;
+        return piml->codecpar->height;
     }
 }

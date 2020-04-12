@@ -48,7 +48,7 @@ namespace EyerPlayer {
     class AVDecoderThread : public Eyer::EyerThread
     {
     public:
-        AVDecoderThread(Eyer::EyerAVStream & stream, StreamInfo & streamInfo, Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager);
+        AVDecoderThread(Eyer::EyerAVStream & stream, StreamInfo & streamInfo, Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * _queueManager, double _startTme);
         ~AVDecoderThread();
         virtual void Run();
 
@@ -63,6 +63,8 @@ namespace EyerPlayer {
 
         int SetReadFinishFlag();
     private:
+        double startTme;
+
         Eyer::EyerEventQueue * eventQueue = nullptr;
         Eyer::EyerAVDecoder * decoder = nullptr;
         int streamId = -1;

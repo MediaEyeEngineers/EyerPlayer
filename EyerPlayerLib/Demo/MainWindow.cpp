@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     player->SetURL("/Users/lichi/Downloads/nezha.mp4");
     player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
 
+    // player->SetURL("C:/Users/redknot/Downloads/1080pCaton.mkv");
+    // player->SetURL("C:/Users/redknot/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
+
     player->SetProgressCB(this);
 
     // player->SetURL("/home/redknot/Videos/bbb_sunflower_2160p_60fps_normal.mp4");
@@ -33,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->video_progress_slider->setRange(0,1000);
     ui->video_progress_slider->setValue(0);
 
-    ui->video_progress_slider->setTickPosition(QSlider::TicksAbove);
+   // ui->video_progress_slider->setTickPosition(QSlider::TicksAbove);
 
     connect(ui->video_progress_slider, SIGNAL(valueChanged(int)), this, SLOT(progressValueChanged(int)));
     connect(ui->video_progress_slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
@@ -135,9 +138,6 @@ void MainWindow::progressValueChanged(int val)
 {
     double p = val * 1.0 / 1000;
     double time = videoDuration * p;
-
-    // player->Seek(time);
-    // qDebug() << val << endl;
 }
 
 void MainWindow::sliderPressed()
@@ -157,7 +157,7 @@ void MainWindow::sliderReleased()
     double p = position * 1.0 / 1000;
     double time = videoDuration * p;
 
-    qDebug() << time << endl;
+    //  qDebug() << time << endl;
 
     player->Seek(time);
 

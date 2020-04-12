@@ -26,6 +26,7 @@ namespace EyerPlayer {
         Eyer::EyerGLTexture * yT = nullptr;
         Eyer::EyerGLTexture * uT = nullptr;
         Eyer::EyerGLTexture * vT = nullptr;
+        Eyer::EyerGLTexture * uvT = nullptr;
 
         Eyer::EyerMat4x4 mvp;
     };

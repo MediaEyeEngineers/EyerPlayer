@@ -78,4 +78,21 @@ namespace Eyer
 
         return 0;
     }
+
+    int EyerGLTexture::SetDataRGChannel(unsigned char * data,int width,int height)
+    {
+#ifdef QT_EYER_PLAYER
+        ctx->glBindTexture(GL_TEXTURE_2D, textureId);
+        ctx->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        ctx->glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, width, height, 0, GL_RG, GL_UNSIGNED_BYTE, data);
+        ctx->glBindTexture(GL_TEXTURE_2D, 0);
+#else
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, width, height, 0, GL_RG, GL_UNSIGNED_BYTE, data);
+        glBindTexture(GL_TEXTURE_2D, 0);
+#endif
+
+        return 0;
+    }
 }

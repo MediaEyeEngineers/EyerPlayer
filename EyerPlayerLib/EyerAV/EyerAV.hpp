@@ -33,7 +33,9 @@ namespace Eyer
         Eyer_AV_PIX_FMT_YUV420P = 101,
         Eyer_AV_PIX_FMT_YUVJ420P = 102,
         Eyer_AV_PIX_FMT_YUV444P = 103,
-        Eyer_AV_PIX_FMT_YUVJ444P = 104
+        Eyer_AV_PIX_FMT_YUVJ444P = 104,
+        Eyer_AV_PIX_FMT_YUVNV12 = 105,
+        Eyer_AV_PIX_FMT_YUVNV21 = 106,
     };
 
     enum EyerAVStreamType{
@@ -98,6 +100,7 @@ namespace Eyer
         int GetYData(unsigned char * yData);
         int GetUData(unsigned char * uData);
         int GetVData(unsigned char * vData);
+        int GetUVData(unsigned char * uvData);
 
         float GetAudioFloatData(int channel, int index);
         int SetAudioFloatData(int channel, int index, float d);
@@ -202,6 +205,7 @@ namespace Eyer
         ~EyerAVDecoder();
 
         int Init(EyerAVStream * stream);
+        int InitHW(EyerAVStream * stream);
 
         int SendPacket(EyerAVPacket * packet);
         int RecvFrame(EyerAVFrame * frame);

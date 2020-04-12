@@ -178,6 +178,8 @@ namespace EyerPlayer {
 
         glFlush();
         glFinish();
+
+        update();
     }
 
 
