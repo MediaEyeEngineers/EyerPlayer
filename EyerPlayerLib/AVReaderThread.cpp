@@ -50,21 +50,21 @@ namespace EyerPlayer {
     {
         SetRunning();
 
-        int recommendVideoIndex = 0;
-        int recommendAudioIndex = 1;
-
-        playerCtr = new PlayCtrThread(eventQueue, queueManager, recommendVideoIndex, recommendAudioIndex, seekTime);
-        playerCtr->Detach();
+        int recommendVideoIndex = -1;
+        int recommendAudioIndex = -1;
 
         //// <===============Init Start===============>
-        // Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;
+
         int streamCount = 0;
         EventOpenResponse * event = nullptr;
         int isStop = 0;
         MediaInfo mediaInfo;
 
         Eyer::EyerAVReader reader(url);
+
+        long long openStartTime = Eyer::EyerTime::GetTime();
         int ret = reader.Open();
+        long long openEndTime = 0;
 
         if(ret){
             // Open Fail
@@ -79,10 +79,24 @@ namespace EyerPlayer {
             goto END;
         }
 
-        streamCount = reader.GetStreamCount();
+        recommendVideoIndex = reader.GetVideoStreamIndex();
+        recommendAudioIndex = reader.GetAudioStreamIndex();
+
+        /*
+        qDebug() << "recommendVideoIndex:" << reader.GetStreamCount() << endl;
+        qDebug() << "recommendVideoIndex:" << recommendVideoIndex << endl;
+        qDebug() << "recommendAudioIndex:" << recommendAudioIndex << endl;
+        */
+
+        openEndTime = Eyer::EyerTime::GetTime();
+        // qDebug() << "OpenTime :" << openEndTime - openStartTime << endl;
+
+        playerCtr = new PlayCtrThread(eventQueue, queueManager, recommendVideoIndex, recommendAudioIndex, seekTime);
+        playerCtr->Detach();
 
         mediaInfo.duration = reader.GetDuration();
 
+        streamCount = reader.GetStreamCount();
         for(int i=0;i<streamCount;i++){
             Eyer::EyerAVStream stream;
             reader.GetStream(stream, i);
@@ -136,13 +150,14 @@ namespace EyerPlayer {
         //// Return Event
         //// <===============Init End===============>
         ///
-
+        ///
+        /*
         for(int i=0;i<streamCount;i++){
-            // reader.SeekFrame(i, seekTime);
+            reader.SeekFrame(i, seekTime);
         }
+        */
 
-
-        reader.SeekFrame(recommendVideoIndex, seekTime);
+        reader.SeekFrame(0, seekTime);
 
         while(!stopFlag){
             isStop = 1;

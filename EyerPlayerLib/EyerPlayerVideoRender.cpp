@@ -210,20 +210,6 @@ namespace EyerPlayer {
         frameDraw->Draw();
 
 
-
-
-
-        /*
-
-        if(frame->GetPixFormat() == Eyer::EyerAVPixelFormat::Eyer_AV_PIX_FMT_YUVNV12){
-            if(frame != nullptr){
-                int w = frame->GetWidth();
-                int h = frame->GetHeight();
-            }
-        }
-
-        */
-
         return 0;
     }
 }
