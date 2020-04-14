@@ -35,6 +35,28 @@ namespace Eyer
         }
     }
 
+    int EyerAVReader::GetVideoStreamIndex()
+    {
+        if(piml->formatCtx == nullptr){
+            return -1;
+        }
+
+        int videoStream = av_find_best_stream(piml->formatCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+
+        return videoStream;
+    }
+
+    int EyerAVReader::GetAudioStreamIndex()
+    {
+        if(piml->formatCtx == nullptr){
+            return -1;
+        }
+
+        int audioStream = av_find_best_stream(piml->formatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+
+        return audioStream;
+    }
+
     int EyerAVReader::SeekFrame(int streamIndex, double timestamp)
     {
         int64_t t = timestamp / av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
@@ -74,6 +96,8 @@ namespace Eyer
         }
 
         avformat_find_stream_info(piml->formatCtx, NULL);
+
+        av_dump_format(piml->formatCtx, 0, piml->path.str, 0);
 
         return 0;
     }

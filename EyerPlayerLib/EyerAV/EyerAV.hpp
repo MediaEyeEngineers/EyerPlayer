@@ -151,6 +151,9 @@ namespace Eyer
         int GetStreamCount();
         int GetStream(EyerAVStream & stream, int index);
 
+        int GetAudioStreamIndex();
+        int GetVideoStreamIndex();
+
         int GetStreamTimeBase(EyerAVRational & rational, int streamIndex);
     };
 
