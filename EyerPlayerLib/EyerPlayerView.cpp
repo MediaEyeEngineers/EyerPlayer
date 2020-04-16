@@ -191,6 +191,9 @@ namespace EyerPlayer {
 
     int EyerPlayerView::Open(EyerPlayerOpenCB * openCB)
     {
+        if(url.isEmpty()){
+            return -1;
+        }
         long long requestId = playerViewPrivate->eventManager->GenId();
 
         if(openCB != nullptr){
