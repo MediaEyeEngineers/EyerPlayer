@@ -16,7 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // player->SetURL("/Users/lichi/Downloads/time_clock_1h_1920x1080_60fps.mp4");
     player->SetURL("/Users/lichi/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
     player->SetURL("/Users/lichi/Downloads/nezha.mp4");
-    player->SetURL("/Users/lichi/Downloads/solo.mp3");
+    // player->SetURL("/Users/lichi/Downloads/solo.mp3");
+    // player->SetURL("/Users/lichi/Downloads/miaomiaomiao.mp3");
+
     // player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
 
     // player->SetURL("C:/Users/redknot/Downloads/1080pCaton.mkv");
@@ -37,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->video_progress_slider->setRange(0,1000);
     ui->video_progress_slider->setValue(0);
 
-   // ui->video_progress_slider->setTickPosition(QSlider::TicksAbove);
+    // ui->video_progress_slider->setTickPosition(QSlider::TicksAbove);
 
     connect(ui->video_progress_slider, SIGNAL(valueChanged(int)), this, SLOT(progressValueChanged(int)));
     connect(ui->video_progress_slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
