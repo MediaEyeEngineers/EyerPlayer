@@ -50,6 +50,20 @@ namespace Eyer
             return 0;
         }
 
+        int ClearAndDelete()
+        {
+            mut.lock();
+
+            typename std::map<std::string, T *>::iterator it;
+            for(it=manager.begin();it!=manager.end();) {
+                delete it->second;
+                manager.erase(it++);
+            }
+
+            mut.unlock();
+            return 0;
+        }
+
     private:
         std::map<std::string, T *> manager;
         std::mutex mut;

@@ -16,7 +16,27 @@ namespace EyerPlayer {
 
     PlayCtrThread::~PlayCtrThread()
     {
-        // TODO 回收所有的缓冲帧
+        AVFrameQueue * playerAudioFrameQueue = nullptr;
+        queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_AUDIO, &playerAudioFrameQueue);
+
+        AVFrameQueue * playerVideoFrameQueue = nullptr;
+        queueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
+
+        while(playerVideoFrameQueue->Size() > 0){
+            Eyer::EyerAVFrame * f = nullptr;
+            playerVideoFrameQueue->FrontPop(&f);
+            if(f != nullptr){
+                delete f;
+            }
+        }
+
+        while(playerAudioFrameQueue->Size() > 0){
+            Eyer::EyerAVFrame * f = nullptr;
+            playerAudioFrameQueue->FrontPop(&f);
+            if(f != nullptr){
+                delete f;
+            }
+        }
     }
 
     void PlayCtrThread::Run()
@@ -158,6 +178,9 @@ namespace EyerPlayer {
         startPlayerPts = playerProgressPts;
 
         // qDebug() << "Player THREAD End" << endl;
+
+
+
 
         SetStoping();
     }

@@ -19,6 +19,15 @@ namespace EyerPlayer {
             readerThread = nullptr;
         }
 
+        // 清空事件队列中来不及处理的事件
+        if(eventQueue->Size() > 0){
+            Eyer::EyerEvent * event = nullptr;
+            eventQueue->Front(event);
+            if(event != nullptr){
+                delete event;
+            }
+        }
+
         if(eventQueue != nullptr){
             delete eventQueue;
             eventQueue = nullptr;

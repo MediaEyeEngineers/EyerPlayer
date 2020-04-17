@@ -226,6 +226,7 @@ END:
             playerCtr = nullptr;
         }
 
+
         SetStoping();
     }
 }

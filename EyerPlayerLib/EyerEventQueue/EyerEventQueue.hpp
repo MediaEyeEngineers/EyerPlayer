@@ -30,6 +30,8 @@ namespace Eyer
         int FrontTargetAndPop(EyerEvent * & event, const EyerString & target);
 
         long long GetEventId();
+
+        int Size();
     private:
         std::queue<EyerEvent *> eventQueue;
         std::mutex mutex;
