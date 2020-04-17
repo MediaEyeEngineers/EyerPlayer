@@ -8,6 +8,10 @@
 #include "PlayerTypedef.hpp"
 
 namespace EyerPlayer {
+    /**
+     * @brief EyerPlayerEventManager 是一个事件管理机
+     * EyerPlayerEventManager 用来协调事件，核心是一个加锁的队列，各个线程投入或者取出事件，因为涉及到平台相关的回调（例如更新到 UI 界面）这个线程使用平台相关的线程实现，Qt 中就是 QThread
+     */
     class EyerPlayerEventManager : public QThread
     {
         Q_OBJECT

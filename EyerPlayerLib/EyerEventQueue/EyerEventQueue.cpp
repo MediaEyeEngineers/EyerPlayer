@@ -91,4 +91,14 @@ namespace Eyer
         idIndex++;
         return idIndex;
     }
+
+    int EyerEventQueue::Size()
+    {
+        int size = 0;
+        mutex.lock();
+        size = eventQueue.size();
+        mutex.unlock();
+
+        return size;
+    }
 }

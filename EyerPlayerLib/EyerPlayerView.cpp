@@ -83,8 +83,8 @@ namespace EyerPlayer {
         }
 
         // delete frame queue manager
-        // TODO Free all queue
         if(playerViewPrivate->frameQueueManager != nullptr){
+            playerViewPrivate->frameQueueManager->ClearAndDelete();
             delete playerViewPrivate->frameQueueManager;
             playerViewPrivate->frameQueueManager = nullptr;
         }

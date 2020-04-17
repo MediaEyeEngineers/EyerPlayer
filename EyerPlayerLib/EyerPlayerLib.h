@@ -122,7 +122,7 @@ namespace EyerPlayer {
     /**
      * @brief EyerPlayerView 可以作为 Qt 中的一个 QWidget
      * EyerPlayerView 可以作为 Qt 中的一个 QWidget，参与到 Qt 的布局中，操作 EyerPlayerView 就可以播放视频
-     */ 
+     */
     class EYERPLAYERLIBSHARED_EXPORT EyerPlayerView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     {
         Q_OBJECT
