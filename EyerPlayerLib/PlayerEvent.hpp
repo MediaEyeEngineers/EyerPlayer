@@ -231,6 +231,47 @@ namespace EyerPlayer {
 
         double time = 0.0f;
     };
+
+
+
+    class EventLagStartRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventLagStartRequest()
+        {
+
+        }
+
+        ~EventLagStartRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::LAGStartRequest;
+        }
+    };
+
+
+    class EventLagStopRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventLagStopRequest()
+        {
+
+        }
+
+        ~EventLagStopRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::LAGStopRequest;
+        }
+    };
 }
 
 #endif // EYERPLAYERLIB_PLAYER_EVENT_H

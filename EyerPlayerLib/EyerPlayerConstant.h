@@ -48,6 +48,14 @@ namespace EyerPlayer {
         static const int SEEKRequest               = 108;
         static const int SEEKResponse                = 208;
 
+
+
+        static const int LAGStartRequest               = 109;
+        static const int LAGStartResponse                = 209;
+
+        static const int LAGStopRequest               = 110;
+        static const int LAGStopResponse                = 210;
+
     };
 }
 

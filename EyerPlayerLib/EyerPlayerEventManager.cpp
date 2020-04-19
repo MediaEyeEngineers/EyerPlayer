@@ -138,6 +138,15 @@ namespace EyerPlayer {
                     emit onProgress(progressEvent->playTime);
                 }
 
+                if(event->GetType() == EventType::LAGStartRequest){
+                    EventLagStartRequest * lagStartRequest = (EventLagStartRequest *)event;
+                    emit onLagStart(lagStartRequest->GetId());
+                }
+                if(event->GetType() == EventType::LAGStopRequest){
+                    EventLagStopRequest * lagStopRequest = (EventLagStopRequest *)event;
+                    emit onLagStop(lagStopRequest->GetId());
+                }
+
                 delete event;
             }
         }
