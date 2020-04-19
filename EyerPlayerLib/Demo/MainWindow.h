@@ -8,7 +8,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow, public EyerPlayer::EyerPlayerOpenCB, public EyerPlayer::EyerPlayerStopCB, public EyerPlayer::EyerPlayerProgressCB
+class MainWindow : public QMainWindow, public EyerPlayer::EyerPlayerOpenCB, public EyerPlayer::EyerPlayerStopCB, public EyerPlayer::EyerPlayerProgressCB, public EyerPlayer::EyerPlayerLagCB
 {
     Q_OBJECT
 
@@ -22,6 +22,9 @@ public:
     virtual int onStop(EyerPlayer::EventStopStatus status);
 
     virtual int onProgress(double playTime);
+
+    virtual int onLagStart(long long id);
+    virtual int onLagStop(long long id);
 
 public slots:
     void ClickOpen();

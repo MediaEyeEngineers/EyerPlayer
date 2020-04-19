@@ -8,7 +8,7 @@ fi
 git clone https://gitee.com/redknot/FFmpeg-QuQi-Analyzer
 
 cd ${basepath}/FFmpeg-QuQi-Analyzer
-./configure --enable-static --enable-shared --prefix=./ffmpeg_install --enable-videotoolbox
+./configure --enable-static --enable-shared --prefix=./ffmpeg_install
 
 make clean
 make -j4

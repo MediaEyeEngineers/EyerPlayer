@@ -42,6 +42,9 @@ namespace EyerPlayer {
         connect(playerViewPrivate->eventManager, SIGNAL(onStop(int, long long)),                    this, SLOT(onStop(int, long long)),                         Qt::AutoConnection);
         connect(playerViewPrivate->eventManager, SIGNAL(onUpdateUI(int, void *)),                   this, SLOT(onUpdateUI(int, void *)),                        Qt::AutoConnection);
         connect(playerViewPrivate->eventManager, SIGNAL(onProgress(double)),                        this, SLOT(onProgress(double)),                             Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onLagStart(long long )),                    this, SLOT(onLagStart(long long)),                          Qt::AutoConnection);
+        connect(playerViewPrivate->eventManager, SIGNAL(onLagStop(long long)),                      this, SLOT(onLagStop(long long)),                             Qt::AutoConnection);
+
 
         playerViewPrivate->eventManager->start();
         playerViewPrivate->audioPlayThread->Detach();
@@ -130,7 +133,8 @@ namespace EyerPlayer {
         playerViewPrivate->frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_PLAYER_VIDEO, &playerVideoFrameQueue);
         if(playerVideoFrameQueue == nullptr){
             return;
-        }
+        }void onLagStart(long long id);
+        void onLagStop(long long id);
 
         Eyer::EyerAVFrame * f = nullptr;
         playerVideoFrameQueue->FrontPop(&f);
@@ -162,7 +166,8 @@ namespace EyerPlayer {
             scale.SetScale(0.0, 0.0, 1.0);
         }
 
-        Eyer::EyerMat4x4 mvp = ortho * scale;
+        Eyer::EyerMat4x4 mvp = ortho * scale;void onLagStart(long long id);
+        void onLagStop(long long id);
 
         playerViewPrivate->videoRender->Viewport(width, height);
         playerViewPrivate->videoRender->SetFrame(f);
@@ -275,6 +280,12 @@ namespace EyerPlayer {
         return 0;
     }
 
+    int EyerPlayerView::SetLagCB(EyerPlayerLagCB * _lagCB)
+    {
+        lagCB = _lagCB;
+        return 0;
+    }
+
 
     void EyerPlayerView::onOpen(int status, long long requestId, MediaInfo * info)
     {
@@ -311,6 +322,20 @@ namespace EyerPlayer {
     {
         if(progressCB != nullptr){
             progressCB->onProgress(playTime);
+        }
+    }
+
+    void EyerPlayerView::onLagStart(long long id)
+    {
+        if(lagCB != nullptr){
+            lagCB->onLagStart(id);
+        }
+    }
+
+    void EyerPlayerView::onLagStop(long long id)
+    {
+        if(lagCB != nullptr){
+            lagCB->onLagStop(id);
         }
     }
 }

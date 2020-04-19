@@ -116,6 +116,13 @@ namespace EyerPlayer {
         virtual int onProgress(double playTime) = 0;
     };
 
+    class EYERPLAYERLIBSHARED_EXPORT EyerPlayerLagCB : public EyerPlayerCB
+    {
+    public:
+        virtual int onLagStart(long long id) = 0;
+        virtual int onLagStop(long long id) = 0;
+    };
+
     class EyerPlayerViewPrivate;
 
 
@@ -206,6 +213,15 @@ namespace EyerPlayer {
         int SetProgressCB(EyerPlayerProgressCB * progressCB);
 
         /**
+         * @brief 设置一个卡顿回调
+         * @details 设置一个卡顿回调
+         * @param lagCB 传入一个卡顿回调，来告诉你现在视频的卡顿情况。
+         * @return 执行成功与否
+         * @note 一个 Player 只能设置一个，重复调用会把之前设置的顶掉
+         */
+        int SetLagCB(EyerPlayerLagCB * lagCB);
+
+        /**
          * @brief Seek 到某个位置
          * @details Seek 到某个位置
          * @param time 传入要 seek 的时间
@@ -231,11 +247,15 @@ namespace EyerPlayer {
 
         EyerPlayerProgressCB * progressCB = nullptr;
 
+        EyerPlayerLagCB * lagCB = nullptr;
+
     private slots:
         void onOpen(int status, long long requestId, MediaInfo * info);
         void onStop(int status, long long requestId);
         void onUpdateUI(int streamId, void * frame);
         void onProgress(double playTime);
+        void onLagStart(long long id);
+        void onLagStop(long long id);
     };
 }
 

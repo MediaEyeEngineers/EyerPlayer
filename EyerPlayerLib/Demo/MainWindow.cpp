@@ -26,8 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // player->SetURL("C:/Users/redknot/Downloads/bbb_sunflower_2160p_60fps_normal.mp4");
 
     player->SetProgressCB(this);
+    player->SetLagCB(this);
 
-    // player->SetURL("/home/redknot/Videos/bbb_sunflower_2160p_60fps_normal.mp4");
+    player->SetURL("/home/redknot/Videos/bbb_sunflower_2160p_60fps_normal.mp4");
+    player->SetURL("/home/redknot/Downloads/gg6.mp4");
 
 
     ui->video_player_layout->addWidget(player);
@@ -135,6 +137,18 @@ int MainWindow::onProgress(double playTime)
         ui->video_progress_slider->setValue((int)(p * 1000));
     }
 
+    return 0;
+}
+
+int MainWindow::onLagStart(long long id)
+{
+    qDebug() << "UI onLagStart:" << id << endl;
+    return 0;
+}
+
+int MainWindow::onLagStop(long long id)
+{
+    qDebug() << "UI onLagStop:" << id << endl;
     return 0;
 }
 
