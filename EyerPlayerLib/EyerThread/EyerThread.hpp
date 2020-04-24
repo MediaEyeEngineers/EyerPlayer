@@ -17,11 +17,8 @@ namespace Eyer
 
         int Stop(int t = 1000);
 
-        int WaitForStop(int t = 1000);
-
         int IsRunning();
-        void Detach();
-        void Join();
+        int Start();
 
     protected:
         void SetRunning();
@@ -29,6 +26,9 @@ namespace Eyer
 
         std::atomic_int stopFlag {0};
         std::atomic_int isRun {0};
+
+    private:
+        std::thread * t = nullptr;
     };
 }
 

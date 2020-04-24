@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     player->SetURL("/home/redknot/Videos/bbb_sunflower_2160p_60fps_normal.mp4");
     player->SetURL("/home/redknot/Downloads/gg6.mp4");
 
+    player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
+
 
     ui->video_player_layout->addWidget(player);
 

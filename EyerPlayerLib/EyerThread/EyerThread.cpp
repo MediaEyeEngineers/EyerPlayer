@@ -12,30 +12,23 @@ namespace Eyer
 
     EyerThread::~EyerThread()
     {
-
+        Stop();
     }
 
-    int EyerThread::Stop(int t)
+    int EyerThread::Stop(int time)
     {
+        if(t == nullptr){
+            return -1;
+        }
+
         stopFlag = 1;
-        while(1){
-            if(!IsRunning()){
-                break;
-            }
-            EyerTime::EyerSleep(t);
+        if(t != nullptr){
+            t->join();
+            delete t;
+            t = nullptr;
         }
         stopFlag = 0;
-        return 0;
-    }
 
-    int EyerThread::WaitForStop(int t)
-    {
-        while(1){
-            if(!IsRunning()){
-                break;
-            }
-            EyerTime::EyerSleep(t);
-        }
         return 0;
     }
 
@@ -44,16 +37,17 @@ namespace Eyer
         return isRun;
     }
 
-    void EyerThread::Detach()
+    int EyerThread::Start()
     {
-        std::thread t(std::bind(&EyerThread::Run, this));
-        t.detach();
-    }
+        if(t != nullptr){
+            return -1;
+        }
 
-    void EyerThread::Join()
-    {
-        std::thread t(std::bind(&EyerThread::Run, this));
-        t.join();
+        SetRunning();
+        stopFlag = 0;
+        t = new std::thread(&EyerThread::Run, this);
+
+        return 0;
     }
 
     void EyerThread::SetRunning()

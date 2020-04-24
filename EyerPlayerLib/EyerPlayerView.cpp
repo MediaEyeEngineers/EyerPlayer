@@ -47,7 +47,7 @@ namespace EyerPlayer {
 
 
         playerViewPrivate->eventManager->start();
-        playerViewPrivate->audioPlayThread->Detach();
+        playerViewPrivate->audioPlayThread->Start();
     }
 
     EyerPlayerView::~EyerPlayerView()
