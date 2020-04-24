@@ -192,9 +192,23 @@ namespace Eyer
             yuv.y = texture(u, t).r - 0.5;
             yuv.z = texture(v, t).r - 0.5;
 
-            rgb = mat3( 1,       1,         1,
-                        0,       -0.39465,  2.03211,
-                        1.13983, -0.58060,  0) * yuv;
+            mat3 kBt709VideoRangeYUV2RGBMatrix = mat3(  1.164, 1.164, 1.164,
+                                                        0.0, -0.213, 2.112,
+                                                        1.793, -0.533, 0.0);
+
+            mat3 kBt709FullRangeYUV2RGBMatrix  = mat3(  1.164,  1.164,  1.164,
+                                                        0.0,   -0.213,  2.112,
+                                                        1.793, -0.533,  0.0);
+
+            mat3 kBt601VideoRangeYUV2RGBMatrix = mat3(  1.164, 1.164, 1.164,
+                                                        0.0, -0.392, 2.017,
+                                                        1.596, -0.813, 0.0);
+
+            mat3 kBt601FullRangeYUV2RGBMatrix = mat3(   1.0, 1.0, 1.0,
+                                                        0.0, -0.343, 1.765,
+                                                        1.4, -0.711, 0.0);
+
+            rgb = kBt601VideoRangeYUV2RGBMatrix * yuv;
 
             color = vec4(rgb, 1.0);
         }

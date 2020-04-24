@@ -27,7 +27,7 @@ namespace EyerPlayer {
     {
         if(playerCtr != nullptr){
             if(!playerCtr->IsRunning()){
-                playerCtr->Detach();
+                playerCtr->Start();
             }
         }
         return 0;
@@ -92,7 +92,7 @@ namespace EyerPlayer {
         // qDebug() << "OpenTime :" << openEndTime - openStartTime << endl;
 
         playerCtr = new PlayCtrThread(eventQueue, queueManager, recommendVideoIndex, recommendAudioIndex, seekTime);
-        playerCtr->Detach();
+        playerCtr->Start();
 
         mediaInfo.duration = reader.GetDuration();
 
@@ -127,13 +127,13 @@ namespace EyerPlayer {
 
             if(stream.streamIndex == recommendVideoIndex){
                 AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager, seekTime);
-                avdecoder->Detach();
+                avdecoder->Start();
 
                 decodeThreadList.push_back(avdecoder);
             }
             if(stream.streamIndex == recommendAudioIndex){
                 AVDecoderThread * avdecoder = new AVDecoderThread(stream, streamInfo, eventQueue, queueManager, seekTime);
-                avdecoder->Detach();
+                avdecoder->Start();
 
                 decodeThreadList.push_back(avdecoder);
             }

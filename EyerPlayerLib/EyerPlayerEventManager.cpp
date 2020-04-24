@@ -56,7 +56,7 @@ namespace EyerPlayer {
                     }
                     else{
                         readerThread = new AVReaderThread(openRequest->url, eventQueue, openRequest->GetRequestId(), queueManager, 0.0);
-                        readerThread->Detach();
+                        readerThread->Start();
                     }
                 }
 
@@ -113,7 +113,7 @@ namespace EyerPlayer {
                     }
 
                     readerThread = new AVReaderThread(url, eventQueue, -1, queueManager, seekRequest->time);
-                    readerThread->Detach();
+                    readerThread->Start();
                 }
 
                 if(event->GetType() == EventType::UPDATEUIRequest){
