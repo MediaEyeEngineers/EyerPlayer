@@ -22,22 +22,6 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
         init();
     }
 
-    public int Open(String url){
-        return 0;
-    }
-
-    public int Close(){
-        return 0;
-    }
-
-    public int Play(){
-        return 0;
-    }
-
-    public int Pause(){
-        return 0;
-    }
-
     private void init(){
         getHolder().addCallback(this);
     }
