@@ -2,6 +2,11 @@
 
 - EyerPlayer 是基于 Qt 和 FFmpeg 开发的一款视频播放器。
 
+
+<img src="logo@400x400.png" width="400px" />
+
+> logo设计与制作(著作权归属) : porschegt23@foxmail.com (Q:531365872)
+
 ## Build
 
 ### Mac
