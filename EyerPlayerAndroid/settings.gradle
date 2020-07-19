@@ -1,0 +1,3 @@
+rootProject.name='EyerPlayer'
+include ':app'
+include ':eyerplayer_lib'
