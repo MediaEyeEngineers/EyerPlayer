@@ -1,2 +1,0 @@
-/home/redknot/NDK/android-ndk-r21/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar qc libEyerGLShader.a  CMakeFiles/EyerGLShader.dir/Shader.cpp.o
-/home/redknot/NDK/android-ndk-r21/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ranlib libEyerGLShader.a

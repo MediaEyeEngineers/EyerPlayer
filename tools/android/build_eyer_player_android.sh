@@ -24,3 +24,5 @@ cmake ../ \
 
 make -j4
 make install
+
+cp ${basepath}/EyerPlayerCore/install/lib/libEyerPlayerJNI.so ${basepath}/EyerPlayerAndroid/eyerplayer_lib/src/main/jniLibs/armeabi-v7a/libEyerPlayerJNI.so

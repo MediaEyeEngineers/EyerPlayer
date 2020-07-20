@@ -20,10 +20,11 @@ add_library(
     EyerRand.cpp
     EyerTime.cpp
 
-)
+    EyerLRUMap.hpp
+    EyerLockQueue.hpp
 
-target_link_libraries (EyerCore pthread)
-target_link_libraries (EyerCore gtest)
+    EyerTime.hpp
+)
 
 set(head_files 
     EyerString.hpp
@@ -36,6 +37,8 @@ set(head_files
     EyerQueue.hpp
     EyerMap.hpp
     EyerMapEle.hpp
+    EyerLockQueue.hpp
+    EyerLRUMap.hpp
 )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerCore)

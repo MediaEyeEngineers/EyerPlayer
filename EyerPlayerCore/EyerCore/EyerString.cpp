@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <stdarg.h>
+
 namespace Eyer {
     EyerString::EyerString()
     {
