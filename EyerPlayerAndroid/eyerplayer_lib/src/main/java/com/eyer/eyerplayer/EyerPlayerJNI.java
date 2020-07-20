@@ -2,7 +2,7 @@ package com.eyer.eyerplayer;
 
 public class EyerPlayerJNI {
     static {
-
+        System.loadLibrary("EyerPlayerJNI");
     }
 
     public static native long       gl_context_init             ();

@@ -26,20 +26,28 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
         getHolder().addCallback(this);
     }
 
-
+    private EyerPlayerGLContext glContext = null;
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        if(glContext != null){
+            glContext.destory();
+            glContext = null;
+        }
 
+        glContext = new EyerPlayerGLContext();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        glContext.setWH(width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        if(glContext != null){
+            glContext.destory();
+            glContext = null;
+        }
     }
 }
