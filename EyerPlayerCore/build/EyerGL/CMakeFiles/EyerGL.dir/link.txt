@@ -1,2 +1,0 @@
-/home/redknot/NDK/android-ndk-r21/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar qc libEyerGL.a  CMakeFiles/EyerGL.dir/EyerGLShader.cpp.o CMakeFiles/EyerGL.dir/EyerGLProgram.cpp.o CMakeFiles/EyerGL.dir/EyerGLVAO.cpp.o CMakeFiles/EyerGL.dir/EyerGLDraw.cpp.o CMakeFiles/EyerGL.dir/EyerGLTexture.cpp.o CMakeFiles/EyerGL.dir/EyerGLFrameBuffer.cpp.o CMakeFiles/EyerGL.dir/EyerGLComponent.cpp.o
-/home/redknot/NDK/android-ndk-r21/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ranlib libEyerGL.a
