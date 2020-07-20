@@ -8,7 +8,7 @@ import com.eyer.eyerplayer.EyerPlayer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EyerPlayer player;
+    private EyerPlayer player = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
