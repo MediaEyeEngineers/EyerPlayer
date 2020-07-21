@@ -102,6 +102,10 @@ namespace Eyer
         glClearColor(1.0, 1.0, 0.0, 1.0);
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
+
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glFinish();
+            eglSwapBuffers(mEglDisplay, window);
             if(taskQueue.GetSize() > 0 || renderAndFreeTaskQueue.GetSize() > 0){
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
