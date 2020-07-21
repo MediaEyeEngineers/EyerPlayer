@@ -1,24 +1,9 @@
 include_directories (../)
 include_directories (./)
 
-include_directories (${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_include/include)
-include_directories (${CMAKE_SOURCE_DIR}/../../Lib/glfw_install/include)
-include_directories (../EyerGLAD/glad/include/)
-
 add_library(
-        EyerGL
-
-        GLHeader.h
-        EyerGL.hpp
-        EyerGLShader.cpp
-        EyerGLProgram.cpp
-        EyerGLVAO.cpp
-        EyerGLDraw.cpp
-        EyerGLTexture.cpp
-        EyerGLFrameBuffer.cpp
-        EyerGLComponent.cpp
-        EyerGLRenderTask.cpp
-        EyerGLRenderTaskQueue.cpp
+        EyerGLContext
+        EyerGLContextThread.cpp
         )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -34,12 +19,12 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-        EyerGL.hpp
+        EyerGLContext.hpp
         )
 
-INSTALL(FILES ${head_files} DESTINATION include/EyerGL)
+INSTALL(FILES ${head_files} DESTINATION include/EyerGLContext)
 INSTALL(
-        TARGETS EyerGL
+        TARGETS EyerGLContext
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

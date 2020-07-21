@@ -1,8 +1,4 @@
-#include "EyerAV.hpp"
-
-extern "C"{
-#include <libavformat/avformat.h>
-}
+#include "EyerAVAV.hpp"
 
 #include "EyerAVPacketPrivate.hpp"
 

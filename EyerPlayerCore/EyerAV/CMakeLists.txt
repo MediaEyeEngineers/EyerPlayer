@@ -10,6 +10,7 @@ add_library(
     EyerAVDecoder.cpp
     EyerAVStream.cpp
     EyerAVFrame.cpp
+    EyerAVFrameUtil.cpp
     EyerAVEncoder.cpp
     EyerAVWriter.cpp
 
@@ -31,96 +32,37 @@ add_library(
     EyerAVFrameQueue.hpp
     EyerAVQueue.cpp
     EyerAVQueue.hpp
-    EyerAVCropUtil.cpp
     EyerAVQueueManager.hpp
+    EyerAVTool.cpp
+
+    AVUtil/EyerWandResource.cpp
+    AVUtil/EyerWandVideoResource.cpp
+    AVUtil/EyerVideoDecoderLine.cpp
 )
-
-target_link_libraries (EyerAV pthread)
-target_link_libraries (EyerAV EyerCore)
-
-
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     MESSAGE(STATUS "current platform: Linux ")
-
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavformat.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavdevice.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavcodec.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavutil.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavfilter.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswresample.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswscale.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/x264_install/lib/libx264.a)
-
-    target_link_libraries (EyerAV dl)
-    target_link_libraries (EyerAV z)
-    target_link_libraries (EyerAV bz2)
-    target_link_libraries (EyerAV lzma)
-
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     MESSAGE(STATUS "current platform: Windows")
-
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavformat.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavdevice.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavcodec.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavutil.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavfilter.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswresample.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswscale.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/x264_install/lib/libx264.a)
-
-    target_link_libraries (EyerAV z)
-    target_link_libraries (EyerAV bz2)
-    target_link_libraries (EyerAV ws2_32)
-    target_link_libraries (EyerAV Secur32)
-    target_link_libraries (EyerAV lzma)
-    target_link_libraries (EyerAV iconv)
-
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Android")
     MESSAGE(STATUS "current platform: Android")
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     MESSAGE(STATUS "current platform: Darwin")
-
-    target_link_libraries (EyerAV bz2)
-    target_link_libraries (EyerAV z)
-    target_link_libraries (EyerAV lzma)
-    target_link_libraries (EyerAV iconv)
-
-    link_directories(${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib)
-    link_directories(/Users/lichi/EyerWand/Lib/ffmpeg_install/lib/)
-
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavformat.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavdevice.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavcodec.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavutil.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavfilter.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswresample.a)
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswscale.a)
-
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavformat.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavdevice.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavcodec.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavutil.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libavfilter.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswresample.dylib)
-    # target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/lib/libswscale.dylib)
-    
-    target_link_libraries (EyerAV ${CMAKE_SOURCE_DIR}/../../Lib/x264_install/lib/libx264.a)
-    
 ELSE ()
     MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
-
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
-set(head_files 
+set(head_files
     EyerAV.hpp
-        EyerAVPacketQueue.hpp
-        EyerAVFrameQueue.hpp
-        EyerAVQueue.hpp
-        EyerAVQueueManager.hpp
+    EyerAVAV.hpp
+    EyerAVPacketQueue.hpp
+    EyerAVFrameQueue.hpp
+    EyerAVQueue.hpp
+    EyerAVQueueManager.hpp
 )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerAV)
+INSTALL(FILES AVUtil/AVUtil.hpp DESTINATION include/EyerAV/AVUtil)
 INSTALL(
     TARGETS EyerAV
     RUNTIME DESTINATION bin        

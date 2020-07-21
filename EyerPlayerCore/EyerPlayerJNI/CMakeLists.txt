@@ -8,7 +8,19 @@ add_library(
 )
 
 target_link_libraries (EyerPlayerJNI
+
+    EyerGLContext
+    EyerGL
     EyerCore
+    EyerThread
+
+    log
+    z
+    android
+    OpenSLES
+    GLESv3
+    EGL
+    jnigraphics
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")

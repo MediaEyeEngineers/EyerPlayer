@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    gl_context_init
- * Signature: ()J
+ * Signature: (Landroid/view/Surface;)J
  */
 JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1init
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
