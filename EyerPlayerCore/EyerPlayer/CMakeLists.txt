@@ -2,11 +2,10 @@ include_directories (../)
 include_directories (./)
 
 add_library(
-    EyerEventQueue
-    EyerEventQueue.hpp
-    EyerEventQueue.cpp
-    EyerEvent.cpp
-)
+    EyerPlayer
+    EyerPlayer.cpp
+    EyerPlayerEventManager.cpp
+    )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     MESSAGE(STATUS "current platform: Linux")
@@ -21,12 +20,12 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-    EyerEventQueue.hpp
+    EyerPlayer.hpp
     )
 
-INSTALL(FILES ${head_files} DESTINATION include/EyerEventQueue)
+INSTALL(FILES ${head_files} DESTINATION include/EyerPlayer)
 INSTALL(
-    TARGETS EyerEventQueue
+    TARGETS EyerPlayer
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib

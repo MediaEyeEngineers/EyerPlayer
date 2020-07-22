@@ -18,4 +18,33 @@ public class MainActivity extends AppCompatActivity {
         player = new EyerPlayer();
         player.Open("");
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(player != null){
+            player.destory();
+            player = null;
+        }
+    }
 }

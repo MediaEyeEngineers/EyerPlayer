@@ -5,10 +5,12 @@ add_library(
     EyerPlayerJNI
     SHARED
     EyerPlayerGLContext.cpp
+    EyerPlayerJNI.cpp
 )
 
 target_link_libraries (EyerPlayerJNI
-
+    EyerPlayer
+    EyerEventQueue
     EyerGLContext
     EyerGL
     EyerCore

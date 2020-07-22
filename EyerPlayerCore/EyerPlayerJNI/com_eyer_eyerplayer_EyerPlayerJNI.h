@@ -31,6 +31,22 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1chang
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1uninit
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_init
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1init
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_uninit
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif
