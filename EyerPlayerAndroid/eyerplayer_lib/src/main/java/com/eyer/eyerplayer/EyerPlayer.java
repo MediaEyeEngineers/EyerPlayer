@@ -16,7 +16,7 @@ public class EyerPlayer {
     }
 
     public int Open(String url){
-        return 0;
+        return EyerPlayerJNI.player_open(nativeId, url);
     }
 
     public int Close(){

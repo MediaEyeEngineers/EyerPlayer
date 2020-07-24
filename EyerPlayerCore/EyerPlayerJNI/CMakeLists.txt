@@ -4,17 +4,22 @@ include_directories (./)
 add_library(
     EyerPlayerJNI
     SHARED
+    JniUtil.cpp
     EyerPlayerGLContext.cpp
     EyerPlayerJNI.cpp
 )
 
 target_link_libraries (EyerPlayerJNI
     EyerPlayer
+    EyerAV
     EyerEventQueue
     EyerGLContext
     EyerGL
     EyerCore
     EyerThread
+
+    avformat
+    avutil
 
     log
     z

@@ -99,7 +99,7 @@ namespace Eyer
 
         eglMakeCurrent(mEglDisplay, window, window, mEglContext);
 
-        glClearColor(1.0, 1.0, 0.0, 1.0);
+        glClearColor(1.0, 1.0, 1.0, 1.0);
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
 

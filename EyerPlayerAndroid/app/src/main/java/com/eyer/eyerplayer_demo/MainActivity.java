@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         player = new EyerPlayer();
-        player.Open("");
+        player.Open("/a/a/a.mp4");
     }
 
     @Override

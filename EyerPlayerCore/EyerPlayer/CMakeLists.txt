@@ -1,10 +1,13 @@
 include_directories (../)
 include_directories (./)
+include_directories (../EyerAV)
 
 add_library(
     EyerPlayer
     EyerPlayer.cpp
     EyerPlayerEventManager.cpp
+    EventTag.cpp
+    AVReaderThread.cpp
     )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")

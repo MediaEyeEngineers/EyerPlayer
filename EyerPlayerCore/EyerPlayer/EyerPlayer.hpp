@@ -4,7 +4,22 @@
 #include <string>
 #include "EyerGLContext/EyerGLContext.hpp"
 
-namespace Eyer {
+namespace EyerPlayer {
+
+    enum EventOpenStatus
+    {
+        OPEN_STATUS_SUCCESS,
+        OPEN_STATUS_FAIL,
+        OPEN_STATUS_BUSY
+    };
+
+    enum EventStopStatus
+    {
+        STOP_STATUS_SUCCESS,
+        STOP_STATUS_FAIL,
+        STOP_STATUS_NOT_OPEN
+    };
+
     class EyerPlayerPrivate;
 
     class EyerPlayer
@@ -13,12 +28,10 @@ namespace Eyer {
         EyerPlayer();
         ~EyerPlayer();
 
-        int BindGLContext(EyerGLContextThread * ctx);
+        int BindGLContext(Eyer::EyerGLContextThread * ctx);
         int UnBindGLContext();
 
-        int SetURL(std::string url);
-
-        int Open();
+        int Open(std::string url);
 
         int Play();
         int Pause();

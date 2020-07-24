@@ -1,12 +1,14 @@
 #include "EyerPlayer.hpp"
 
 #include "EyerPlayerPrivate.hpp"
+#include "PlayerEvent.hpp"
 
-namespace Eyer 
+namespace EyerPlayer 
 {
     EyerPlayer::EyerPlayer()
     {
         piml = new EyerPlayerPrivate();
+
         piml->eventManager = new EyerPlayerEventManager();
         piml->eventManager->Start();
     }
@@ -24,8 +26,20 @@ namespace Eyer
         }
     }
 
-    int EyerPlayer::SetURL(std::string url)
+    int EyerPlayer::Open(std::string url)
     {
+        piml->url = url;
+
+        long long requestId = piml->eventManager->GenId();
+
+        EventOpenRequest * event = new EventOpenRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->url = url.c_str();
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
+
         return 0;
     }
 
@@ -44,7 +58,7 @@ namespace Eyer
         return 0;
     }
 
-    int EyerPlayer::BindGLContext(EyerGLContextThread * ctx)
+    int EyerPlayer::BindGLContext(Eyer::EyerGLContextThread * ctx)
     {
         return 0;
     }

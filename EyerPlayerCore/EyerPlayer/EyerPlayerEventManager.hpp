@@ -3,10 +3,11 @@
 
 #include "EyerThread/EyerThread.hpp"
 #include "EyerEventQueue/EyerEventQueue.hpp"
+#include "EyerPlayerThread.hpp"
 
-namespace Eyer 
+namespace EyerPlayer 
 {
-    class EyerPlayerEventManager : public EyerThread 
+    class EyerPlayerEventManager : public Eyer::EyerThread 
     {
     public:
         EyerPlayerEventManager();
@@ -14,8 +15,13 @@ namespace Eyer
 
         virtual void Run();
 
+        int PushEvent(Eyer::EyerEvent * event);
+        long long GenId();
+
     private:
-        EyerEventQueue * eventQueue = nullptr;
+        Eyer::EyerEventQueue * eventQueue = nullptr;
+
+        AVReaderThread * readerThread = nullptr;
     };
 }
 
