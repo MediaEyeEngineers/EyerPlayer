@@ -3,6 +3,7 @@
 //
 
 #include "EyerAVPacketQueue.hpp"
+#include "EyerAVAV.hpp"
 
 namespace Eyer
 {

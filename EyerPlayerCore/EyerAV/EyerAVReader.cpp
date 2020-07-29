@@ -1,4 +1,4 @@
-#include "EyerAV.hpp"
+#include "EyerAVAV.hpp"
 
 extern "C"{
 #include <libavformat/avformat.h>
@@ -15,7 +15,7 @@ namespace Eyer
         piml = new EyerAVReaderPrivate();
         piml->path = _path;
 
-        av_register_all();
+        // av_register_all();
         avformat_network_init();
 
         piml->formatCtx = avformat_alloc_context();
@@ -167,6 +167,26 @@ namespace Eyer
         rational.num = piml->formatCtx->streams[streamIndex]->time_base.num;
         rational.den = piml->formatCtx->streams[streamIndex]->time_base.den;
 
+        return 0;
+    }
+
+
+    int EyerAVReader::PrintInfo()
+    {
+        EyerLog("=============================\n");
+
+        EyerLog("Url: %s\n", piml->path.str);
+
+        int streamCount = GetStreamCount();
+        EyerLog("Stream Count: %d\n", streamCount);
+
+        for(int index=0;index<streamCount;index++){
+            EyerLog("# Stream %d:\n", index);
+            double duration = piml->formatCtx->streams[index]->duration * 1.0 * piml->formatCtx->streams[index]->time_base.num / piml->formatCtx->streams[index]->time_base.den;
+            EyerLog("    Duration: %f s\n", duration);
+        }
+
+        EyerLog("=============================\n");
         return 0;
     }
 }

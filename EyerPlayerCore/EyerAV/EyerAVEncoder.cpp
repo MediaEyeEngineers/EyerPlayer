@@ -1,4 +1,4 @@
-#include "EyerAV.hpp"
+#include "EyerAVAV.hpp"
 
 #include "EyerAVStreamPrivate.hpp"
 #include "EyerAVDecoderPrivate.hpp"
@@ -10,7 +10,7 @@ namespace Eyer
 {
     EyerAVEncoder::EyerAVEncoder()
     {
-        av_register_all();
+        // av_register_all();
         avformat_network_init();
         piml = new EyerAVEncoderPrivate();
     }

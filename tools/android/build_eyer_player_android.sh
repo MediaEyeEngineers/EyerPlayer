@@ -22,7 +22,7 @@ cmake ../ \
 -DANDROID_ABI=armeabi-v7a \
 -DANDROID_NATIVE_API_LEVEL=21
 
-make -j4
+make
 make install
 
 cp ${basepath}/EyerPlayerCore/install/lib/libEyerPlayerJNI.so ${basepath}/EyerPlayerAndroid/eyerplayer_lib/src/main/jniLibs/armeabi-v7a/libEyerPlayerJNI.so

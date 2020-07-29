@@ -3,8 +3,8 @@ package com.eyer.eyerplayer;
 public class EyerPlayerGLContext {
     private long nativeId = 0;
 
-    public EyerPlayerGLContext(){
-        nativeId = EyerPlayerJNI.gl_context_init();
+    public EyerPlayerGLContext(android.view.Surface surface){
+        nativeId = EyerPlayerJNI.gl_context_init(surface);
     }
 
     public int setWH(int w, int h){
