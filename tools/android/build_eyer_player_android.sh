@@ -26,3 +26,6 @@ make
 make install
 
 cp ${basepath}/EyerPlayerCore/install/lib/libEyerPlayerJNI.so ${basepath}/EyerPlayerAndroid/eyerplayer_lib/src/main/jniLibs/armeabi-v7a/libEyerPlayerJNI.so
+
+cd ${basepath}/EyerPlayerAndroid/eyerplayer_lib/src/main/jniLibs/armeabi-v7a/
+ls -lh

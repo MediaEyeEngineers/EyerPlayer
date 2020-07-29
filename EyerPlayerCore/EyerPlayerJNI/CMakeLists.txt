@@ -1,6 +1,8 @@
 include_directories (../)
 include_directories (./)
 
+link_directories(${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/lib)
+
 add_library(
     EyerPlayerJNI
     SHARED
@@ -19,6 +21,8 @@ target_link_libraries (EyerPlayerJNI
     EyerThread
 
     avformat
+    avcodec
+    swresample
     avutil
 
     log

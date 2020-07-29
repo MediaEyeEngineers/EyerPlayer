@@ -46,7 +46,7 @@ namespace EyerPlayer
                     //TODO 返回错误
                 }
                 else{
-                    readerThread = new AVReaderThread(openRequest->url);
+                    readerThread = new AVReaderThread(openRequest->url, openRequest->GetRequestId(), eventQueue);
                     readerThread->Start();
                 }
             }

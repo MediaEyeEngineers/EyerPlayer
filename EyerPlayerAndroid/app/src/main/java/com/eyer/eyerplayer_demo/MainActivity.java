@@ -1,12 +1,24 @@
 package com.eyer.eyerplayer_demo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 
 import com.eyer.eyerplayer.EyerPlayer;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static String[] PERMISSIONS_STORAGE = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE" };
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     private EyerPlayer player = null;
 
@@ -15,8 +27,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        verifyStoragePermissions(this);
+
+
+
+        String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/time_clock_1min_720x1280_30fps.mp4";
+        Log.e("MainActivity", videoPath);
+
+        File videoFile = new File(videoPath);
+        if(videoFile.exists()){
+            Log.e("MainActivity", videoFile.canRead() + "");
+        }
+
         player = new EyerPlayer();
-        player.Open("/a/a/a.mp4");
+        player.Open(videoPath);
     }
 
     @Override
@@ -45,6 +69,17 @@ public class MainActivity extends AppCompatActivity {
         if(player != null){
             player.destory();
             player = null;
+        }
+    }
+
+    private static void verifyStoragePermissions(Activity activity) {
+        try {
+            int permission = ActivityCompat.checkSelfPermission(activity, PERMISSIONS_STORAGE[0]);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

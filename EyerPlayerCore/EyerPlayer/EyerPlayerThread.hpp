@@ -13,12 +13,14 @@ namespace EyerPlayer {
     class AVReaderThread : public Eyer::EyerThread
     {
     public:
-        AVReaderThread(Eyer::EyerString url);
+        AVReaderThread(Eyer::EyerString url, long long openEventId, Eyer::EyerEventQueue * eventQueue);
         ~AVReaderThread();
         virtual void Run();
 
     private:
         Eyer::EyerString url;
+        long long openEventId = -1;
+        Eyer::EyerEventQueue * eventQueue = nullptr;
     };
 }
 
