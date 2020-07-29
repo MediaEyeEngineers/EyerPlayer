@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    gl_context_init
- * Signature: ()J
+ * Signature: (Landroid/view/Surface;)J
  */
 JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1init
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
@@ -30,6 +30,30 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1chang
  */
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1uninit
   (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_init
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1init
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_uninit
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_open
+ * Signature: (JLjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
+  (JNIEnv *, jclass, jlong, jstring);
 
 #ifdef __cplusplus
 }

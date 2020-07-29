@@ -29,6 +29,8 @@ namespace Eyer
         }
         stopFlag = 0;
 
+        SetStoping();
+
         return 0;
     }
 

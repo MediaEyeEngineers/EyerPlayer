@@ -2,14 +2,14 @@
 
 namespace Eyer
 {
-    char * GL_SHADER::TEST_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEST_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         void main(){
             gl_Position = vec4(pos * 1.0, 1.0);
         }
     );
 
-    char * GL_SHADER::TEST_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEST_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
 
         void main()
@@ -20,8 +20,7 @@ namespace Eyer
 
 
 
-
-    char * GL_SHADER::YUV_VIDEO_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEST2_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -33,7 +32,32 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::YUV_VIDEO_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEST2_FRAGMENT_SHADER = (char *)SHADER(
+        out vec4 color;
+        in vec3 outCoor;
+
+        void main()
+        {
+            color = vec4(outCoor, 1.0);
+        }
+    );
+
+
+
+
+    char * EYER_GL_SHADER::YUV_VIDEO_VERTEX_SHADER = (char *)SHADER(
+        layout (location = 0) in vec3 pos;
+        layout (location = 1) in vec3 coor;
+
+        out vec3 outCoor;
+
+        void main(){
+            outCoor = coor;
+            gl_Position = vec4(pos * 1.0, 1.0);
+        }
+    );
+
+    char * EYER_GL_SHADER::YUV_VIDEO_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         in vec3 outCoor;
         uniform sampler2D numberTex;
@@ -45,7 +69,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::TEXT_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEXT_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -58,7 +82,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::TEXT_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::TEXT_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         in vec3 outCoor;
         uniform sampler2D charTex;
@@ -75,7 +99,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::POINT_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::POINT_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -88,7 +112,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::POINT_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::POINT_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         in vec3 outCoor;
         void main(){
@@ -97,7 +121,7 @@ namespace Eyer
     );
 
 
-    char * GL_SHADER::SINGLE_TEXTURE_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::SINGLE_TEXTURE_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -108,7 +132,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::SINGLE_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::SINGLE_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         uniform sampler2D imageTex;
         in vec3 outCoor;
@@ -120,7 +144,7 @@ namespace Eyer
     );
 
 
-    char * GL_SHADER::FRAME_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::FRAME_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -135,7 +159,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::FRAME_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::FRAME_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         uniform sampler2D y;
         uniform sampler2D u;
@@ -160,7 +184,7 @@ namespace Eyer
     );
 
 
-    char * GL_SHADER::YUV_2_TEXTURE_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::YUV_2_TEXTURE_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -173,7 +197,7 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::YUV_2_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::YUV_2_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
 
         out vec4 color;
 
@@ -181,9 +205,17 @@ namespace Eyer
         uniform sampler2D u;
         uniform sampler2D v;
 
+        uniform int colorRange;
+        uniform int reverseY;
+
         in vec3 outCoor;
         void main(){
             vec2 t = vec2(outCoor.x, outCoor.y);
+            if(reverseY == 0){
+            }
+            else{
+                t.y = 1.0 - t.y;
+            }
 
             vec3 yuv;
             vec3 rgb;
@@ -208,7 +240,13 @@ namespace Eyer
                                                         0.0, -0.343, 1.765,
                                                         1.4, -0.711, 0.0);
 
-            rgb = kBt601VideoRangeYUV2RGBMatrix * yuv;
+            if(colorRange == 1){
+                rgb = kBt601VideoRangeYUV2RGBMatrix * yuv;
+            }
+            if(colorRange == 2){
+                rgb = kBt601FullRangeYUV2RGBMatrix * yuv;
+            }
+
 
             color = vec4(rgb, 1.0);
         }
@@ -216,7 +254,7 @@ namespace Eyer
 
 
 
-    char * GL_SHADER::MVP_TEXTURE_VERTEX_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::MVP_TEXTURE_VERTEX_SHADER = (char *)SHADER(
         layout (location = 0) in vec3 pos;
         layout (location = 1) in vec3 coor;
 
@@ -230,13 +268,63 @@ namespace Eyer
         }
     );
 
-    char * GL_SHADER::MVP_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
+    char * EYER_GL_SHADER::MVP_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
         out vec4 color;
         uniform sampler2D imageTex;
         in vec3 outCoor;
         void main(){
             vec2 TexCoords = vec2(outCoor.x, 1.0 - outCoor.y);
             color = texture(imageTex, TexCoords);
+        }
+    );
+
+
+
+
+
+
+
+    char * EYER_GL_SHADER::JULIA_VERTEX_SHADER = (char *)SHADER(
+        layout (location = 0) in vec3 position;
+        layout (location = 1) in vec3 texCoord;
+
+        out vec3 TexCoord;
+
+        void main()
+        {
+            gl_Position = vec4(position, 1.0f);
+            TexCoord = texCoord;
+        }
+    );
+
+    char * EYER_GL_SHADER::JULIA_FRAGMENT_SHADER = (char *)SHADER(
+        in vec3 TexCoord;
+
+        out vec4 color;
+
+        uniform float iTime;
+        uniform float width;
+        uniform float height;
+
+        void main()
+        {
+            vec2 fragCoord = vec2(width * TexCoord.x,height * TexCoord.y);
+            vec2 iResolution = vec2(width,height);
+            vec2 z = 1.15*(-iResolution.xy + 2.0 * fragCoord.xy) / iResolution.y;
+
+            vec2 an = 0.51*cos( vec2(0.0,1.5708) + 0.1*iTime ) - 0.25*cos( vec2(0.0,1.5708) + 0.2*iTime );
+
+            float f = 1e20;
+
+            for( int i=0; i<128; i++ )
+            {
+                z = vec2( z.x*z.x-z.y*z.y, 2.0*z.x*z.y ) + an;
+                f = min( f, dot(z,z) );
+            }
+
+            f = 1.0+log(f)/16.0;
+
+            color = vec4(f,f*f,f*f*f,1.0);
         }
     );
 }

@@ -35,7 +35,7 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
             glContext = null;
         }
 
-        glContext = new EyerPlayerGLContext();
+        glContext = new EyerPlayerGLContext(holder.getSurface());
     }
 
     @Override
