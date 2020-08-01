@@ -39,6 +39,11 @@ namespace Eyer
         return 0;
     }
 
+    int EyerAVPacket::GetSize()
+    {
+        return piml->packet->size;
+    }
+
     int EyerAVPacket::GetStreamId()
     {
         return piml->packet->stream_index;

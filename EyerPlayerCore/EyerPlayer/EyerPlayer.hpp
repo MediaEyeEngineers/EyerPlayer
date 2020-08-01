@@ -8,9 +8,9 @@ namespace EyerPlayer {
 
     enum EventOpenStatus
     {
-        OPEN_STATUS_SUCCESS,
-        OPEN_STATUS_FAIL,
-        OPEN_STATUS_BUSY
+        OPEN_STATUS_SUCCESS = 1,
+        OPEN_STATUS_FAIL = 2,
+        OPEN_STATUS_BUSY = -1
     };
 
     enum EventStopStatus

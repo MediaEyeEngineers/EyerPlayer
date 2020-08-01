@@ -7,7 +7,12 @@ add_library(
     EyerPlayer.cpp
     EyerPlayerEventManager.cpp
     EventTag.cpp
+
     AVReaderThread.cpp
+    AVDecoderThread.cpp
+
+    MediaInfo.cpp
+    StreamInfo.cpp
     )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")

@@ -43,11 +43,38 @@ namespace EyerPlayer
                 EyerLog("Url: %s\n", openRequest->url.str);
                 
                 if(readerThread != nullptr){
-                    //TODO 返回错误
+                    EventOpenResponse * openResponseEvent = new EventOpenResponse();
+                    openResponseEvent->SetFrom(EventTag::EVENT_MANAGER);
+                    openResponseEvent->SetTo(EventTag::EVENT_MANAGER);
+                    openResponseEvent->SetRequestId(event->GetRequestId());
+                    openResponseEvent->status = EventOpenStatus::OPEN_STATUS_BUSY;
+                    eventQueue->Push(openResponseEvent);
                 }
                 else{
                     readerThread = new AVReaderThread(openRequest->url, openRequest->GetRequestId(), eventQueue);
                     readerThread->Start();
+                }
+            }
+
+
+
+
+            else if(event->GetType() == EventType::OPENResponse){
+                EventOpenResponse * openResponse = (EventOpenResponse *)event;
+                EyerLog("EventOpenResponse\n");
+                if(openResponse->status == EventOpenStatus::OPEN_STATUS_SUCCESS){
+                    EyerLog("EventOpenResponse OPEN_STATUS_SUCCESS\n");
+                    MediaInfo mediaInfo = openResponse->mediaInfo;
+                    mediaInfo.Print();
+                }
+                else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){
+                    EyerLog("EventOpenResponse OPEN_STATUS_FAIL\n");
+                }
+                else if(openResponse->status == EventOpenStatus::OPEN_STATUS_BUSY){
+                    EyerLog("EventOpenResponse OPEN_STATUS_BUSY\n");
+                }
+                else{
+                    EyerLog("EventOpenResponse UNKNOW\n");
                 }
             }
 
