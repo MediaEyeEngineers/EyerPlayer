@@ -46,7 +46,7 @@ namespace EyerPlayer {
                 if(videoFrame->timePts <= dTime){
                     // Play !!!
                     if(glCtx != nullptr){
-                        glCtx->AddTaskToRenderAndFreeQueue();
+                        // glCtx->AddTaskToRenderAndFreeQueue();
                     }
                     // EyerLog("Video Frame: %f\n", videoFrame->timePts);
                     if(videoFrame != nullptr){
