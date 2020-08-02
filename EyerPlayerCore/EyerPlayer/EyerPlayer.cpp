@@ -60,6 +60,15 @@ namespace EyerPlayer
 
     int EyerPlayer::BindGLContext(Eyer::EyerGLContextThread * ctx)
     {
+        long long requestId = piml->eventManager->GenId();
+
+        EventSetGLCtxRequest * event = new EventSetGLCtxRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
+
         return 0;
     }
 

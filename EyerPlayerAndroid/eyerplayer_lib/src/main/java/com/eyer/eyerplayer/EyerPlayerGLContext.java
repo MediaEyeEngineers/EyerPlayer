@@ -18,4 +18,8 @@ public class EyerPlayerGLContext {
         }
         return 0;
     }
+
+    public long getNativeId(){
+        return nativeId;
+    }
 }

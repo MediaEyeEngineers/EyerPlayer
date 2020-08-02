@@ -1,0 +1,8 @@
+#ifndef EYERPLAYERLIB_YUV_RENDER_TASK_H
+#define EYERPLAYERLIB_YUV_RENDER_TASK_H
+
+namespace EyerPlayer {
+    
+}
+
+#endif // EYERPLAYERLIB_YUV_RENDER_TASK_H

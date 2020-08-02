@@ -12,4 +12,7 @@ public class EyerPlayerJNI {
     public static native long       player_init                 ();
     public static native int        player_uninit               (long player);
     public static native int        player_open                 (long player, String url);
+
+    public static native int        player_set_gl_ctx           (long player, long gl_ctx);
+    public static native int        player_unset_gl_ctx         (long player);
 }

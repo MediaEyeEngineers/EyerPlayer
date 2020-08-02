@@ -38,6 +38,12 @@ namespace EyerPlayer {
         static const int LAGStopRequest                     = 110;
         static const int LAGStopResponse                    = 210;
 
+
+
+
+
+        static const int SetGLCtxRequest                    = 111;
+        static const int SetGLCtxResponse                   = 211;
     };
 }
 

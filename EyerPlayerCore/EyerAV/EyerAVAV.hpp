@@ -78,6 +78,8 @@ namespace Eyer
         int SetDTS(uint64_t dts);
 
         int SetStreamId(int id);
+
+        int GetSize();
     };
 
     enum EyerAVAudioDateType

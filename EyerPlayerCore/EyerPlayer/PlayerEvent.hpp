@@ -6,6 +6,7 @@
 #include "EventType.hpp"
 #include "EyerAV/EyerAV.hpp"
 #include "EyerPlayer.hpp"
+#include "MediaInfo.hpp"
 
 namespace EyerPlayer {
     class EventOpenRequest : public Eyer::EyerEvent
@@ -48,7 +49,7 @@ namespace EyerPlayer {
         }
 
         EventOpenStatus status = EventOpenStatus::OPEN_STATUS_SUCCESS;
-        /// MediaInfo mediaInfo;
+        MediaInfo mediaInfo;
     };
 
 
@@ -271,6 +272,61 @@ namespace EyerPlayer {
         virtual int GetType()
         {
             return EventType::LAGStopRequest;
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    class EventSetGLCtxRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventSetGLCtxRequest()
+        {
+
+        }
+
+        ~EventSetGLCtxRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SetGLCtxRequest;
+        }
+
+        Eyer::EyerGLContextThread * glCtx = nullptr;
+    };
+
+
+    class EventSetGLCtxResponse : public Eyer::EyerEvent
+    {
+    public:
+        EventSetGLCtxResponse()
+        {
+
+        }
+
+        ~EventSetGLCtxResponse()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SetGLCtxResponse;
         }
     };
 }

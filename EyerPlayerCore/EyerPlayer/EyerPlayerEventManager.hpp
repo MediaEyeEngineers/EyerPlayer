@@ -4,6 +4,7 @@
 #include "EyerThread/EyerThread.hpp"
 #include "EyerEventQueue/EyerEventQueue.hpp"
 #include "EyerPlayerThread.hpp"
+#include "EyerPlayerThreadManager.hpp"
 
 namespace EyerPlayer 
 {
@@ -20,8 +21,7 @@ namespace EyerPlayer
 
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
-
-        AVReaderThread * readerThread = nullptr;
+        EyerPlayerThreadManager * playerManager = nullptr;
     };
 }
 

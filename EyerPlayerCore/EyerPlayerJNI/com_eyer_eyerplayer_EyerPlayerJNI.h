@@ -55,6 +55,22 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
   (JNIEnv *, jclass, jlong, jstring);
 
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_set_gl_ctx
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1gl_1ctx
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_unset_gl_ctx
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1unset_1gl_1ctx
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

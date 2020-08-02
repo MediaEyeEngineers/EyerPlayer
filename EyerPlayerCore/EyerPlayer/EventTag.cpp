@@ -11,5 +11,6 @@ namespace EyerPlayer {
 
     const Eyer::EyerString EventTag::FRAME_QUEUE_PLAYER_VIDEO = "FRAME_QUEUE_PLAYER_VIDEO";
     const Eyer::EyerString EventTag::FRAME_QUEUE_PLAYER_AUDIO = "FRAME_QUEUE_PLAYER_AUDIO";
-    const Eyer::EyerString EventTag::FRAME_QUEUE_DECODER_VIDEO = "FRAME_QUEUE_DECODER_VIDEO_";
+    const Eyer::EyerString EventTag::FRAME_QUEUE_DECODER_VIDEO = "FRAME_QUEUE_DECODER_VIDEO";
+    const Eyer::EyerString EventTag::FRAME_QUEUE_DECODER_AUDIO = "FRAME_QUEUE_DECODER_AUDIO";
 }

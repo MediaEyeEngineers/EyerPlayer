@@ -23,6 +23,7 @@ target_link_libraries (EyerPlayerJNI
     avformat
     avcodec
     swresample
+    swscale
     avutil
 
     log
