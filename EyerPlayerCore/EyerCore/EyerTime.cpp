@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <thread>
 #include <chrono>
 
 namespace Eyer
@@ -43,6 +44,12 @@ namespace Eyer
 #else
         usleep(time);
 #endif // _MSC_VER
+        return 0;
+    }
+
+    int EyerTime::EyerSleepMilliseconds(int time)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         return 0;
     }
 }

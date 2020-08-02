@@ -1,8 +1,13 @@
 #include "EyerPlayerThread.hpp"
+#include "EventTag.hpp"
 
 namespace EyerPlayer {
-    AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream * stream)
+    AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream * stream, Eyer::EyerAVRational _timebase,Eyer::EyerAVStreamType _streamType, AVFrameQueueManager * _frameQueueManager)
     {
+        timebase = _timebase;
+        streamType = _streamType;
+        frameQueueManager = _frameQueueManager;
+
         int ret = decoder.Init(stream);
         if(ret){
             EyerLog("AVDecoderThread Init\n");
@@ -18,9 +23,23 @@ namespace EyerPlayer {
     {
         EyerLog("AVDecoder Thread Start\n");
 
+        AVFrameQueue * frameQueue = nullptr;
+        if(streamType == Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO){
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &frameQueue);
+        }
+        else if(streamType == Eyer::EyerAVStreamType::STREAM_TYPE_AUDIO){
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &frameQueue);
+        }
+
         int ret = 0;
         while(!stopFlag){
-            Eyer::EyerTime::EyerSleep(1000);
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+
+            if(frameQueue != nullptr){
+                if(frameQueue->Size() > 10){
+                    continue;
+                }
+            }
 
             Eyer::EyerAVPacket * pkt = nullptr;
             pktQueue.FrontPop(&pkt);
@@ -42,15 +61,18 @@ namespace EyerPlayer {
                     break;
                 }
 
-                // EyerLog("frame: %lld\n", frame->GetPTS());
-
-                if(frame != nullptr){
-                    delete frame;
-                    frame = nullptr;
+                if(frameQueue != nullptr){
+                    frameQueue->Push(frame);
+                }
+                else{
+                    if(frame != nullptr){
+                        delete frame;
+                        frame = nullptr;
+                    }
                 }
 
-                // double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
-                // frame->timePts = t;
+                double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
+                frame->timePts = t;
             }
 
             if(pkt != nullptr){
@@ -70,13 +92,17 @@ namespace EyerPlayer {
                 break;
             }
 
-            if(frame != nullptr){
-                delete frame;
-                frame = nullptr;
+            if(frameQueue != nullptr){
+                frameQueue->Push(frame);
             }
-
-            // double t = frame->GetPTS() * 1.0 * streamInfo.timeBaseNum / streamInfo.timeBaseDen;
-            // frame->timePts = t;
+            else{
+                if(frame != nullptr){
+                    delete frame;
+                    frame = nullptr;
+                }
+            }
+            double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
+            frame->timePts = t;
         }
 
         EyerLog("AVDecoder Thread Stop\n");
@@ -97,7 +123,7 @@ namespace EyerPlayer {
     int AVDecoderThread::GetPacketSize()
     {
         if(cacheSize < 0){
-            cacheSize < 0;
+            cacheSize = 0;
         }
         return cacheSize;
     }

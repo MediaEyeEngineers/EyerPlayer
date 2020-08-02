@@ -274,6 +274,61 @@ namespace EyerPlayer {
             return EventType::LAGStopRequest;
         }
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    class EventSetGLCtxRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventSetGLCtxRequest()
+        {
+
+        }
+
+        ~EventSetGLCtxRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SetGLCtxRequest;
+        }
+
+        Eyer::EyerGLContextThread * glCtx = nullptr;
+    };
+
+
+    class EventSetGLCtxResponse : public Eyer::EyerEvent
+    {
+    public:
+        EventSetGLCtxResponse()
+        {
+
+        }
+
+        ~EventSetGLCtxResponse()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SetGLCtxResponse;
+        }
+    };
 }
 
 #endif // EYERPLAYERLIB_PLAYER_EVENT_H

@@ -26,10 +26,11 @@ namespace EyerPlayer {
 
     int MediaInfo::Print()
     {
-        EyerLog("MediaInfo\n");
+        EyerLog("==========================MediaInfo==========================\n");
         EyerLog("Video Stream\n");
         EyerLog("Width: %d, Height: %d\n", videoStream.GetWidth(), videoStream.GetHeight());
         EyerLog("Audio Stream\n");
+        EyerLog("==========================MediaInfo==========================\n");
         return 0;
     }
 }

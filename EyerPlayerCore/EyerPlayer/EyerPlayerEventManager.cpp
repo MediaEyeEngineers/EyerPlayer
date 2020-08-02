@@ -9,14 +9,15 @@ namespace EyerPlayer
     EyerPlayerEventManager::EyerPlayerEventManager()
     {
         eventQueue = new Eyer::EyerEventQueue();
+
+        playerManager = new EyerPlayerThreadManager();
     }
 
     EyerPlayerEventManager::~EyerPlayerEventManager()
     {
-        if(readerThread != nullptr){
-            readerThread->Stop();
-            delete readerThread;
-            readerThread = nullptr;
+        if(playerManager != nullptr){
+            delete playerManager;
+            playerManager = nullptr;
         }
 
         if(eventQueue != nullptr){
@@ -28,6 +29,7 @@ namespace EyerPlayer
     void EyerPlayerEventManager::Run()
     {
         EyerLog("Event Manager Start\n");
+
         while(!stopFlag){
             Eyer::EyerTime::EyerSleep(1000);
 
@@ -41,21 +43,18 @@ namespace EyerPlayer
                 EventOpenRequest * openRequest = (EventOpenRequest *)event;
                 EyerLog("OPENRequest\n");
                 EyerLog("Url: %s\n", openRequest->url.str);
-                
-                if(readerThread != nullptr){
-                    EventOpenResponse * openResponseEvent = new EventOpenResponse();
-                    openResponseEvent->SetFrom(EventTag::EVENT_MANAGER);
-                    openResponseEvent->SetTo(EventTag::EVENT_MANAGER);
-                    openResponseEvent->SetRequestId(event->GetRequestId());
-                    openResponseEvent->status = EventOpenStatus::OPEN_STATUS_BUSY;
-                    eventQueue->Push(openResponseEvent);
-                }
-                else{
-                    readerThread = new AVReaderThread(openRequest->url, openRequest->GetRequestId(), eventQueue);
-                    readerThread->Start();
-                }
-            }
 
+                playerManager->Open(openRequest->url, openRequest->GetRequestId(), eventQueue);
+
+                /// TODO
+                playerManager->Play();
+            }
+            else if(event->GetType() == EventType::SetGLCtxRequest){
+                EyerLog("SetGLCtxRequest\n");
+                EventSetGLCtxRequest * glCtxEvent = (EventSetGLCtxRequest *)event;
+                playerManager->SetGLCtx(glCtxEvent->glCtx);
+            }
+ 
 
 
 
@@ -84,11 +83,6 @@ namespace EyerPlayer
         }
 
         // 结束之前回收所有的资源
-        if(readerThread != nullptr){
-            readerThread->Stop();
-            delete readerThread;
-            readerThread = nullptr;
-        }
         EyerLog("Event Manager End\n");
     };
 
