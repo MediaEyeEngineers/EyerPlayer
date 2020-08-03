@@ -1,5 +1,6 @@
 cd ../../
 
+
 basepath=$(cd `dirname $0`; pwd)
 echo ${basepath}
 
@@ -34,7 +35,7 @@ export TARGET=armv7a-linux-androideabi
 
 
 # Set this to your minSdkVersion.
-export API=21
+export API=18
 
 export CC=$TOOLCHAIN/bin/$TARGET$API-clang
 export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
@@ -46,6 +47,11 @@ export LD=$TOOLCHAIN/bin/arm-linux-androideabi-ld
 export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
 export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
 
+
+export COMMON_FF_CFG_FLAGS=
+. ${basepath}/tools/configs/module.sh
+
+echo $COMMON_FF_CFG_FLAGS
 
 
 :<<!
@@ -78,21 +84,12 @@ make -j4
 make install
 cd ../../
 !
+
+
 cd ${basepath}/Eyer3rdpart/ffmpeg-4.3/
 ./configure \
---disable-x86asm \
---enable-static \
---disable-shared \
---disable-ffmpeg \
---disable-ffplay \
---disable-ffprobe \
---disable-avdevice \
---disable-doc \
---disable-symver \
+$COMMON_FF_CFG_FLAGS \
 --prefix=./ffmpeg_install \
---enable-gpl \
---enable-pic \
---disable-neon \
 --enable-cross-compile \
 --target-os=android \
 --arch=arm \
@@ -113,3 +110,6 @@ fi
 mkdir Lib
 
 cp -r Eyer3rdpart/ffmpeg-4.3/ffmpeg_install Lib/ffmpeg_install
+
+cd ${basepath}/Lib/ffmpeg_install/lib
+ls -lh
