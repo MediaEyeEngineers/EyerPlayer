@@ -21,6 +21,8 @@ namespace EyerPlayer {
 
         AVReaderThread * readerThread = nullptr;
         PlayCtrThread * playerCtr = nullptr;
+
+        Eyer::EyerGLContextThread * glCtx = nullptr;
     };
 }
 

@@ -249,6 +249,8 @@ namespace Eyer
 
 
             color = vec4(rgb, 1.0);
+
+            // color = vec4(t, 1.0, 1.0);
         }
     );
 

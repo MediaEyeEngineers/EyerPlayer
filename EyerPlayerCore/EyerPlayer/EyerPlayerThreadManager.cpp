@@ -49,6 +49,11 @@ namespace EyerPlayer {
         }
 
         playerCtr = new PlayCtrThread(frameQueueManager);
+
+        if(playerCtr != nullptr){
+            playerCtr->SetGLCtx(glCtx);
+        }
+
         playerCtr->Start();
 
         return 0;
@@ -76,8 +81,9 @@ namespace EyerPlayer {
         return 0;
     }
 
-    int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * glCtx)
+    int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
+        glCtx = _glCtx;
         if(playerCtr != nullptr){
             playerCtr->SetGLCtx(glCtx);
         }

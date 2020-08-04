@@ -66,6 +66,7 @@ namespace EyerPlayer
         event->SetFrom(EventTag::PLAYER);
         event->SetTo(EventTag::EVENT_MANAGER);
         event->SetRequestId(requestId);
+        event->glCtx = ctx;
 
         piml->eventManager->PushEvent(event);
 

@@ -1,3 +1,4 @@
+#include "EyerGLRenderTask/YUVRenderTask.hpp"
 #include "EyerPlayerThread.hpp"
 #include "EventTag.hpp"
 
@@ -45,10 +46,18 @@ namespace EyerPlayer {
                 // 判断视频是否应该播放
                 if(videoFrame->timePts <= dTime){
                     // Play !!!
+                    // EyerLog("Play\n");
+
+                    EyerLog("Video Frame: %f\n", videoFrame->timePts);
+
                     if(glCtx != nullptr){
-                        // glCtx->AddTaskToRenderAndFreeQueue();
+                        // EyerLog("Render\n");
+                        YUVRenderTask * yuvRenderTask = new YUVRenderTask();
+                        yuvRenderTask->SetFrame(videoFrame);
+                        videoFrame = nullptr;
+                        glCtx->AddTaskToRenderAndFreeQueue(yuvRenderTask);
                     }
-                    // EyerLog("Video Frame: %f\n", videoFrame->timePts);
+
                     if(videoFrame != nullptr){
                         delete videoFrame;
                         videoFrame = nullptr;

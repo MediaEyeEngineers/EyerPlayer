@@ -15,10 +15,12 @@ target_link_libraries (EyerPlayerJNI
     EyerPlayer
     EyerAV
     EyerEventQueue
+    EyerGLRenderTask
     EyerGLContext
     EyerGL
     EyerCore
     EyerThread
+    EyerGLShader
 
     avformat
     avcodec
