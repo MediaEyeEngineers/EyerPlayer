@@ -19,7 +19,7 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-        EyerGLContext.hpp
+        EyerGLContext/EyerGLContext_.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerGLContext)

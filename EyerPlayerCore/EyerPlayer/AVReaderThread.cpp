@@ -25,12 +25,6 @@ namespace EyerPlayer {
             delete audioThread;
             audioThread = nullptr;
         }
-
-        if(frameQueueManager != nullptr){
-            frameQueueManager->ClearAndDelete();
-            delete frameQueueManager;
-            frameQueueManager = nullptr;
-        }
     }
 
     int AVReaderThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
@@ -121,7 +115,7 @@ namespace EyerPlayer {
                     delete packet;
                     packet = nullptr;
                 }
-                goto END;
+                break;
             }
 
             if(packet->GetStreamId() == videoStreamIndex){
@@ -134,6 +128,11 @@ namespace EyerPlayer {
                 delete packet;
             }
         }
+
+        while(!stopFlag) {
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        }
+
 
     END:
         //销毁两个线程

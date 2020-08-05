@@ -1,9 +1,10 @@
 include_directories (../)
 include_directories (./)
+include_directories (../EyerAV)
 
 add_library(
-        EyerGLContext
-        EyerGLContextThread.cpp
+        EyerGLRenderTask
+        YUVRenderTask.cpp
         )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -19,12 +20,12 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-        EyerGLContext.hpp
+        YUVRenderTask.hpp
         )
 
-INSTALL(FILES ${head_files} DESTINATION include/EyerGLContext)
+INSTALL(FILES ${head_files} DESTINATION include/EyerGLRenderTask)
 INSTALL(
-        TARGETS EyerGLContext
+        TARGETS EyerGLRenderTask
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

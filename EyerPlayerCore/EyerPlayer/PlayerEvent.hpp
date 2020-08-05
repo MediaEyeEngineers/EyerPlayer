@@ -329,6 +329,53 @@ namespace EyerPlayer {
             return EventType::SetGLCtxResponse;
         }
     };
+
+
+
+
+
+
+
+
+
+    class EventUnbindGLCtxRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventUnbindGLCtxRequest()
+        {
+
+        }
+
+        ~EventUnbindGLCtxRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::UnbindGLCtxRequest;
+        }
+    };
+
+
+    class EventUnbindGLCtxResponse : public Eyer::EyerEvent
+    {
+    public:
+        EventUnbindGLCtxResponse()
+        {
+
+        }
+
+        ~EventUnbindGLCtxResponse()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::UnbindGLCtxResponse;
+        }
+    };
 }
 
 #endif // EYERPLAYERLIB_PLAYER_EVENT_H

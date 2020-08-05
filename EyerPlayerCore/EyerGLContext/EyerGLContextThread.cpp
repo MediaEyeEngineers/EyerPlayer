@@ -2,60 +2,38 @@
 
 namespace Eyer
 {
-
-#ifdef EYER_PLATFORM_ANDROID
     EyerGLContextThread::EyerGLContextThread(ANativeWindow * _nativeWindow)
     {
         nativeWindow = _nativeWindow;
     }
-#else
-#endif
 
     EyerGLContextThread::~EyerGLContextThread()
     {
 
     }
 
-    int EyerGLContextThread::SetWH(int _w, int _h)
-    {
-        w = _w;
-        h = _h;
-        return 0;
-    }
-
-    int EyerGLContextThread::GetW()
-    {
-        return w;
-    }
-    
-    int EyerGLContextThread::GetH()
-    {
-        return h;
-    }
-
     void EyerGLContextThread::Run()
     {
         EyerLog("EyerGLContextThread Start\n");
 
-#ifdef EYER_PLATFORM_ANDROID
         EGLContext mEglContext;
         EGLConfig eglConfig;
         EGLSurface window;
         EGLDisplay mEglDisplay;
-        
+
         const EGLint attrib_config_list[] = {
-            EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES3_BIT,
-            EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
-            EGL_BLUE_SIZE,          8,
-            EGL_GREEN_SIZE,         8,
-            EGL_RED_SIZE,           8,
-            EGL_ALPHA_SIZE,         8,
-            EGL_NONE
+                EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES3_BIT,
+                EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
+                EGL_BLUE_SIZE,          8,
+                EGL_GREEN_SIZE,         8,
+                EGL_RED_SIZE,           8,
+                EGL_ALPHA_SIZE,         8,
+                EGL_NONE
         };
 
         const EGLint attrib_ctx_list[] = {
-            EGL_CONTEXT_CLIENT_VERSION, 3,
-            EGL_NONE
+                EGL_CONTEXT_CLIENT_VERSION, 3,
+                EGL_NONE
         };
 
         EGLint num_config;
@@ -101,71 +79,56 @@ namespace Eyer
 
         glClearColor(1.0, 1.0, 1.0, 1.0);
         while(!stopFlag){
-            Eyer::EyerTime::EyerSleep(1000);
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
 
-            // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            // glFinish();
-            // eglSwapBuffers(mEglDisplay, window);
-            if(taskQueue.GetSize() > 0 || renderAndFreeTaskQueue.GetSize() > 0){
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            int queueSize = taskQueue.Size();
+            while(queueSize > 0){
+                EyerGLRenderTask * renderTask = nullptr;
+                taskQueue.FrontPop(&renderTask);
+                if(renderTask != nullptr){
+                    renderTask->Init();
 
-                while(taskQueue.GetSize() > 0){
-                    taskQueue.PopAndRender(w, h);
-                }
-
-                // EyerLog("Queue Size: %d\n", renderAndFreeTaskQueue.GetSize());
-
-                while(renderAndFreeTaskQueue.GetSize() > 0){
-                    // EyerLog("Queue Size: %d\n", renderAndFreeTaskQueue.GetSize());
-                    renderAndFreeTaskQueue.PopAndRenderAndFree(w, h);
-
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    renderTask->Render();
                     glFinish();
                     eglSwapBuffers(mEglDisplay, window);
+
+                    renderTask->Destory();
+
+                    delete renderTask;
                 }
-                
-                // glFinish();
-                // eglSwapBuffers(mEglDisplay, window);
+                queueSize = taskQueue.Size();
             }
         }
 
-        while(destoryTaskQueue.Size() > 0){
-            EyerGLRenderTask * task = nullptr;
-            destoryTaskQueue.FrontPop(&task);
-            if(task != nullptr){
-                task->Destory();
-            }
-        }
 
         eglDestroySurface(mEglDisplay, window);
         eglDestroyContext(mEglDisplay, mEglContext);
         eglTerminate(mEglDisplay);
 
-        SetStoping();
-
-#else
-#endif
         EyerLog("EyerGLContextThread End\n");
     }
 
-    int EyerGLContextThread::AddTaskToRenderQueue(EyerGLRenderTask * task)
+    int EyerGLContextThread::SetWH(int _w, int _h)
     {
-        taskQueue.PushRendTask(task);
+        w = _w;
+        h = _h;
         return 0;
     }
 
-    int EyerGLContextThread::AddTaskToRenderAndFreeQueue(EyerGLRenderTask * task)
+    int EyerGLContextThread::AddRenderTask(EyerGLRenderTask * task)
     {
-        // EyerLog("Queue Size: %d\n", renderAndFreeTaskQueue.GetSize());
-        while(renderAndFreeTaskQueue.GetSize() > 2){
-            renderAndFreeTaskQueue.PopAndFree();
-        }
-        renderAndFreeTaskQueue.PushRendTask(task);
+        taskQueue.Push(task);
         return 0;
     }
 
-    int EyerGLContextThread::AddTaskToDestoryQueue(EyerGLRenderTask * task)
+    int EyerGLContextThread::GetW()
     {
-        destoryTaskQueue.Push(task);
-        return 0;
+        return w;
+    }
+
+    int EyerGLContextThread::GetH()
+    {
+        return h;
     }
 }

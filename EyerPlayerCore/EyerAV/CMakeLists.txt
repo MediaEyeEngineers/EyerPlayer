@@ -38,7 +38,7 @@ add_library(
     AVUtil/EyerWandResource.cpp
     AVUtil/EyerWandVideoResource.cpp
     AVUtil/EyerVideoDecoderLine.cpp
-)
+        ../EyerPlayerMain/Main.cpp)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     MESSAGE(STATUS "current platform: Linux ")

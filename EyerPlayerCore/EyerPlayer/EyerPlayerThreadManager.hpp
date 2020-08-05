@@ -15,12 +15,16 @@ namespace EyerPlayer {
         int Stop();
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
+        int UnbindGLCtx();
 
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
 
         AVReaderThread * readerThread = nullptr;
-        PlayCtrThread * playerCtr = nullptr;
+        AVPlayCtrThread * playerCtr = nullptr;
+
+        std::mutex glCtxMut;
+        Eyer::EyerGLContextThread * glCtx = nullptr;
     };
 }
 
