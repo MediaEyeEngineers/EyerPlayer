@@ -47,13 +47,6 @@ namespace EyerPlayer
                 playerManager->Open(openRequest->url, openRequest->GetRequestId(), eventQueue);
                 playerManager->Play();
             }
-            else if(event->GetType() == EventType::SetGLCtxRequest){
-                EyerLog("SetGLCtxRequest\n");
-                EventSetGLCtxRequest * glCtxEvent = (EventSetGLCtxRequest *)event;
-                EyerLog("SetGLCtxRequest Width: %d\n", glCtxEvent->glCtx->GetW());
-                playerManager->SetGLCtx(glCtxEvent->glCtx);
-            }
- 
 
 
 
@@ -93,5 +86,16 @@ namespace EyerPlayer
     long long EyerPlayerEventManager::GenId()
     {
         return eventQueue->GetEventId();
+    }
+
+
+
+    int EyerPlayerEventManager::SetGLCtx(Eyer::EyerGLContextThread * glCtx)
+    {
+        return playerManager->SetGLCtx(glCtx);
+    }
+    int EyerPlayerEventManager::UnbindGLCtx()
+    {
+        return playerManager->UnbindGLCtx();
     }
 }

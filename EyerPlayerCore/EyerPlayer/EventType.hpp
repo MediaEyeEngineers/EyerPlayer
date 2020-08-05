@@ -44,6 +44,9 @@ namespace EyerPlayer {
 
         static const int SetGLCtxRequest                    = 111;
         static const int SetGLCtxResponse                   = 211;
+
+        static const int UnbindGLCtxRequest                    = 112;
+        static const int UnbindGLCtxResponse                   = 212;
     };
 }
 

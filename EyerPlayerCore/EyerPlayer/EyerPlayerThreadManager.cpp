@@ -10,6 +10,8 @@ namespace EyerPlayer {
 
     EyerPlayerThreadManager::~EyerPlayerThreadManager()
     {
+        Stop();
+
         if(frameQueueManager != nullptr){
             frameQueueManager->ClearAndDelete();
             delete frameQueueManager;
@@ -48,10 +50,12 @@ namespace EyerPlayer {
             playerCtr = nullptr;
         }
 
-        playerCtr = new PlayCtrThread(frameQueueManager);
+        playerCtr = new AVPlayCtrThread(frameQueueManager);
 
         if(playerCtr != nullptr){
+            glCtxMut.lock();
             playerCtr->SetGLCtx(glCtx);
+            glCtxMut.unlock();
         }
 
         playerCtr->Start();
@@ -83,10 +87,25 @@ namespace EyerPlayer {
 
     int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
+        glCtxMut.lock();
         glCtx = _glCtx;
         if(playerCtr != nullptr){
             playerCtr->SetGLCtx(glCtx);
         }
+        glCtxMut.unlock();
+
+        return 0;
+    }
+
+    int EyerPlayerThreadManager::UnbindGLCtx()
+    {
+        glCtxMut.lock();
+        glCtx = nullptr;
+        if(playerCtr != nullptr){
+            playerCtr->SetGLCtx(glCtx);
+        }
+        glCtxMut.unlock();
+
         return 0;
     }
 }

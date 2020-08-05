@@ -3,16 +3,16 @@
 #include "EventTag.hpp"
 
 namespace EyerPlayer {
-    PlayCtrThread::PlayCtrThread(AVFrameQueueManager * _frameQueueManager)
+    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager)
     {
         frameQueueManager = _frameQueueManager;
     }
 
-    PlayCtrThread::~PlayCtrThread()
+    AVPlayCtrThread::~AVPlayCtrThread()
     {
     }
 
-    void PlayCtrThread::Run()
+    void AVPlayCtrThread::Run()
     {
         EyerLog("PlayCtr Thread Start\n");
 
@@ -29,12 +29,13 @@ namespace EyerPlayer {
         Eyer::EyerAVFrame * audioFrame = nullptr;
 
         while(!stopFlag){
+
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             long long nowTime = Eyer::EyerTime::GetTime();
 
             double dTime = (nowTime - startTime) / 1000.0;
-            
+
 
 
             if(videoFrame == nullptr){
@@ -47,16 +48,16 @@ namespace EyerPlayer {
                 if(videoFrame->timePts <= dTime){
                     // Play !!!
                     // EyerLog("Play\n");
-
-                    EyerLog("Video Frame: %f\n", videoFrame->timePts);
-
+                    // EyerLog("Video Frame: %f\n", videoFrame->timePts);
+                    mut.lock();
                     if(glCtx != nullptr){
                         // EyerLog("Render\n");
                         YUVRenderTask * yuvRenderTask = new YUVRenderTask();
                         yuvRenderTask->SetFrame(videoFrame);
+                        glCtx->AddRenderTask(yuvRenderTask);
                         videoFrame = nullptr;
-                        glCtx->AddTaskToRenderAndFreeQueue(yuvRenderTask);
                     }
+                    mut.unlock();
 
                     if(videoFrame != nullptr){
                         delete videoFrame;
@@ -64,8 +65,8 @@ namespace EyerPlayer {
                     }
                 }
             }
-            
-            
+
+
 
             
             if(audioFrame == nullptr){
@@ -84,15 +85,15 @@ namespace EyerPlayer {
                     }
                 }
             }
-
-            // Eyer::EyerTime::EyerSleepMilliseconds(1000);
         }
         EyerLog("PlayCtr Thread End\n");
     }
 
-    int PlayCtrThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
+    int AVPlayCtrThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
+        mut.lock();
         glCtx = _glCtx;
+        mut.unlock();
         return 0;
     }
 }

@@ -19,6 +19,9 @@ namespace EyerPlayer
         int PushEvent(Eyer::EyerEvent * event);
         long long GenId();
 
+        int SetGLCtx(Eyer::EyerGLContextThread * _glCtx);
+        int UnbindGLCtx();
+
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         EyerPlayerThreadManager * playerManager = nullptr;

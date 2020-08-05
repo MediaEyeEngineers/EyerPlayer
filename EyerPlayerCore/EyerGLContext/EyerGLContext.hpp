@@ -9,40 +9,27 @@
 
 namespace Eyer
 {
-    class EyerGLContextThread : public EyerThread
-    {
+    class EyerGLContextThread : public EyerThread {
     public:
-#ifdef EYER_PLATFORM_ANDROID
         EyerGLContextThread(ANativeWindow * nativeWindow);
-#else
-#endif
-
         ~EyerGLContextThread();
         virtual void Run();
 
         int SetWH(int w, int h);
 
-        int AddTaskToRenderQueue(EyerGLRenderTask * task);
-        int AddTaskToRenderAndFreeQueue(EyerGLRenderTask * task);
-        
-        int AddTaskToDestoryQueue(EyerGLRenderTask * task);
+        int AddRenderTask(EyerGLRenderTask * task);
 
         int GetW();
         int GetH();
-    private:
 
-#ifdef EYER_PLATFORM_ANDROID
+    private:
         ANativeWindow * nativeWindow = nullptr;
-#else
-#endif
 
         int w = 0;
         int h = 0;
 
-        EyerGLRenderTaskQueue taskQueue;
-        EyerGLRenderTaskQueue renderAndFreeTaskQueue;
-        EyerLockQueue<EyerGLRenderTask> destoryTaskQueue;
+        EyerLockQueue<EyerGLRenderTask> taskQueue;
     };
 }
 
-#endif
+#endif //EYER_LIB_GL_CONTEXT_THREAD_AV_H

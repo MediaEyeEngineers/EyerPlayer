@@ -62,11 +62,11 @@ namespace EyerPlayer {
         Eyer::EyerAVRational timebase;
     };
 
-    class PlayCtrThread : public Eyer::EyerThread
+    class AVPlayCtrThread : public Eyer::EyerThread
     {
     public:
-        PlayCtrThread(AVFrameQueueManager * frameQueueManager);
-        ~PlayCtrThread();
+        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager);
+        ~AVPlayCtrThread();
 
         virtual void Run();
 
@@ -74,6 +74,8 @@ namespace EyerPlayer {
 
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
+
+        std::mutex mut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
     };
 }
