@@ -146,11 +146,13 @@ namespace Eyer
 
         double duration = piml->formatCtx->streams[index]->duration * 1.0 * piml->formatCtx->streams[index]->time_base.num / piml->formatCtx->streams[index]->time_base.den;
         stream.SetDuration(duration);
-
         stream.streamIndex = piml->formatCtx->streams[index]->index;
         stream.piml->type = EyerAVStreamType::STREAM_TYPE_UNKNOW;
-
         avcodec_parameters_copy(stream.piml->codecpar, piml->formatCtx->streams[index]->codecpar);
+
+        EyerAVRational timebase;
+        GetStreamTimeBase(timebase, index);
+        stream.timebase = timebase;
 
         return 0;
     }

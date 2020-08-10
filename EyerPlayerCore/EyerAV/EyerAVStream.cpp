@@ -22,6 +22,22 @@ namespace Eyer
         }
     }
 
+    EyerAVStream::EyerAVStream(const EyerAVStream & stream) : EyerAVStream()
+    {
+        *this = stream;
+    }
+
+    const EyerAVStream & EyerAVStream::operator = (const EyerAVStream & stream)
+    {
+        avcodec_parameters_copy(piml->codecpar, stream.piml->codecpar);
+        piml->type = stream.piml->type;
+        streamIndex = stream.streamIndex;
+        duration = stream.duration;
+        timebase = stream.timebase;
+
+        return *this;
+    }
+
     EyerAVStreamType EyerAVStream::GetStreamType()
     {
         if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){

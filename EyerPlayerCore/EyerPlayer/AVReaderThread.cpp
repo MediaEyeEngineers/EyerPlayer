@@ -72,7 +72,7 @@ namespace EyerPlayer {
             mediaInfo.videoStream.SetWH(videoStream.GetWidth(), videoStream.GetHeight());
 
             // 创建视频解码线程
-            videoThread = new AVDecoderThread(&videoStream, timebase, Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO, frameQueueManager);
+            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager);
             videoThread->Start();
         }
         // 获取音频流编号
@@ -85,7 +85,7 @@ namespace EyerPlayer {
             reader.GetStreamTimeBase(timebase, audioStreamIndex);
 
             // 创建音频解码线程
-            audioThread = new AVDecoderThread(&audioStream, timebase, Eyer::EyerAVStreamType::STREAM_TYPE_AUDIO, frameQueueManager);
+            audioThread = new AVDecoderThreadSoftware(audioStream, frameQueueManager);
             audioThread->Start();
         }
 
@@ -115,6 +115,12 @@ namespace EyerPlayer {
                     delete packet;
                     packet = nullptr;
                 }
+
+                // 发送一个空的 packet 出去
+                packet = new Eyer::EyerAVPacket();
+                packet->SetLast();
+                videoThread->SendPacket(packet);
+
                 break;
             }
 

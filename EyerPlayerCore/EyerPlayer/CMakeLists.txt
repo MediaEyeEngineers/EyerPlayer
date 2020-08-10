@@ -11,6 +11,8 @@ add_library(
     AVReaderThread.cpp
     AVDecoderThread.cpp
     AVPlayCtrThread.cpp
+        AVDecoderThreadSoftware.cpp
+        AVDecoderThreadMediaCodec.cpp
 
     MediaInfo.cpp
     StreamInfo.cpp

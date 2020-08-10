@@ -306,4 +306,15 @@ namespace Eyer {
     {
         return 0;
     }
+
+    int EyerAVFrame::SetLast()
+    {
+        piml->isLastPacket = 1;
+        return 0;
+    }
+
+    int EyerAVFrame::IsLast()
+    {
+        return piml->isLastPacket;
+    }
 }

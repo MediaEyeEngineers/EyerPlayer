@@ -46,12 +46,8 @@ namespace EyerPlayer {
             if(videoFrame != nullptr){
                 // 判断视频是否应该播放
                 if(videoFrame->timePts <= dTime){
-                    // Play !!!
-                    // EyerLog("Play\n");
-                    // EyerLog("Video Frame: %f\n", videoFrame->timePts);
                     mut.lock();
                     if(glCtx != nullptr){
-                        // EyerLog("Render\n");
                         YUVRenderTask * yuvRenderTask = new YUVRenderTask();
                         yuvRenderTask->SetFrame(videoFrame);
                         glCtx->AddRenderTask(yuvRenderTask);

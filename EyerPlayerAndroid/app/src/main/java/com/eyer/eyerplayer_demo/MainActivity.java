@@ -13,6 +13,7 @@ import android.util.Log;
 import com.eyer.eyerplayer.EyerPlayer;
 import com.eyer.eyerplayer.EyerPlayerView;
 import com.eyer.eyerplayer.EyerPlayerViewListener;
+import com.eyer.eyerplayer.codec.EyerMediaCodec;
 
 import java.io.File;
 
