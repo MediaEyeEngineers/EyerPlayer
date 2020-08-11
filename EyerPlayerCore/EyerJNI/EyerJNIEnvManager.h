@@ -7,6 +7,7 @@ namespace Eyer{
     class EyerJNIEnvManager {
     public:
         static JavaVM * jvm;
+        static jobject eyerMediaCodec_ClassLoader;
     };
 }
 

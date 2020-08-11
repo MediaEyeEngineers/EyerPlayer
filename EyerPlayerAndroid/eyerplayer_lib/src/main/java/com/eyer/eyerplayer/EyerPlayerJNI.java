@@ -1,7 +1,10 @@
 package com.eyer.eyerplayer;
 
+import com.eyer.eyerplayer.codec.EyerMediaCodec;
+
 public class EyerPlayerJNI {
     static {
+        EyerMediaCodec a = new EyerMediaCodec();
         System.loadLibrary("EyerPlayerJNI");
     }
 
