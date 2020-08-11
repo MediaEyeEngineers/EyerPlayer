@@ -1,7 +1,8 @@
 #ifndef	EYER_LIB_AV_H
 #define	EYER_LIB_AV_H
 
-#include "EyerAV.hpp"
+#include "EyerAVAV.hpp"
 #include "AVUtil/AVUtil.hpp"
+#include "EyerAVBitstreamFilter.hpp"
 
 #endif

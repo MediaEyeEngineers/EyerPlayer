@@ -6,25 +6,9 @@ import android.util.Log;
 import android.view.Surface;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class EyerMediaCodec {
-
-    /*
-    public int init(int width, int height, Surface surface){
-        MediaCodec mediaCodec = null;
-        try {
-            mediaCodec = MediaCodec.createDecoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MediaFormat mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height);
-        mediaCodec.configure(mediaFormat, surface, null, 0);
-        mediaCodec.start();
-
-        return 0;
-    }
-    */
 
     private MediaCodec mediaCodec = null;
 
@@ -51,6 +35,16 @@ public class EyerMediaCodec {
 
         mediaCodec.stop();
         mediaCodec.release();
+
+        return 0;
+    }
+
+    public int input(){
+        int inputBufIndex = mediaCodec.dequeueInputBuffer(10000);
+        if (inputBufIndex >= 0) {
+            ByteBuffer inputBuf = mediaCodec.getInputBuffers()[inputBufIndex];
+            mediaCodec.queueInputBuffer(inputBufIndex, 0, chunkSize, mMediaExtractor.getSampleTime(), 0);
+        }
 
         return 0;
     }

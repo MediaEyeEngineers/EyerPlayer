@@ -69,6 +69,9 @@ namespace EyerPlayer {
 
         Eyer::EyerAVRational timebase = stream.timebase;
 
+
+        Eyer::EyerAVBitstreamFilter bitstreamFilter;
+
         // 解码
         while (!stopFlag) {
             if (frameQueue != nullptr) {
@@ -94,11 +97,14 @@ namespace EyerPlayer {
 
             cacheSize -= pkt->GetSize();
 
-            /*
-            AVBitStreamFilterContext * bsfc = av_bitstream_filter_init("h264_mp4toannexb");
-            av_bitstream_filter_filter(bsfc, pCodecCtx, NULL, &dummy, &dummy_len, NULL, 0, 0);
-            */
+            unsigned char * dstData = nullptr;
+            int dstLen = 0;
+            bitstreamFilter.Filter(stream, pkt, &dstData, &dstLen);
 
+            if(dstData != nullptr){
+                free(dstData);
+                dstData = nullptr;
+            }
 
             if (pkt != nullptr) {
                 delete pkt;

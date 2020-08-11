@@ -144,15 +144,20 @@ namespace Eyer
             return -1;
         }
 
+
         double duration = piml->formatCtx->streams[index]->duration * 1.0 * piml->formatCtx->streams[index]->time_base.num / piml->formatCtx->streams[index]->time_base.den;
         stream.SetDuration(duration);
         stream.streamIndex = piml->formatCtx->streams[index]->index;
         stream.piml->type = EyerAVStreamType::STREAM_TYPE_UNKNOW;
+
         avcodec_parameters_copy(stream.piml->codecpar, piml->formatCtx->streams[index]->codecpar);
+        avcodec_copy_context(stream.piml->codec, piml->formatCtx->streams[index]->codec);
 
         EyerAVRational timebase;
         GetStreamTimeBase(timebase, index);
         stream.timebase = timebase;
+
+
 
         return 0;
     }

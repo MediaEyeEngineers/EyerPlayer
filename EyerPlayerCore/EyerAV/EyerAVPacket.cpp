@@ -1,9 +1,5 @@
 #include "EyerAVAV.hpp"
 
-extern "C"{
-#include <libavformat/avformat.h>
-}
-
 #include "EyerAVPacketPrivate.hpp"
 
 namespace Eyer

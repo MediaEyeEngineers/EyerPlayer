@@ -1,5 +1,6 @@
 include_directories (../)
 include_directories (./)
+include_directories (../EyerAV)
 
 include_directories (${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/include)
 
@@ -38,10 +39,13 @@ add_library(
     AVUtil/EyerWandResource.cpp
     AVUtil/EyerWandVideoResource.cpp
     AVUtil/EyerVideoDecoderLine.cpp
-)
+        EyerAVBitstreamFilter.cpp
+        EyerAVBitstreamFilter.hpp
+        EyerAVBitstreamFilterPrivate.hpp)
 
 target_link_libraries (EyerAV EyerCore)
 
+include_directories (${CMAKE_SOURCE_DIR}/../../Lib/ffmpeg_install/include)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     MESSAGE(STATUS "current platform: Linux ")
