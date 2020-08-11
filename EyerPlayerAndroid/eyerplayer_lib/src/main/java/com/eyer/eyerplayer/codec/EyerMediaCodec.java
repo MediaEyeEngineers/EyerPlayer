@@ -7,16 +7,14 @@ import android.view.Surface;
 import java.io.IOException;
 
 public class EyerMediaCodec {
-    public int init(Surface surface){
+
+    public int init(int width, int height, Surface surface){
         MediaCodec mediaCodec = null;
         try {
             mediaCodec = MediaCodec.createDecoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        int width = 1080;
-        int height = 1920;
 
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height);
         mediaCodec.configure(mediaFormat, surface, null, 0);

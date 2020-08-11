@@ -27,7 +27,11 @@ namespace EyerPlayer {
         }
 
         jclass eyerMediaCodec = env->FindClass("com/eyer/eyerplayer/codec/EyerMediaCodec");
-        
+
+        // int ret = env->CallIntMethodV();
+
+        // MediaFormat mediaFormat = MediaFormat.createVideoFormat(mimeType, width, height);
+
 
 
         EyerLog("AVDecoder Software Thread Stop\n");

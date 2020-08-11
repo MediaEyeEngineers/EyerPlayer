@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     player->SetURL("/Users/lichi/Downloads/1080pCaton.mkv");
 
+    player->SetURL("/Users/lichi/annie/xinxiaomen.mp4");
+
 
     ui->video_player_layout->addWidget(player);
 
