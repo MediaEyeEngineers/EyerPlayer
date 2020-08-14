@@ -96,6 +96,7 @@ namespace Eyer
         int IsLast();
 
         int GetSize();
+        unsigned char * GetDataPtr();
     };
 
     enum EyerAVAudioDateType

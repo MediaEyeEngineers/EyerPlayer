@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int afterCreated() {
             Log.e("Listener", "afterCreated");
-            player.SetPlayerView(eyer_player_view);
+            // player.SetPlayerView(eyer_player_view);
 
             // String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
             String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", videoFile.canRead() + "");
             }
 
+            // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
             player.Open(videoPath);
 
             return 0;

@@ -13,7 +13,7 @@ namespace Eyer
 {
     class EyerAVBitstreamFilterPrivate {
     public:
-        AVBitStreamFilterContext * h264bsfc = nullptr;
+        AVBSFContext * ctx = nullptr;
     };
 }
 

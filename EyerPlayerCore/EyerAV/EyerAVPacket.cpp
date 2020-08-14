@@ -1,5 +1,9 @@
 #include "EyerAVAV.hpp"
 
+extern "C"{
+#include <libavformat/avformat.h>
+}
+
 #include "EyerAVPacketPrivate.hpp"
 
 namespace Eyer
@@ -86,5 +90,10 @@ namespace Eyer
     int EyerAVPacket::GetSize()
     {
         return piml->packet->size;
+    }
+
+    unsigned char * EyerAVPacket::GetDataPtr()
+    {
+        return piml->packet->data;
     }
 }

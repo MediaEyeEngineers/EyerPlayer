@@ -5,17 +5,34 @@
 #include "EyerAVPacketPrivate.hpp"
 
 namespace Eyer {
-    EyerAVBitstreamFilter::EyerAVBitstreamFilter()
+    int EyerAVBitstreamFilter::QueryAllBitstreamFilter()
+    {
+        void *state = NULL;
+
+        const AVBitStreamFilter * bsf = nullptr;
+        while (bsf = av_bsf_next(&state)) {
+            EyerLog("%s\n", bsf->name);
+        }
+
+        return 0;
+    }
+
+    EyerAVBitstreamFilter::EyerAVBitstreamFilter(EyerAVBitstreamFilterType type, EyerAVStream & stream)
     {
         piml = new EyerAVBitstreamFilterPrivate();
-        piml->h264bsfc = av_bitstream_filter_init("h264_mp4toannexb");
+
+        const AVBitStreamFilter *bsf = av_bsf_get_by_name("h264_mp4toannexb");
+        int ret = av_bsf_alloc(bsf, &piml->ctx);
+
+        avcodec_parameters_copy(piml->ctx->par_in, stream.piml->codecpar);
+        av_bsf_init(piml->ctx);
     }
 
     EyerAVBitstreamFilter::~EyerAVBitstreamFilter()
     {
-        if(piml->h264bsfc != nullptr){
-            av_bitstream_filter_close(piml->h264bsfc);
-            piml->h264bsfc = nullptr;
+        if(piml->ctx != nullptr){
+            av_bsf_free(&piml->ctx);
+            piml->ctx = nullptr;
         }
         if(piml != nullptr){
             delete piml;
@@ -23,25 +40,23 @@ namespace Eyer {
         }
     }
 
-    /*
-    int EyerAVBitstreamFilter::Filter(EyerAVStream & stream, unsigned char * * dstData, int * dstLen, unsigned char * srcData, int srcLen)
+    int EyerAVBitstreamFilter::SendPacket(EyerAVPacket * packet)
     {
         int ret = 0;
-        // int ret = av_bitstream_filter_filter(piml->h264bsfc, ifmt_ctx->streams[videoindex]->codec, NULL, &pkt.data, &pkt.size, pkt.data, pkt.size, 0);
+        if(packet == nullptr){
+            ret = av_bsf_send_packet(piml->ctx, nullptr);
+        }
+        else{
+            ret = av_bsf_send_packet(piml->ctx, packet->piml->packet);
+        }
+
         return ret;
     }
-     */
 
-    int EyerAVBitstreamFilter::Filter(EyerAVStream & stream, EyerAVPacket * pkt, unsigned char * * dstData, int * dstLen)
+    int EyerAVBitstreamFilter::ReceivePacket(EyerAVPacket * packet)
     {
-        int ret = av_bitstream_filter_filter(
-                piml->h264bsfc,
-                stream.piml->codec,
-                NULL,
-                dstData,
-                dstLen,
-                pkt->piml->packet->data,
-                pkt->piml->packet->size, 0);
+        int ret = 0;
+        ret = av_bsf_receive_packet(piml->ctx, packet->piml->packet);
         return ret;
     }
 }

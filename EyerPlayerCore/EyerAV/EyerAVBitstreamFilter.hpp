@@ -7,14 +7,21 @@ namespace Eyer {
 
     class EyerAVBitstreamFilterPrivate;
 
+    enum EyerAVBitstreamFilterType
+    {
+        h264_mp4toannexb = 1,
+        hevc_mp4toannexb = 2
+    };
+
     class EyerAVBitstreamFilter {
     public:
-        EyerAVBitstreamFilter();
+        EyerAVBitstreamFilter(EyerAVBitstreamFilterType type, EyerAVStream & stream);
         ~EyerAVBitstreamFilter();
 
-        // int Filter(EyerAVStream & stream, unsigned char * * dstData, int * dstLen, unsigned char * srcData, int srcLen);
-        int Filter(EyerAVStream & stream,  EyerAVPacket * pkt, unsigned char * * dstData, int * dstLen);
+        int SendPacket(EyerAVPacket * packet);
+        int ReceivePacket(EyerAVPacket * packet);
 
+        static int QueryAllBitstreamFilter();
     private:
         EyerAVBitstreamFilterPrivate * piml = nullptr;
     };

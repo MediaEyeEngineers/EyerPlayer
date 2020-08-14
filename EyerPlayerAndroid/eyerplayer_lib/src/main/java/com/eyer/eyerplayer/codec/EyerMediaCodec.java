@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 public class EyerMediaCodec {
 
     private MediaCodec mediaCodec = null;
+    public static Surface surface = null;
 
     public int init(int width, int height){
         displayDecoders();
@@ -28,7 +29,7 @@ public class EyerMediaCodec {
         }
 
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height);
-        mediaCodec.configure(mediaFormat, null, null, 0);
+        mediaCodec.configure(mediaFormat, surface, null, 0);
         mediaCodec.start();
 
         return 0;
@@ -63,14 +64,41 @@ public class EyerMediaCodec {
         }
     }
 
-    public int input(){
-        /*
-        int inputBufIndex = mediaCodec.dequeueInputBuffer(10000);
-        if (inputBufIndex >= 0) {
-            ByteBuffer inputBuf = mediaCodec.getInputBuffers()[inputBufIndex];
-            mediaCodec.queueInputBuffer(inputBufIndex, 0, chunkSize, mMediaExtractor.getSampleTime(), 0);
+    public int send(byte[] data){
+        try {
+            // 返回输入缓冲区的索引
+            int inputBufIndex = mediaCodec.dequeueInputBuffer(-1);
+            Log.e("MediaCodec", "dequeueInputBuffer: " + inputBufIndex);
+
+            // Log.e("MediaCodec", " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " " + data[4]);
+            // Log.e("MediaCodec", "nalu type: " + (data[4] & 0x1F));
+
+
+            if (inputBufIndex >= 0) {
+                // 获取索引成功
+                ByteBuffer inputBuf = mediaCodec.getInputBuffers()[inputBufIndex];
+                inputBuf.clear();
+                inputBuf.put(data);
+
+                mediaCodec.queueInputBuffer(inputBufIndex, 0, data.length, 0, 0);
+            }
+
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+            while (true) {
+                int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1);
+                if (outindex >= 0) {
+                    ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[outindex];
+                    mediaCodec.releaseOutputBuffer(outindex, true);
+                } else {
+                    break;
+                }
+            }
         }
-        */
+        catch
+        (Exception e){
+            e.printStackTrace();
+        }
+
 
         return 0;
     }

@@ -56,7 +56,11 @@ namespace EyerPlayer {
         int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(), stream.GetHeight());
         EyerLog("MediaCodec Thread: MediaCodec init: %d\n", ret);
 
-
+        // 查询 Send 函数
+        jmethodID eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([B)I");
+        if(eyerMediaCodecMethod_Send == nullptr){
+            EyerLog("MediaCodec Thread: send GetMethodID Fail\n");
+        }
 
         AVFrameQueue * frameQueue = nullptr;
         if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO) {
@@ -70,7 +74,7 @@ namespace EyerPlayer {
         Eyer::EyerAVRational timebase = stream.timebase;
 
 
-        Eyer::EyerAVBitstreamFilter bitstreamFilter;
+        Eyer::EyerAVBitstreamFilter bitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
 
         // 解码
         while (!stopFlag) {
@@ -97,14 +101,24 @@ namespace EyerPlayer {
 
             cacheSize -= pkt->GetSize();
 
-            unsigned char * dstData = nullptr;
-            int dstLen = 0;
-            bitstreamFilter.Filter(stream, pkt, &dstData, &dstLen);
 
-            if(dstData != nullptr){
-                free(dstData);
-                dstData = nullptr;
+            bitstreamFilter.SendPacket(pkt);
+            while(1){
+                Eyer::EyerAVPacket annexbPkt;
+                ret = bitstreamFilter.ReceivePacket(&annexbPkt);
+                if(ret){
+                    break;
+                }
+
+                
+
+                jbyteArray jData = env->NewByteArray(annexbPkt.GetSize());
+                env->SetByteArrayRegion(jData, 0, annexbPkt.GetSize(), (jbyte*)annexbPkt.GetDataPtr());
+                int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData);
+
+                env-> DeleteLocalRef(jData);
             }
+
 
             if (pkt != nullptr) {
                 delete pkt;

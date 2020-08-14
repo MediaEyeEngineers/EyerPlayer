@@ -53,8 +53,7 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
             glContext = null;
         }
 
-
-
+        /*
         glContext = new EyerPlayerGLContext(holder.getSurface());
 
 
@@ -72,9 +71,9 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
 
         SurfaceTexture mSurfaceTexture = new SurfaceTexture(mTextureID);
         Surface mDecoderSurface = new Surface(mSurfaceTexture);
+        */
 
-        // EyerMediaCodec mediaCodec = new EyerMediaCodec();
-        // mediaCodec.init(mDecoderSurface);
+        EyerMediaCodec.surface = holder.getSurface();
 
         if(this.listener != null){
             this.listener.afterCreated();
@@ -83,7 +82,9 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        glContext.setWH(width, height);
+        if(glContext != null){
+            glContext.setWH(width, height);
+        }
     }
 
     @Override
