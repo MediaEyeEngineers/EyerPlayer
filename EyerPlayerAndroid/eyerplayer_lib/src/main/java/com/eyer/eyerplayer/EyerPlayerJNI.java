@@ -8,6 +8,11 @@ public class EyerPlayerJNI {
         System.loadLibrary("EyerPlayerJNI");
     }
 
+    public static native long       videoview_context_init      (android.view.Surface surface);
+    public static native int        videoview_context_change    (long surface, int w, int h);
+    public static native int        videoview_context_uninit    (long surface);
+
+
     public static native long       gl_context_init             (android.view.Surface surface);
     public static native int        gl_context_change           (long ctx, int w, int h);
     public static native int        gl_context_uninit           (long ctx);

@@ -73,6 +73,7 @@ namespace EyerPlayer {
 
             // 创建视频解码线程
             videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager);
+            // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
             videoThread->Start();
         }
         // 获取音频流编号

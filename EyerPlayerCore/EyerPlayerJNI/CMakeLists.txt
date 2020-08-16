@@ -18,10 +18,13 @@ target_link_libraries (EyerPlayerJNI
     EyerGLRenderTask
     EyerGLContext
     EyerGL
-    EyerCore
+
     EyerThread
     EyerGLShader
-        EyerJNI
+    EyerJNI
+        EyerCodec
+        EyerAV
+        EyerCore
 
     avformat
     avcodec
