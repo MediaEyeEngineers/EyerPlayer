@@ -65,7 +65,7 @@ public class EyerMediaCodec {
     }
 
     public int send(byte[] data){
-        try {
+
             // 返回输入缓冲区的索引
             int inputBufIndex = mediaCodec.dequeueInputBuffer(-1);
             Log.e("MediaCodec", "dequeueInputBuffer: " + inputBufIndex);
@@ -93,11 +93,7 @@ public class EyerMediaCodec {
                     break;
                 }
             }
-        }
-        catch
-        (Exception e){
-            e.printStackTrace();
-        }
+
 
 
         return 0;
