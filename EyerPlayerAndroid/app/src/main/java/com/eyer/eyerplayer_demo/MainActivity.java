@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Listener", "afterCreated");
             // player.SetPlayerView(eyer_player_view);
 
-            // String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
-            String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
+            String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+            videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
             Log.e("MainActivity", videoPath);
 
             File videoFile = new File(videoPath);
