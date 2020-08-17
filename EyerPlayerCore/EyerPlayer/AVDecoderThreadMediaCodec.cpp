@@ -19,6 +19,13 @@ namespace EyerPlayer {
     {
         EyerLog("AVDecoder MediaCodec Thread Start\n");
 
+        AVFrameQueue * frameQueue = nullptr;
+        if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO) {
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &frameQueue);
+        } else if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_AUDIO) {
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &frameQueue);
+        }
+
         Eyer::EyerMediaCodec mediaCodec;
         mediaCodec.BindDecoderThread();
         mediaCodec.BindPlayCtrThread();

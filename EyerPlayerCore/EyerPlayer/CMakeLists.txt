@@ -18,6 +18,8 @@ add_library(
     StreamInfo.cpp
 
     EyerPlayerThreadManager.cpp
+
+        AVFrameQueueManager.cpp
     )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
