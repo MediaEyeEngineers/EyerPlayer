@@ -74,6 +74,7 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
 
 
         EyerMediaCodec.surface = holder.getSurface();
+        // EyerMediaCodec.surface = mDecoderSurface;
 
         if(this.listener != null){
             this.listener.afterCreated();

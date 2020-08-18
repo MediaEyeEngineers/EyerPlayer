@@ -127,7 +127,7 @@ namespace Eyer
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        jmethodID eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([B)I");
+        jmethodID eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([BJ)I");
         if(eyerMediaCodecMethod_Send == nullptr){
             EyerLog("MediaCodec Thread: send GetMethodID Fail\n");
         }
@@ -137,8 +137,11 @@ namespace Eyer
 
         jbyteArray jData = env->NewByteArray(annexbPkt->GetSize());
         env->SetByteArrayRegion(jData, 0, annexbPkt->GetSize(), (jbyte*)annexbPkt->GetDataPtr());
+        jlong time = annexbPkt->GetPTS();
 
-        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData);
+        EyerLog("time: %lld\n", time);
+
+        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData, time);
 
         env->DeleteLocalRef(jData);
 

@@ -4,11 +4,8 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
-import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
-
-import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -47,7 +44,7 @@ public class EyerMediaCodec {
     }
 
     private void displayDecoders() {
-        MediaCodecList list = null;//REGULAR_CODECS参考api说明
+        MediaCodecList list = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             list = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
         }
@@ -64,7 +61,7 @@ public class EyerMediaCodec {
         }
     }
 
-    public int send(byte[] data){
+    public int send(byte[] data, long time){
         int inputBufIndex = mediaCodec.dequeueInputBuffer(1000);
 
         if (inputBufIndex >= 0) {
@@ -72,7 +69,7 @@ public class EyerMediaCodec {
             inputBuf.clear();
             inputBuf.put(data);
 
-            mediaCodec.queueInputBuffer(inputBufIndex, 0, data.length, 0, 0);
+            mediaCodec.queueInputBuffer(inputBufIndex, 0, data.length, time, 0);
 
             return 0;
         }
