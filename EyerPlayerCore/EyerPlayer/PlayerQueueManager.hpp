@@ -5,6 +5,7 @@
 #include "EyerAV/EyerAV.hpp"
 #include "EyerAV/EyerAVQueueManager.hpp"
 #include "EyerAV/EyerAVQueue.hpp"
+#include "EyerCodec/EyerCodec.hpp"
 
 namespace EyerPlayer {
     typedef Eyer::EyerAVQueue<Eyer::EyerAVFrame> AVFrameQueue;
@@ -19,10 +20,15 @@ namespace EyerPlayer {
         int GetQueue(Eyer::EyerString key, AVFrameQueue * * queue);
         int ClearAndDelete();
 
+        int GetMediaCodecQueueInit(Eyer::EyerAVStream & stream);
         int GetMediaCodecQueue(Eyer::EyerMediaCodec * * mediaCodecQueue);
 
     private:
         Eyer::EyerAVQueueManager<AVFrameQueue> queueManager;
+
+
+        std::mutex mediaCodecQueueMut;
+        Eyer::EyerMediaCodec * mediaCodecQueue = nullptr;
     };
 }
 

@@ -65,35 +65,31 @@ public class EyerMediaCodec {
     }
 
     public int send(byte[] data){
-        // 返回输入缓冲区的索引
-        int inputBufIndex = mediaCodec.dequeueInputBuffer(-1);
-        Log.e("MediaCodec", "dequeueInputBuffer: " + inputBufIndex);
-
-        // Log.e("MediaCodec", " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " " + data[4]);
-        // Log.e("MediaCodec", "nalu type: " + (data[4] & 0x1F));
-
+        int inputBufIndex = mediaCodec.dequeueInputBuffer(1000);
 
         if (inputBufIndex >= 0) {
-            // 获取索引成功
             ByteBuffer inputBuf = mediaCodec.getInputBuffers()[inputBufIndex];
             inputBuf.clear();
             inputBuf.put(data);
 
             mediaCodec.queueInputBuffer(inputBufIndex, 0, data.length, 0, 0);
+
+            return 0;
         }
 
-        return 0;
+        return -1;
     }
 
     public int recvAndRender(){
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-        int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1);
+        int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1000);
+
         if (outindex >= 0) {
             ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[outindex];
             mediaCodec.releaseOutputBuffer(outindex, true);
-
             return 0;
         }
+
         return -1;
     }
 }

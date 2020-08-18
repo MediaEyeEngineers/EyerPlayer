@@ -7,6 +7,7 @@ namespace Eyer
 {
     EyerMediaCodec::EyerMediaCodec()
     {
+        std::lock_guard<std::mutex> lg(mut);
         JNIEnv * env = nullptr;
         int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
         if (status < 0) {
@@ -19,11 +20,9 @@ namespace Eyer
 
     EyerMediaCodec::~EyerMediaCodec()
     {
-        if(bitstreamFilter != nullptr){
-            delete bitstreamFilter;
-            bitstreamFilter = nullptr;
-        }
+        std::lock_guard<std::mutex> lg(mut);
 
+        /*
         // 调用 Uninit 函数
         jmethodID eyerMediaCodecMethod_Uninit = decoderEnv->GetMethodID(eyerMediaCodecClass, "uninit", "()I");
         if(eyerMediaCodecMethod_Uninit == nullptr){
@@ -32,10 +31,13 @@ namespace Eyer
 
         int ret = decoderEnv->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Uninit);
         EyerLog("MediaCodec Thread: MediaCodec uninit: %d\n", ret);
+        */
     }
 
     int EyerMediaCodec::BindDecoderThread()
     {
+        std::lock_guard<std::mutex> lg(mut);
+        /*
         int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &decoderEnv, JNI_VERSION_1_6);
         if (status < 0) {
             Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&decoderEnv, NULL);
@@ -43,11 +45,14 @@ namespace Eyer
         if(decoderEnv == nullptr) {
             EyerLog("AttachCurrentThread Fail\n");
         }
+         */
         return 0;
     }
 
     int EyerMediaCodec::BindPlayCtrThread()
     {
+        std::lock_guard<std::mutex> lg(mut);
+        /*
         int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &playctrEnv, JNI_VERSION_1_6);
         if (status < 0) {
             Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&playctrEnv, NULL);
@@ -55,12 +60,13 @@ namespace Eyer
         if(playctrEnv == nullptr) {
             EyerLog("AttachCurrentThread Fail\n");
         }
+        */
         return 0;
     }
 
     int EyerMediaCodec::Init(EyerAVStream & stream)
     {
-        bitstreamFilter = new Eyer::EyerAVBitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
+        std::lock_guard<std::mutex> lg(mut);
 
         JNIEnv * env = nullptr;
         int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
@@ -71,7 +77,7 @@ namespace Eyer
             EyerLog("AttachCurrentThread Fail\n");
         }
 
-        eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
@@ -83,11 +89,12 @@ namespace Eyer
         }
 
 
-        eyerMediaCodec = env->NewObject(eyerMediaCodecClass, eyerMediaCodecMethod);
-        if(eyerMediaCodec == nullptr){
+        jobject _eyerMediaCodec = env->NewObject(eyerMediaCodecClass, eyerMediaCodecMethod);
+        if(_eyerMediaCodec == nullptr){
             EyerLog("MediaCodec Thread: EyerMediaCodec Class Fail\n");
         }
 
+        eyerMediaCodec = env->NewGlobalRef(_eyerMediaCodec);
 
 
         // 调用 Init 函数
@@ -99,44 +106,75 @@ namespace Eyer
         int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(), stream.GetHeight());
         EyerLog("MediaCodec Thread: MediaCodec init: %d\n", ret);
 
-        // 查询 Send 函数
-        eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([B)I");
+        return 0;
+    }
+
+    int EyerMediaCodec::SendPacket(Eyer::EyerAVPacket * annexbPkt)
+    {
+        std::lock_guard<std::mutex> lg(mut);
+
+        JNIEnv * env = nullptr;
+        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
+        if (status < 0) {
+            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
+        }
+        if(env == nullptr) {
+            EyerLog("AttachCurrentThread Fail\n");
+        }
+
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if(eyerMediaCodecClass == nullptr){
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
+
+        jmethodID eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([B)I");
         if(eyerMediaCodecMethod_Send == nullptr){
             EyerLog("MediaCodec Thread: send GetMethodID Fail\n");
         }
 
-        // 查询 RecvAndRender 函数
-        eyerMediaCodecMethod_RecvAndRender = env->GetMethodID(eyerMediaCodecClass, "recvAndRender", "()I");
-        if(eyerMediaCodecMethod_RecvAndRender == nullptr){
-            EyerLog("MediaCodec Thread: recvAndRender GetMethodID Fail\n");
-        }
 
-        return 0;
-    }
+        int ret = 0;
 
-    int EyerMediaCodec::SendPacket(Eyer::EyerAVPacket *pkt)
-    {
-        bitstreamFilter->SendPacket(pkt);
-        while(1){
-            Eyer::EyerAVPacket annexbPkt;
-            int ret = bitstreamFilter->ReceivePacket(&annexbPkt);
-            if(ret){
-                break;
-            }
+        jbyteArray jData = env->NewByteArray(annexbPkt->GetSize());
+        env->SetByteArrayRegion(jData, 0, annexbPkt->GetSize(), (jbyte*)annexbPkt->GetDataPtr());
 
-            jbyteArray jData = decoderEnv->NewByteArray(annexbPkt.GetSize());
-            decoderEnv->SetByteArrayRegion(jData, 0, annexbPkt.GetSize(), (jbyte*)annexbPkt.GetDataPtr());
-            ret = decoderEnv->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData);
+        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData);
 
-            decoderEnv->DeleteLocalRef(jData);
-        }
+        env->DeleteLocalRef(jData);
 
-        return 0;
+        return ret;
     }
 
     int EyerMediaCodec::RecvFrameRender()
     {
-        int ret = decoderEnv->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_RecvAndRender);
+        std::lock_guard<std::mutex> lg(mut);
+
+        int ret = 0;
+
+
+        JNIEnv * env = nullptr;
+        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
+        if (status < 0) {
+            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
+        }
+        if(env == nullptr) {
+            EyerLog("AttachCurrentThread Fail\n");
+        }
+
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if(eyerMediaCodecClass == nullptr){
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
+
+        // 查询 RecvAndRender 函数
+        jmethodID eyerMediaCodecMethod_RecvAndRender = env->GetMethodID(eyerMediaCodecClass, "recvAndRender", "()I");
+        if(eyerMediaCodecMethod_RecvAndRender == nullptr){
+            EyerLog("MediaCodec Thread: recvAndRender GetMethodID Fail\n");
+        }
+
+
+        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_RecvAndRender);
+
         return ret;
     }
 }
