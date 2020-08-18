@@ -14,6 +14,7 @@ namespace Eyer
     {
     public:
         AVFrame * frame = nullptr;
+        int isLastPacket = 0;
     };
 }
 

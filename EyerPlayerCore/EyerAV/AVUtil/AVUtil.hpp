@@ -2,7 +2,7 @@
 #define	EYER_LIB_AV_UTIL_H
 
 #include "EyerCore/EyerCore.hpp"
-#include "EyerAVAV.hpp"
+#include "../EyerAVAV.hpp"
 
 namespace Eyer
 {

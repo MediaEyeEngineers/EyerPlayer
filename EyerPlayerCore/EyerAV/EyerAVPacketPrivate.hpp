@@ -12,6 +12,7 @@ namespace Eyer
     {
     public:
         AVPacket * packet = nullptr;
+        int isLastPacket = 0;
     };
 }
 

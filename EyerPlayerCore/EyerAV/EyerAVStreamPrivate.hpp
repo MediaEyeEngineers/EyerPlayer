@@ -13,6 +13,7 @@ namespace Eyer
     class EyerAVStreamPrivate
     {
     public:
+        AVCodecContext * codec = nullptr;
         AVCodecParameters * codecpar = nullptr;
         EyerAVStreamType type = EyerAVStreamType::STREAM_TYPE_UNKNOW;
     };

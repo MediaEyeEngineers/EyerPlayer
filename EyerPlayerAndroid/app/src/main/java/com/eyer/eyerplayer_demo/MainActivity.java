@@ -13,6 +13,7 @@ import android.util.Log;
 import com.eyer.eyerplayer.EyerPlayer;
 import com.eyer.eyerplayer.EyerPlayerView;
 import com.eyer.eyerplayer.EyerPlayerViewListener;
+import com.eyer.eyerplayer.codec.EyerMediaCodec;
 
 import java.io.File;
 
@@ -79,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int afterCreated() {
             Log.e("Listener", "afterCreated");
-            player.SetPlayerView(eyer_player_view);
+            // player.SetPlayerView(eyer_player_view);
 
-            // String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
-            String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
+            String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+            videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
+            // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
             Log.e("MainActivity", videoPath);
 
             File videoFile = new File(videoPath);
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", videoFile.canRead() + "");
             }
 
+            // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
             player.Open(videoPath);
 
             return 0;

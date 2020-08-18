@@ -8,12 +8,18 @@
 #include "EyerAV/EyerAVQueue.hpp"
 #include "PlayerQueueManager.hpp"
 #include "EyerGLContext/EyerGLContext.hpp"
+#include "EyerCodec/EyerCodec.hpp"
 
 namespace EyerPlayer {
     class AVReaderThread;
     class AVDecoderThread;
     class PlayCtrThread;
 
+    /**
+     *
+     * Reader
+     *
+     */
     class AVReaderThread : public Eyer::EyerThread
     {
     public:
@@ -36,32 +42,63 @@ namespace EyerPlayer {
         Eyer::EyerGLContextThread * glCtx = nullptr;
     };
 
+
+    /**
+     *
+     * Decoder
+     *
+     */
     class AVDecoderThread : public Eyer::EyerThread
     {
     public:
-        AVDecoderThread(Eyer::EyerAVStream * stream, Eyer::EyerAVRational timebase, Eyer::EyerAVStreamType streamType, AVFrameQueueManager * frameQueueManager);
+        AVDecoderThread(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
         ~AVDecoderThread();
 
-        virtual void Run();
+        virtual void Run() = 0;
 
         int SendPacket(Eyer::EyerAVPacket * pkt);
 
         int GetPacketCount();
         int GetPacketSize();
 
-    private:
-        Eyer::EyerAVDecoder decoder;
+    protected:
         Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;
 
         int cacheSize = 0;
 
         AVFrameQueueManager * frameQueueManager = nullptr;
-
-        Eyer::EyerAVStreamType streamType = Eyer::EyerAVStreamType::STREAM_TYPE_UNKNOW;
-
-        Eyer::EyerAVRational timebase;
+        Eyer::EyerAVStream stream;
     };
 
+    class AVDecoderThreadSoftware : public AVDecoderThread
+    {
+    public:
+        AVDecoderThreadSoftware(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
+        ~AVDecoderThreadSoftware();
+
+        virtual void Run();
+
+    private:
+        Eyer::EyerAVDecoder decoder;
+    };
+
+    class AVDecoderThreadMediaCodec : public AVDecoderThread
+    {
+    public:
+        AVDecoderThreadMediaCodec(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
+        ~AVDecoderThreadMediaCodec();
+
+        virtual void Run();
+
+    private:
+    };
+
+
+    /**
+     *
+     * Play Ctr
+     *
+     */
     class AVPlayCtrThread : public Eyer::EyerThread
     {
     public:

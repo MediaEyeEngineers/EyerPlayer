@@ -49,7 +49,7 @@ namespace Eyer
 
     int EyerTime::EyerSleepMilliseconds(int time)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(time));
         return 0;
     }
 }

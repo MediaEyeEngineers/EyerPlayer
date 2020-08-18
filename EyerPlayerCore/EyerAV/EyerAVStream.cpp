@@ -8,6 +8,7 @@ namespace Eyer
     {
         piml = new EyerAVStreamPrivate();
         piml->codecpar = avcodec_parameters_alloc();
+        piml->codec = avcodec_alloc_context3(nullptr);
     }
     
     EyerAVStream::~EyerAVStream()
@@ -16,10 +17,32 @@ namespace Eyer
             avcodec_parameters_free(&piml->codecpar);
             piml->codecpar = nullptr;
         }
+        if(piml->codec != nullptr){
+            avcodec_free_context(&piml->codec);
+            piml->codec = nullptr;
+        }
         if(piml != nullptr){
             delete piml;
             piml = nullptr;
         }
+    }
+
+    EyerAVStream::EyerAVStream(const EyerAVStream & stream) : EyerAVStream()
+    {
+        *this = stream;
+    }
+
+    const EyerAVStream & EyerAVStream::operator = (const EyerAVStream & stream)
+    {
+        avcodec_parameters_copy(piml->codecpar, stream.piml->codecpar);
+        avcodec_copy_context(piml->codec, stream.piml->codec);
+
+        piml->type = stream.piml->type;
+        streamIndex = stream.streamIndex;
+        duration = stream.duration;
+        timebase = stream.timebase;
+
+        return *this;
     }
 
     EyerAVStreamType EyerAVStream::GetStreamType()

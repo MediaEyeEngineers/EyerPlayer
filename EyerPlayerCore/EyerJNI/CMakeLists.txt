@@ -4,41 +4,8 @@ include_directories (./)
 link_directories(${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/lib)
 
 add_library(
-    EyerPlayerJNI
-    SHARED
-    JniUtil.cpp
-    EyerPlayerGLContext.cpp
-    EyerPlayerJNI.cpp
-)
-
-target_link_libraries (EyerPlayerJNI
-    EyerPlayer
-    EyerAV
-    EyerEventQueue
-    EyerGLRenderTask
-    EyerGLContext
-    EyerGL
-
-    EyerThread
-    EyerGLShader
-    EyerJNI
-        EyerCodec
-        EyerAV
-        EyerCore
-
-    avformat
-    avcodec
-    swresample
-    swscale
-    avutil
-
-    log
-    z
-    android
-    OpenSLES
-    GLESv3
-    EGL
-    jnigraphics
+        EyerJNI
+        EyerJNIEnvManager.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -54,8 +21,8 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 INSTALL(
-    TARGETS EyerPlayerJNI
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+        TARGETS EyerJNI
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
 )

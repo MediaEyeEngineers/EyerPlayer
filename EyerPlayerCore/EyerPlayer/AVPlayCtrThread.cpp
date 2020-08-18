@@ -24,9 +24,10 @@ namespace EyerPlayer {
 
         long long startTime = Eyer::EyerTime::GetTime();
 
-        
         Eyer::EyerAVFrame * videoFrame = nullptr;
         Eyer::EyerAVFrame * audioFrame = nullptr;
+
+        Eyer::EyerMediaCodec * mediaCodec = nullptr;
 
         while(!stopFlag){
 
@@ -36,8 +37,20 @@ namespace EyerPlayer {
 
             double dTime = (nowTime - startTime) / 1000.0;
 
+            if(mediaCodec == nullptr){
+                frameQueueManager->GetMediaCodecQueue(&mediaCodec);
+                if(mediaCodec != nullptr){
+                    mediaCodec->BindPlayCtrThread();
+                }
+            }
+
+            if(mediaCodec != nullptr){
+                mediaCodec->BindPlayCtrThread();
+                int ret = mediaCodec->RecvFrameRender();
+            }
 
 
+            /*
             if(videoFrame == nullptr){
                 if(videoFrameQueue != nullptr){
                     videoFrameQueue->FrontPop(&videoFrame);
@@ -46,12 +59,8 @@ namespace EyerPlayer {
             if(videoFrame != nullptr){
                 // 判断视频是否应该播放
                 if(videoFrame->timePts <= dTime){
-                    // Play !!!
-                    // EyerLog("Play\n");
-                    // EyerLog("Video Frame: %f\n", videoFrame->timePts);
                     mut.lock();
                     if(glCtx != nullptr){
-                        // EyerLog("Render\n");
                         YUVRenderTask * yuvRenderTask = new YUVRenderTask();
                         yuvRenderTask->SetFrame(videoFrame);
                         glCtx->AddRenderTask(yuvRenderTask);
@@ -65,8 +74,7 @@ namespace EyerPlayer {
                     }
                 }
             }
-
-
+            */
 
             
             if(audioFrame == nullptr){
@@ -86,6 +94,8 @@ namespace EyerPlayer {
                 }
             }
         }
+
+        Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
         EyerLog("PlayCtr Thread End\n");
     }
 

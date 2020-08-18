@@ -9,6 +9,30 @@ extern "C" {
 #endif
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    videoview_context_init
+ * Signature: (Landroid/view/Surface;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_videoview_1context_1init
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    videoview_context_change
+ * Signature: (JII)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_videoview_1context_1change
+  (JNIEnv *, jclass, jlong, jint, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    videoview_context_uninit
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_videoview_1context_1uninit
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    gl_context_init
  * Signature: (Landroid/view/Surface;)J
  */
