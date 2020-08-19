@@ -3,7 +3,7 @@
 
 #include "EyerPlayerThread.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class EyerPlayerThreadManager{
     public:
         EyerPlayerThreadManager();

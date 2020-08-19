@@ -3,7 +3,7 @@
 
 #include "EyerCodec/EyerCodec.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVDecoderThreadMediaCodec::AVDecoderThreadMediaCodec(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager)
             : AVDecoderThread(_stream, _frameQueueManager)
     {

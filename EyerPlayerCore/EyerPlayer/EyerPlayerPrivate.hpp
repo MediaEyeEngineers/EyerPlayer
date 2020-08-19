@@ -4,7 +4,7 @@
 #include "EyerPlayerEventManager.hpp"
 #include <string>
 
-namespace EyerPlayer 
+namespace Eyer
 {
     class EyerPlayerPrivate 
     {

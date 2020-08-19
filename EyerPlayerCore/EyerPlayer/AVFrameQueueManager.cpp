@@ -1,6 +1,6 @@
 #include "PlayerQueueManager.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVFrameQueueManager::AVFrameQueueManager()
     {
 

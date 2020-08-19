@@ -4,7 +4,7 @@
 #include <string>
 #include "EyerGLContext/EyerGLContext.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
 
     enum EventOpenStatus
     {
@@ -22,6 +22,7 @@ namespace EyerPlayer {
 
     class EyerPlayerPrivate;
 
+
     class EyerPlayer
     {
     public:
@@ -30,6 +31,8 @@ namespace EyerPlayer {
 
         int BindGLContext(Eyer::EyerGLContextThread * ctx);
         int UnBindGLContext();
+
+        int SetSurface();
 
         int Open(std::string url);
 

@@ -7,7 +7,7 @@
 #include "EyerAV/EyerAVQueue.hpp"
 #include "EyerCodec/EyerCodec.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     typedef Eyer::EyerAVQueue<Eyer::EyerAVFrame> AVFrameQueue;
     // typedef Eyer::EyerAVQueueManager<AVFrameQueue> AVFrameQueueManager;
 

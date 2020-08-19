@@ -5,15 +5,11 @@ import androidx.core.app.ActivityCompat;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
 import com.eyer.eyerplayer.EyerPlayer;
-import com.eyer.eyerplayer.EyerPlayerView;
-import com.eyer.eyerplayer.EyerPlayerViewListener;
-import com.eyer.eyerplayer.codec.EyerMediaCodec;
 
 import java.io.File;
 
@@ -24,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
             "android.permission.WRITE_EXTERNAL_STORAGE" };
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
-    private EyerPlayerView eyer_player_view = null;
     private EyerPlayer player = null;
 
     @Override
@@ -35,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
 
         player = new EyerPlayer();
-
-        eyer_player_view = findViewById(R.id.eyer_player_view);
-        eyer_player_view.setListener(new MyEyerPlayerViewListener());
     }
 
     @Override
@@ -66,49 +58,6 @@ public class MainActivity extends AppCompatActivity {
         if(player != null){
             player.destory();
             player = null;
-        }
-    }
-
-    private class MyEyerPlayerViewListener implements EyerPlayerViewListener {
-
-        @Override
-        public int beforeCreated() {
-            Log.e("Listener", "beforeCreated");
-            return 0;
-        }
-
-        @Override
-        public int afterCreated() {
-            Log.e("Listener", "afterCreated");
-            // player.SetPlayerView(eyer_player_view);
-
-            String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
-            videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
-            // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
-            Log.e("MainActivity", videoPath);
-
-            File videoFile = new File(videoPath);
-            if(videoFile.exists()){
-                Log.e("MainActivity", videoFile.canRead() + "");
-            }
-
-            // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
-            player.Open(videoPath);
-
-            return 0;
-        }
-
-        @Override
-        public int beforeDestroyed() {
-            Log.e("Listener", "beforeDestroyed");
-            player.UnsetPlayerView();
-            return 0;
-        }
-
-        @Override
-        public int afterDestroyed() {
-            Log.e("Listener", "afterDestroyed");
-            return 0;
         }
     }
 

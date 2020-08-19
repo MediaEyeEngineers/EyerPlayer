@@ -3,7 +3,7 @@
 #include "EyerPlayerPrivate.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer 
+namespace Eyer
 {
     EyerPlayer::EyerPlayer()
     {

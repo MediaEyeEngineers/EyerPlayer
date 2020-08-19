@@ -2,7 +2,7 @@
 #include "EyerPlayerConstant.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     EyerPlayerThreadManager::EyerPlayerThreadManager()
     {
         frameQueueManager = new AVFrameQueueManager();

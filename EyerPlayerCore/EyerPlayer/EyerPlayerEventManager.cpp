@@ -4,7 +4,7 @@
 #include "EyerPlayerConstant.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer
+namespace Eyer
 {
     EyerPlayerEventManager::EyerPlayerEventManager()
     {
@@ -87,8 +87,6 @@ namespace EyerPlayer
     {
         return eventQueue->GetEventId();
     }
-
-
 
     int EyerPlayerEventManager::SetGLCtx(Eyer::EyerGLContextThread * glCtx)
     {

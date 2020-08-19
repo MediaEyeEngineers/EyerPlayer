@@ -3,7 +3,7 @@
 
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         url = _url;

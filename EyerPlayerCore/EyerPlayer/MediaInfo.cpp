@@ -1,7 +1,7 @@
 #include "MediaInfo.hpp"
 #include "EyerCore/EyerCore.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     MediaInfo::MediaInfo()
     {
         

@@ -6,7 +6,7 @@
 #include "EyerPlayerThread.hpp"
 #include "EyerPlayerThreadManager.hpp"
 
-namespace EyerPlayer 
+namespace Eyer
 {
     class EyerPlayerEventManager : public Eyer::EyerThread 
     {

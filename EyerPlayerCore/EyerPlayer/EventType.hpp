@@ -1,7 +1,7 @@
 #ifndef	EYER_PLAYER_EVENT_TYPE_H
 #define	EYER_PLAYER_EVENT_TYPE_H
 
-namespace EyerPlayer {
+namespace Eyer {
     class EventType
     {
     public:

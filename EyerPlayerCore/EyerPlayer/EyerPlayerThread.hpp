@@ -10,7 +10,7 @@
 #include "EyerGLContext/EyerGLContext.hpp"
 #include "EyerCodec/EyerCodec.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class AVReaderThread;
     class AVDecoderThread;
     class PlayCtrThread;

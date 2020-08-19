@@ -3,7 +3,7 @@
 
 #include "EyerCore/EyerCore.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class EventTag
     {
     public:
