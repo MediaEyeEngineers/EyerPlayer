@@ -83,6 +83,8 @@ namespace Eyer
         int GetStreamId();
 
         uint64_t GetPTS();
+        double GetSecPTS();
+
         uint64_t GetDTS();
 
         int RescaleTs(Eyer::EyerAVRational & codecTimebase, Eyer::EyerAVRational & streamTimebase);
@@ -248,6 +250,8 @@ namespace Eyer
 
         EyerAVStream(const EyerAVStream & stream);
         const EyerAVStream & operator = (const EyerAVStream & stream);
+
+        int ScalerPacketPTS(EyerAVPacket & pkt);
 
         EyerAVStreamType GetStreamType();
 

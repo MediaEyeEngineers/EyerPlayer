@@ -2,8 +2,6 @@ include_directories (../)
 include_directories (./)
 include_directories (../EyerAV)
 
-include_directories (${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/include)
-
 add_library(
     EyerAV
     EyerAVPacket.cpp
@@ -39,9 +37,9 @@ add_library(
     AVUtil/EyerWandResource.cpp
     AVUtil/EyerWandVideoResource.cpp
     AVUtil/EyerVideoDecoderLine.cpp
-        EyerAVBitstreamFilter.cpp
-        EyerAVBitstreamFilter.hpp
-        EyerAVBitstreamFilterPrivate.hpp)
+    EyerAVBitstreamFilter.cpp
+    EyerAVBitstreamFilter.hpp
+    EyerAVBitstreamFilterPrivate.hpp)
 
 target_link_libraries (EyerAV EyerCore)
 
@@ -127,6 +125,7 @@ set(head_files
     EyerAVFrameQueue.hpp
     EyerAVQueue.hpp
     EyerAVQueueManager.hpp
+    EyerAVBitstreamFilter.hpp
 )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerAV)

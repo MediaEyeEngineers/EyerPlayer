@@ -25,9 +25,6 @@ namespace EyerPlayer {
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
         frameQueueManager->GetMediaCodecQueue(&mediaCodec);
 
-        mediaCodec->BindDecoderThread();
-
-
         // 解码
         while (!stopFlag) {
             Eyer::EyerTime::EyerSleepMilliseconds(1);
@@ -55,6 +52,8 @@ namespace EyerPlayer {
                 if(ret){
                     break;
                 }
+
+                stream.ScalerPacketPTS(annexbPkt);
 
                 while(!stopFlag){
                     ret = mediaCodec->SendPacket(&annexbPkt);

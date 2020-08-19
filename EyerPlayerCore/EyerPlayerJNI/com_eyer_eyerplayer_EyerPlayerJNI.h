@@ -33,6 +33,14 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_videoview_1context
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    gl_render
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1render
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    gl_context_init
  * Signature: (Landroid/view/Surface;)J
  */
