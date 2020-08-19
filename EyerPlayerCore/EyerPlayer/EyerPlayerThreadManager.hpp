@@ -17,6 +17,8 @@ namespace Eyer {
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int UnbindGLCtx();
 
+        int SetSurface(jobject _surface);
+
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
 
@@ -25,6 +27,7 @@ namespace Eyer {
 
         std::mutex glCtxMut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
+        jobject surface = nullptr;
     };
 }
 

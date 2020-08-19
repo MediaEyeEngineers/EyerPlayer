@@ -67,4 +67,10 @@ namespace Eyer
     {
         return piml->eventManager->UnbindGLCtx();
     }
+
+    int EyerPlayer::SetSurface(jobject _surface)
+    {
+        piml->eventManager->SetSurface(_surface);
+        return 0;
+    }
 }

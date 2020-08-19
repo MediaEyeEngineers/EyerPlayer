@@ -21,7 +21,7 @@ namespace Eyer
     {
     }
 
-    int EyerMediaCodec::Init(EyerAVStream & stream)
+    int EyerMediaCodec::Init(EyerAVStream & stream, jobject surface)
     {
         JNIEnv * env = nullptr;
         int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
@@ -53,12 +53,12 @@ namespace Eyer
 
 
         // 调用 Init 函数
-        jmethodID eyerMediaCodecMethod_Init = env->GetMethodID(eyerMediaCodecClass, "init", "(II)I");
+        jmethodID eyerMediaCodecMethod_Init = env->GetMethodID(eyerMediaCodecClass, "init", "(IILandroid/view/Surface;)I");
         if(eyerMediaCodecMethod_Init == nullptr){
             EyerLog("MediaCodec Thread: Init GetMethodID Fail\n");
         }
 
-        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(), stream.GetHeight());
+        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(), stream.GetHeight(), surface);
         EyerLog("MediaCodec Thread: MediaCodec init: %d\n", ret);
 
         return 0;

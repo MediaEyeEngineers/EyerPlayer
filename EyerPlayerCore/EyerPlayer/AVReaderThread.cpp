@@ -33,6 +33,12 @@ namespace Eyer {
         return 0;
     }
 
+    int AVReaderThread::SetSurface(jobject _surface)
+    {
+        surface = _surface;
+        return 0;
+    }
+
     void AVReaderThread::Run()
     {
         EyerLog("AVReader Thread Start\n");
@@ -72,7 +78,7 @@ namespace Eyer {
             mediaInfo.videoStream.SetWH(videoStream.GetWidth(), videoStream.GetHeight());
 
             // 创建视频解码线程
-            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager);
+            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
             // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
             videoThread->Start();
         }

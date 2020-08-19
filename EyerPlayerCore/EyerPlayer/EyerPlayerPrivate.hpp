@@ -3,6 +3,7 @@
 
 #include "EyerPlayerEventManager.hpp"
 #include <string>
+#include <jni.h>
 
 namespace Eyer
 {
@@ -11,6 +12,7 @@ namespace Eyer
     public:
         EyerPlayerEventManager * eventManager = nullptr;
         std::string url;
+        jobject surface = nullptr;
     };
 }
 

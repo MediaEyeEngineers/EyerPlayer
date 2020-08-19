@@ -28,6 +28,7 @@ namespace Eyer {
         virtual void Run();
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
+        int SetSurface(jobject _surface);
 
     private:
         Eyer::EyerString url;
@@ -40,6 +41,7 @@ namespace Eyer {
         AVFrameQueueManager * frameQueueManager = nullptr;
 
         Eyer::EyerGLContextThread * glCtx = nullptr;
+        jobject surface = nullptr;
     };
 
 
@@ -85,12 +87,13 @@ namespace Eyer {
     class AVDecoderThreadMediaCodec : public AVDecoderThread
     {
     public:
-        AVDecoderThreadMediaCodec(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
+        AVDecoderThreadMediaCodec(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager, jobject surface);
         ~AVDecoderThreadMediaCodec();
 
         virtual void Run();
 
     private:
+        jobject surface = nullptr;
     };
 
 

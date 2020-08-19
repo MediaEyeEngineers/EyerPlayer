@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
             "android.permission.WRITE_EXTERNAL_STORAGE" };
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
-    private EyerPlayer player = null;
+    // private EyerPlayer player = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         verifyStoragePermissions(this);
 
-        player = new EyerPlayer();
+        // player = new EyerPlayer();
     }
 
     @Override
@@ -55,10 +55,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
         if(player != null){
             player.destory();
             player = null;
         }
+
+         */
     }
 
     private static void verifyStoragePermissions(Activity activity) {

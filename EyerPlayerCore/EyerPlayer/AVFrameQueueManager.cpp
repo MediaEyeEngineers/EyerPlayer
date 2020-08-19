@@ -22,14 +22,14 @@ namespace Eyer {
     }
 
 
-    int AVFrameQueueManager::GetMediaCodecQueueInit(Eyer::EyerAVStream & stream)
+    int AVFrameQueueManager::GetMediaCodecQueueInit(Eyer::EyerAVStream & stream, jobject surface)
     {
         std::lock_guard<std::mutex> lg(mediaCodecQueueMut);
         if(mediaCodecQueue == nullptr){
             mediaCodecQueue = new Eyer::EyerMediaCodec();
         }
 
-        mediaCodecQueue->Init(stream);
+        mediaCodecQueue->Init(stream, surface);
 
         return 0;
     }

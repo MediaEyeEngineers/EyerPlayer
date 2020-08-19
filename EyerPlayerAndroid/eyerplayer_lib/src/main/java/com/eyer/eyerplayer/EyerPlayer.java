@@ -1,5 +1,7 @@
 package com.eyer.eyerplayer;
 
+import android.view.Surface;
+
 public class EyerPlayer {
 
     private long nativeId = 0;
@@ -16,6 +18,10 @@ public class EyerPlayer {
 
     public int Open(String url){
         return EyerPlayerJNI.player_open(nativeId, url);
+    }
+
+    public int SetSurface(Surface surface){
+        return EyerPlayerJNI.player_setsurface(nativeId, surface);
     }
 
     public int Close(){

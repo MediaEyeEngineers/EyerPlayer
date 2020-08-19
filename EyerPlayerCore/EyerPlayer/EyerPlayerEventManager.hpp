@@ -22,6 +22,8 @@ namespace Eyer
         int SetGLCtx(Eyer::EyerGLContextThread * _glCtx);
         int UnbindGLCtx();
 
+        int SetSurface(jobject _surface);
+
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         EyerPlayerThreadManager * playerManager = nullptr;

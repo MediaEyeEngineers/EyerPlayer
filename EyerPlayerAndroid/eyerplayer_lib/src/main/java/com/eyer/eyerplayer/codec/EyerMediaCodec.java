@@ -13,9 +13,8 @@ import java.nio.ByteBuffer;
 public class EyerMediaCodec {
 
     private MediaCodec mediaCodec = null;
-    public static Surface surface = null;
 
-    public int init(int width, int height){
+    public int init(int width, int height, Surface surface){
         displayDecoders();
         Log.e("EyerMediaCodec", "width: " + width + " height: " + height);
 

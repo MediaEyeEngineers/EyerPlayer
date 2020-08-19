@@ -2,6 +2,7 @@
 #define	EYER_PLAYER_H
 
 #include <string>
+#include <jni.h>
 #include "EyerGLContext/EyerGLContext.hpp"
 
 namespace Eyer {
@@ -22,6 +23,11 @@ namespace Eyer {
 
     class EyerPlayerPrivate;
 
+    class EyerPlayerAndroidSurface
+    {
+    public:
+
+    };
 
     class EyerPlayer
     {
@@ -32,7 +38,7 @@ namespace Eyer {
         int BindGLContext(Eyer::EyerGLContextThread * ctx);
         int UnBindGLContext();
 
-        int SetSurface();
+        int SetSurface(jobject surface);
 
         int Open(std::string url);
 

@@ -4,10 +4,10 @@
 #include "EyerCodec/EyerCodec.hpp"
 
 namespace Eyer {
-    AVDecoderThreadMediaCodec::AVDecoderThreadMediaCodec(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager)
+    AVDecoderThreadMediaCodec::AVDecoderThreadMediaCodec(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager, jobject _surface)
             : AVDecoderThread(_stream, _frameQueueManager)
     {
-
+        surface = _surface;
     }
 
     AVDecoderThreadMediaCodec::~AVDecoderThreadMediaCodec()
@@ -21,7 +21,7 @@ namespace Eyer {
 
         Eyer::EyerAVBitstreamFilter bitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
 
-        frameQueueManager->GetMediaCodecQueueInit(stream);
+        frameQueueManager->GetMediaCodecQueueInit(stream, surface);
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
         frameQueueManager->GetMediaCodecQueue(&mediaCodec);
 

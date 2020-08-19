@@ -96,4 +96,9 @@ namespace Eyer
     {
         return playerManager->UnbindGLCtx();
     }
+
+    int EyerPlayerEventManager::SetSurface(jobject surface)
+    {
+        return playerManager->SetSurface(surface);
+    }
 }
