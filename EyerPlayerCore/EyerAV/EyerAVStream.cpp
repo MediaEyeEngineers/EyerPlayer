@@ -1,6 +1,7 @@
 #include "EyerAVAV.hpp"
 
 #include "EyerAVStreamPrivate.hpp"
+#include "EyerAVPacketPrivate.hpp"
 
 namespace Eyer
 {
@@ -55,6 +56,14 @@ namespace Eyer
         }
 
         return EyerAVStreamType::STREAM_TYPE_AUDIO;
+    }
+
+    int EyerAVStream::ScalerPacketPTS(EyerAVPacket & pkt)
+    {
+        uint64_t pts = pkt.GetPTS();
+        double ptsSec = pts * 1.0 * timebase.num / timebase.den;
+        pkt.piml->ptsSec = ptsSec;
+        return 0;
     }
 
     int EyerAVStream::SetDuration(double _duration)

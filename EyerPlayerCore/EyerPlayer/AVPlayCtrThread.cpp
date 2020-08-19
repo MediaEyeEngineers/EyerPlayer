@@ -28,6 +28,8 @@ namespace EyerPlayer {
         Eyer::EyerAVFrame * audioFrame = nullptr;
 
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
+        int outindex = -1;
+        long videoFrameTime = 0;
 
         while(!stopFlag){
 
@@ -39,14 +41,21 @@ namespace EyerPlayer {
 
             if(mediaCodec == nullptr){
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
-                if(mediaCodec != nullptr){
-                    mediaCodec->BindPlayCtrThread();
-                }
             }
 
             if(mediaCodec != nullptr){
-                mediaCodec->BindPlayCtrThread();
-                int ret = mediaCodec->RecvFrameRender();
+                if(outindex < 0){
+                    outindex = mediaCodec->DequeueOutputBuffer();
+                    videoFrameTime = mediaCodec->GetOutTime();
+                }
+
+                if(outindex >= 0){
+                    double timePts = videoFrameTime / 1000.0;
+                    if (timePts <= dTime) {
+                        mediaCodec->RenderFrame(outindex);
+                        outindex = -1;
+                    }
+                }
             }
 
 
@@ -76,7 +85,10 @@ namespace EyerPlayer {
             }
             */
 
-            
+
+
+
+
             if(audioFrame == nullptr){
                 if(audioFrameQueue != nullptr){
                     audioFrameQueue->FrontPop(&audioFrame);

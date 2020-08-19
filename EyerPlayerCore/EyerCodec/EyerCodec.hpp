@@ -15,16 +15,15 @@ namespace Eyer
 
         int Init(EyerAVStream & stream);
 
-        int BindDecoderThread();
-        int BindPlayCtrThread();
-
-        int SendPacket(Eyer::EyerAVPacket *pkt );
+        int SendPacket(Eyer::EyerAVPacket * pkt);
         int RecvFrameRender();
+
+        int DequeueOutputBuffer();
+        long GetOutTime();
+        int RenderFrame(int outindex);
 
     private:
         jobject eyerMediaCodec = nullptr;
-
-        std::mutex mut;
     };
 }
 

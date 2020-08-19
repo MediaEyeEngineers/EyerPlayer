@@ -89,4 +89,22 @@ public class EyerMediaCodec {
 
         return -1;
     }
+
+    private MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+
+    public int dequeueOutputBuffer(){
+        int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1000);
+        return outindex;
+    }
+
+    public long getOutTime(){
+        return bufferInfo.presentationTimeUs;
+    }
+
+    public int renderFrame(int outindex){
+        ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[outindex];
+        mediaCodec.releaseOutputBuffer(outindex, true);
+
+        return 0;
+    }
 }
