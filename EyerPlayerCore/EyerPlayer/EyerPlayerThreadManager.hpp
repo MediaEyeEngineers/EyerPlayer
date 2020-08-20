@@ -3,7 +3,7 @@
 
 #include "EyerPlayerThread.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class EyerPlayerThreadManager{
     public:
         EyerPlayerThreadManager();
@@ -17,6 +17,8 @@ namespace EyerPlayer {
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int UnbindGLCtx();
 
+        int SetSurface(jobject _surface);
+
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
 
@@ -25,6 +27,7 @@ namespace EyerPlayer {
 
         std::mutex glCtxMut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
+        jobject surface = nullptr;
     };
 }
 

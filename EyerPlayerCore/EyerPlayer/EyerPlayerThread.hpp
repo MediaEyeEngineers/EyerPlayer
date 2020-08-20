@@ -10,7 +10,7 @@
 #include "EyerGLContext/EyerGLContext.hpp"
 #include "EyerCodec/EyerCodec.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class AVReaderThread;
     class AVDecoderThread;
     class PlayCtrThread;
@@ -28,6 +28,7 @@ namespace EyerPlayer {
         virtual void Run();
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
+        int SetSurface(jobject _surface);
 
     private:
         Eyer::EyerString url;
@@ -40,6 +41,7 @@ namespace EyerPlayer {
         AVFrameQueueManager * frameQueueManager = nullptr;
 
         Eyer::EyerGLContextThread * glCtx = nullptr;
+        jobject surface = nullptr;
     };
 
 
@@ -85,12 +87,13 @@ namespace EyerPlayer {
     class AVDecoderThreadMediaCodec : public AVDecoderThread
     {
     public:
-        AVDecoderThreadMediaCodec(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
+        AVDecoderThreadMediaCodec(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager, jobject surface);
         ~AVDecoderThreadMediaCodec();
 
         virtual void Run();
 
     private:
+        jobject surface = nullptr;
     };
 
 

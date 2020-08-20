@@ -13,7 +13,7 @@ namespace Eyer
         EyerMediaCodec();
         ~EyerMediaCodec();
 
-        int Init(EyerAVStream & stream);
+        int Init(EyerAVStream & stream, jobject surface);
 
         int SendPacket(Eyer::EyerAVPacket * pkt);
         int RecvFrameRender();

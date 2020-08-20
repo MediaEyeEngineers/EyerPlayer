@@ -1,6 +1,6 @@
 #include "MediaInfo.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     StreamInfo::StreamInfo()
     {
 

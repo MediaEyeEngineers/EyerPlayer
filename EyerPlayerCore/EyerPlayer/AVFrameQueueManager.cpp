@@ -1,6 +1,6 @@
 #include "PlayerQueueManager.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVFrameQueueManager::AVFrameQueueManager()
     {
 
@@ -22,14 +22,14 @@ namespace EyerPlayer {
     }
 
 
-    int AVFrameQueueManager::GetMediaCodecQueueInit(Eyer::EyerAVStream & stream)
+    int AVFrameQueueManager::GetMediaCodecQueueInit(Eyer::EyerAVStream & stream, jobject surface)
     {
         std::lock_guard<std::mutex> lg(mediaCodecQueueMut);
         if(mediaCodecQueue == nullptr){
             mediaCodecQueue = new Eyer::EyerMediaCodec();
         }
 
-        mediaCodecQueue->Init(stream);
+        mediaCodecQueue->Init(stream, surface);
 
         return 0;
     }

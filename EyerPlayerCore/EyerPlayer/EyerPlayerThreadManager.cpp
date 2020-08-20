@@ -2,7 +2,7 @@
 #include "EyerPlayerConstant.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     EyerPlayerThreadManager::EyerPlayerThreadManager()
     {
         frameQueueManager = new AVFrameQueueManager();
@@ -33,6 +33,7 @@ namespace EyerPlayer {
         }
 
         readerThread = new AVReaderThread(url, openEventId, eventQueue, frameQueueManager);
+        readerThread->SetSurface(surface);
         readerThread->Start();
 
         return 0;
@@ -105,6 +106,16 @@ namespace EyerPlayer {
             playerCtr->SetGLCtx(glCtx);
         }
         glCtxMut.unlock();
+
+        return 0;
+    }
+
+    int EyerPlayerThreadManager::SetSurface(jobject _surface)
+    {
+        surface = _surface;
+        if(readerThread != nullptr){
+            readerThread->SetSurface(surface);
+        }
 
         return 0;
     }

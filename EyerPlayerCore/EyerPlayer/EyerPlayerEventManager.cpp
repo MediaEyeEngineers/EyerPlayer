@@ -4,7 +4,7 @@
 #include "EyerPlayerConstant.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer
+namespace Eyer
 {
     EyerPlayerEventManager::EyerPlayerEventManager()
     {
@@ -24,6 +24,12 @@ namespace EyerPlayer
             delete eventQueue;
             eventQueue = nullptr;
         }
+    }
+
+    int EyerPlayerEventManager::SetCallback(EyerPlayerCallback * _callback)
+    {
+        callback = _callback;
+        return 0;
     }
 
     void EyerPlayerEventManager::Run()
@@ -57,6 +63,9 @@ namespace EyerPlayer
                     EyerLog("EventOpenResponse OPEN_STATUS_SUCCESS\n");
                     MediaInfo mediaInfo = openResponse->mediaInfo;
                     mediaInfo.Print();
+                    if(callback != nullptr){
+
+                    }
                 }
                 else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){
                     EyerLog("EventOpenResponse OPEN_STATUS_FAIL\n");
@@ -88,8 +97,6 @@ namespace EyerPlayer
         return eventQueue->GetEventId();
     }
 
-
-
     int EyerPlayerEventManager::SetGLCtx(Eyer::EyerGLContextThread * glCtx)
     {
         return playerManager->SetGLCtx(glCtx);
@@ -97,5 +104,10 @@ namespace EyerPlayer
     int EyerPlayerEventManager::UnbindGLCtx()
     {
         return playerManager->UnbindGLCtx();
+    }
+
+    int EyerPlayerEventManager::SetSurface(jobject surface)
+    {
+        return playerManager->SetSurface(surface);
     }
 }

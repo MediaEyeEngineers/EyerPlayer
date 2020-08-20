@@ -1,6 +1,6 @@
 #include "EventTag.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     const Eyer::EyerString EventTag::PLAYER = "PLAYER";
     const Eyer::EyerString EventTag::EVENT_MANAGER = "EVENT_MANAGER";
     const Eyer::EyerString EventTag::EVENT_AVREADER = "EVENT_AVREADER";

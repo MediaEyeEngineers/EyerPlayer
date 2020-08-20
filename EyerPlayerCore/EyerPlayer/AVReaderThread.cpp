@@ -3,7 +3,7 @@
 
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         url = _url;
@@ -30,6 +30,12 @@ namespace EyerPlayer {
     int AVReaderThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
         glCtx = _glCtx;
+        return 0;
+    }
+
+    int AVReaderThread::SetSurface(jobject _surface)
+    {
+        surface = _surface;
         return 0;
     }
 
@@ -72,7 +78,7 @@ namespace EyerPlayer {
             mediaInfo.videoStream.SetWH(videoStream.GetWidth(), videoStream.GetHeight());
 
             // 创建视频解码线程
-            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager);
+            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
             // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
             videoThread->Start();
         }

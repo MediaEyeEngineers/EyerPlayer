@@ -8,7 +8,7 @@
 #include "EyerPlayer.hpp"
 #include "MediaInfo.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class EventOpenRequest : public Eyer::EyerEvent
     {
     public:

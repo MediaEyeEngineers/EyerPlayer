@@ -3,7 +3,7 @@
 #include "EyerPlayerPrivate.hpp"
 #include "PlayerEvent.hpp"
 
-namespace EyerPlayer 
+namespace Eyer
 {
     EyerPlayer::EyerPlayer()
     {
@@ -66,5 +66,15 @@ namespace EyerPlayer
     int EyerPlayer::UnBindGLContext()
     {
         return piml->eventManager->UnbindGLCtx();
+    }
+
+    int EyerPlayer::SetSurface(jobject _surface)
+    {
+        return piml->eventManager->SetSurface(_surface);
+    }
+
+    int EyerPlayer::SetCallback(EyerPlayerCallback * callback)
+    {
+        return piml->eventManager->SetCallback(callback);
     }
 }
