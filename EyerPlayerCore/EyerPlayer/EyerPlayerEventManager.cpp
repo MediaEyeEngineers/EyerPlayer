@@ -26,6 +26,12 @@ namespace Eyer
         }
     }
 
+    int EyerPlayerEventManager::SetCallback(EyerPlayerCallback * _callback)
+    {
+        callback = _callback;
+        return 0;
+    }
+
     void EyerPlayerEventManager::Run()
     {
         EyerLog("Event Manager Start\n");
@@ -57,6 +63,9 @@ namespace Eyer
                     EyerLog("EventOpenResponse OPEN_STATUS_SUCCESS\n");
                     MediaInfo mediaInfo = openResponse->mediaInfo;
                     mediaInfo.Print();
+                    if(callback != nullptr){
+
+                    }
                 }
                 else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){
                     EyerLog("EventOpenResponse OPEN_STATUS_FAIL\n");

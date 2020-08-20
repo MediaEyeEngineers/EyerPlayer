@@ -25,10 +25,18 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    player_setsurface
+ * Method:    player_set_surface
  * Signature: (JLandroid/view/Surface;)I
  */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1setsurface
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1surface
+  (JNIEnv *, jclass, jlong, jobject);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_set_callback
+ * Signature: (JLcom/eyer/eyerplayer/callback/EyerCallback;)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1callback
   (JNIEnv *, jclass, jlong, jobject);
 
 /*

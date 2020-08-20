@@ -70,7 +70,11 @@ namespace Eyer
 
     int EyerPlayer::SetSurface(jobject _surface)
     {
-        piml->eventManager->SetSurface(_surface);
-        return 0;
+        return piml->eventManager->SetSurface(_surface);
+    }
+
+    int EyerPlayer::SetCallback(EyerPlayerCallback * callback)
+    {
+        return piml->eventManager->SetCallback(callback);
     }
 }

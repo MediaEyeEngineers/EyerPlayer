@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         verifyStoragePermissions(this);
-
-        // player = new EyerPlayer();
     }
 
     @Override
@@ -55,13 +53,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*
-        if(player != null){
-            player.destory();
-            player = null;
-        }
-
-         */
     }
 
     private static void verifyStoragePermissions(Activity activity) {

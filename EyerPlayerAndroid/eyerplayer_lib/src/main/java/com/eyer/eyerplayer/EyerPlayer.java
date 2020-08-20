@@ -2,6 +2,8 @@ package com.eyer.eyerplayer;
 
 import android.view.Surface;
 
+import com.eyer.eyerplayer.callback.EyerCallback;
+
 public class EyerPlayer {
 
     private long nativeId = 0;
@@ -9,6 +11,7 @@ public class EyerPlayer {
     public EyerPlayer(){
         nativeId = EyerPlayerJNI.player_init();
     }
+
     public void destory(){
         if(nativeId != 0){
             EyerPlayerJNI.player_uninit(nativeId);
@@ -16,23 +19,29 @@ public class EyerPlayer {
         }
     }
 
-    public int Open(String url){
+    public int setListener(EyerPlayerListener listener) {
+        EyerCallback callback = new EyerCallback(listener);
+        EyerPlayerJNI.player_set_callback(nativeId, callback);
+        return 0;
+    }
+
+    public int setSurface(Surface surface){
+        return EyerPlayerJNI.player_set_surface(nativeId, surface);
+    }
+
+    public int open(String url){
         return EyerPlayerJNI.player_open(nativeId, url);
     }
 
-    public int SetSurface(Surface surface){
-        return EyerPlayerJNI.player_setsurface(nativeId, surface);
-    }
-
-    public int Close(){
+    public int stop(){
         return 0;
     }
 
-    public int Play(){
+    public int play(){
         return 0;
     }
 
-    public int Pause() {
+    public int pause() {
         return 0;
     }
 }

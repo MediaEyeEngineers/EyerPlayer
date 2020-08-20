@@ -56,12 +56,20 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
     return 0;
 }
 
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1setsurface
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1surface
 (JNIEnv * env, jclass, jlong playerJNI, jobject surface)
 {
     Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
     jobject surfaceRef = env->NewGlobalRef(surface);
     player->SetSurface(surfaceRef);
+
+    return 0;
+}
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1callback
+(JNIEnv *, jclass, jlong playerJNI, jobject callback)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
 
     return 0;
 }

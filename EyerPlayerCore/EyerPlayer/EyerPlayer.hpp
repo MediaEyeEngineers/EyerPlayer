@@ -29,6 +29,15 @@ namespace Eyer {
 
     };
 
+    class EyerPlayerCallback{
+    public:
+        EyerPlayerCallback();
+        ~EyerPlayerCallback();
+
+    private:
+        jobject callback = nullptr;
+    };
+
     class EyerPlayer
     {
     public:
@@ -39,6 +48,7 @@ namespace Eyer {
         int UnBindGLContext();
 
         int SetSurface(jobject surface);
+        int SetCallback(EyerPlayerCallback * callback);
 
         int Open(std::string url);
 
