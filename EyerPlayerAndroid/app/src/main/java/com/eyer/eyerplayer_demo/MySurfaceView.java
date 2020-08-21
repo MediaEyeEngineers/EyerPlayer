@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.eyer.eyerplayer.EyerPlayer;
 import com.eyer.eyerplayer.EyerPlayerListener;
+import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 import java.io.File;
 
@@ -17,6 +18,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private SurfaceHolder mSurfaceHolder = null;
     private EyerPlayer player = null;
+
+    int videoWidth = 0;
+    int videoHeight = 0;
 
     public MySurfaceView(Context context) {
         super(context);
@@ -47,7 +51,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
         videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
-        // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
+        videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
+        videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
         Log.e("MainActivity", videoPath);
 
         File videoFile = new File(videoPath);
@@ -57,13 +62,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
         player.open(videoPath);
-
-        // requestLayout();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        Log.e("@@@@", "SurfaceChange， Width: " + width + " Height: " + height);
     }
 
     @Override
@@ -76,31 +79,42 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mVideoWidth = 1080;
-        int mVideoHeight = 1920;
-
-        Log.e("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", " + MeasureSpec.toString(heightMeasureSpec) + ")");
-
-        int width = View.getDefaultSize(mVideoWidth, widthMeasureSpec);
-        int height = View.getDefaultSize(mVideoHeight, heightMeasureSpec);
-
-        /// Log.e("@@@@", "onMeasure(" + width + ", " + height + ")");
-
-
+        int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int viewHeight = MeasureSpec.getSize(heightMeasureSpec);
+        // Log.e("@@@@", "onMeasure(" + MeasureSpec.getSize(widthMeasureSpec) + ", " + MeasureSpec.getSize(heightMeasureSpec) + ")");
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int mWidth = 1080;
-        int mHeight = 1920;
+        if(videoWidth > 0 && videoHeight >0){
+            int mWidth = 0;
+            int mHeight = 0;
 
-        setMeasuredDimension(mWidth, mHeight);
+            float fitView = (float)(viewWidth * 1.0 / viewHeight);
+            float fitVideo = (float)(videoWidth * 1.0 / videoHeight);
+
+            if(fitView > fitVideo){
+                mHeight = viewHeight;
+                mWidth = (int)(videoWidth * 1.0 / videoHeight * mHeight);
+            }
+            else{
+                mWidth = viewWidth;
+                mHeight = (int)(videoHeight * 1.0 / videoWidth * mWidth);
+            }
+
+            setMeasuredDimension(mWidth, mHeight);
+        }
     }
 
 
     private class MyEyerPlayerListener implements EyerPlayerListener
     {
         @Override
-        public int onOpen() {
+        public int onOpen(EyerMediaInfo mediaInfo) {
+            videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
+            videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
+
+            requestLayout();
+
             return 0;
         }
     }

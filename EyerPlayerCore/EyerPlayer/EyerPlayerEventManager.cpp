@@ -64,7 +64,7 @@ namespace Eyer
                     MediaInfo mediaInfo = openResponse->mediaInfo;
                     mediaInfo.Print();
                     if(callback != nullptr){
-
+                        callback->OnOpen(mediaInfo);
                     }
                 }
                 else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){

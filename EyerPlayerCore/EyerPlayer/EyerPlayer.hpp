@@ -4,6 +4,7 @@
 #include <string>
 #include <jni.h>
 #include "EyerGLContext/EyerGLContext.hpp"
+#include "MediaInfo.hpp"
 
 namespace Eyer {
 
@@ -34,7 +35,9 @@ namespace Eyer {
         EyerPlayerCallback();
         ~EyerPlayerCallback();
 
-    private:
+        int OnOpen(MediaInfo & mediaInfo);
+
+    public:
         jobject callback = nullptr;
     };
 

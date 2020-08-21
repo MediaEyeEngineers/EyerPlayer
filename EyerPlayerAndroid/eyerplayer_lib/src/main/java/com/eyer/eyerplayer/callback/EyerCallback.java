@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.eyer.eyerplayer.EyerPlayerListener;
+import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 public class EyerCallback {
 
@@ -11,16 +12,25 @@ public class EyerCallback {
 
     private CallbackHandle handle = null;
 
+    public EyerCallback(){
+
+    }
+
     public EyerCallback(EyerPlayerListener listener){
         handle = new CallbackHandle(listener);
     }
 
     // 该函数被子线程调用
-    public int onOpen()
+    public int onOpen(int videoW, int videoH)
     {
         Message msg = new Message();
         msg.what = MSG_ID_ONOPEN;
         handle.sendMessage(msg);
+
+        EyerMediaInfo mediaInfo = new EyerMediaInfo();
+        mediaInfo.setVideoStreamInfo(videoW, videoH);
+
+        msg.obj = mediaInfo;
 
         return 0;
     }
@@ -37,7 +47,8 @@ public class EyerCallback {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == MSG_ID_ONOPEN){
-                this.listener.onOpen();
+                EyerMediaInfo mediaInfo = (EyerMediaInfo)msg.obj;
+                this.listener.onOpen(mediaInfo);
             }
         }
     }
