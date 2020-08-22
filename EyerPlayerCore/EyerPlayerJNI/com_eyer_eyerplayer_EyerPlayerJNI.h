@@ -47,6 +47,14 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1callb
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
   (JNIEnv *, jclass, jlong, jstring);
 
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_stop
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1stop
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

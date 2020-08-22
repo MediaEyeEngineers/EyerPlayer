@@ -10,6 +10,7 @@
         android:gravity="center"
         android:layout_above="@id/bottom_bar">
         <com.eyer.eyerplayer_demo.MySurfaceView
+            android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </RelativeLayout>
@@ -22,6 +23,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btn_open"
             android:text="Open"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_stop"
+            android:text="Stop"/>
     </LinearLayout>
 </RelativeLayout>

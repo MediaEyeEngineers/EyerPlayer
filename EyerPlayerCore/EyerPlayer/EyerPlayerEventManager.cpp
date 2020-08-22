@@ -54,6 +54,13 @@ namespace Eyer
                 playerManager->Play();
             }
 
+            if(event->GetType() == EventType::STOPRequest){
+                EventStopRequest * stopRequest = (EventStopRequest *)event;
+                EyerLog("StopRequest\n");
+
+                playerManager->Stop();
+            }
+
 
 
             else if(event->GetType() == EventType::OPENResponse){

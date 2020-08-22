@@ -20,17 +20,18 @@ public class EyerCallback {
         handle = new CallbackHandle(listener);
     }
 
-    // 该函数被子线程调用
+    //
     public int onOpen(int videoW, int videoH)
     {
         Message msg = new Message();
         msg.what = MSG_ID_ONOPEN;
-        handle.sendMessage(msg);
 
         EyerMediaInfo mediaInfo = new EyerMediaInfo();
         mediaInfo.setVideoStreamInfo(videoW, videoH);
 
         msg.obj = mediaInfo;
+
+        handle.sendMessage(msg);
 
         return 0;
     }

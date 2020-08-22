@@ -55,6 +55,15 @@ namespace Eyer
 
     int EyerPlayer::Stop()
     {
+        long long requestId = piml->eventManager->GenId();
+
+        EventStopRequest * event = new EventStopRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
+
         return 0;
     }
 

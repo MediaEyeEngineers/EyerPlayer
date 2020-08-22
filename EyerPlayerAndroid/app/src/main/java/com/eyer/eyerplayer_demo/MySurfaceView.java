@@ -37,6 +37,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         init();
     }
 
+    public int open(String url){
+        return player.open(url);
+    }
+
+    public int stop(){
+        return player.stop();
+    }
+
     private void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.setKeepScreenOn(true);
@@ -48,20 +56,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         player = new EyerPlayer();
         player.setListener(new MyEyerPlayerListener());
         player.setSurface(holder.getSurface());
-
-        String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
-        videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
-        videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
-        videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-        Log.e("MainActivity", videoPath);
-
-        File videoFile = new File(videoPath);
-        if(videoFile.exists()){
-            Log.e("MainActivity", videoFile.canRead() + "");
-        }
-
-        // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
-        player.open(videoPath);
     }
 
     @Override
@@ -112,7 +106,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         public int onOpen(EyerMediaInfo mediaInfo) {
             videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
             videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
-
             requestLayout();
 
             return 0;

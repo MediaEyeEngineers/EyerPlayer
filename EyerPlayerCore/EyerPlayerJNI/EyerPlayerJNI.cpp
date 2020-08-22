@@ -112,3 +112,11 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
     free(url);
     return ret;
 }
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1stop
+(JNIEnv *, jclass, jlong playerJNI)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    int ret = player->Stop();
+    return ret;
+}

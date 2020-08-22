@@ -34,7 +34,7 @@ public class EyerPlayer {
     }
 
     public int stop(){
-        return 0;
+        return EyerPlayerJNI.player_stop(nativeId);
     }
 
     public int play(){
