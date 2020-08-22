@@ -2,7 +2,7 @@
 #include "EyerPlayerThread.hpp"
 #include "EventTag.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager)
     {
         frameQueueManager = _frameQueueManager;
@@ -24,9 +24,12 @@ namespace EyerPlayer {
 
         long long startTime = Eyer::EyerTime::GetTime();
 
-        
         Eyer::EyerAVFrame * videoFrame = nullptr;
         Eyer::EyerAVFrame * audioFrame = nullptr;
+
+        Eyer::EyerMediaCodec * mediaCodec = nullptr;
+        int outindex = -1;
+        long videoFrameTime = 0;
 
         while(!stopFlag){
 
@@ -36,8 +39,27 @@ namespace EyerPlayer {
 
             double dTime = (nowTime - startTime) / 1000.0;
 
+            if(mediaCodec == nullptr){
+                frameQueueManager->GetMediaCodecQueue(&mediaCodec);
+            }
+
+            if(mediaCodec != nullptr){
+                if(outindex < 0){
+                    outindex = mediaCodec->DequeueOutputBuffer();
+                    videoFrameTime = mediaCodec->GetOutTime();
+                }
+
+                if(outindex >= 0){
+                    double timePts = videoFrameTime / 1000.0;
+                    if (timePts <= dTime) {
+                        mediaCodec->RenderFrame(outindex);
+                        outindex = -1;
+                    }
+                }
+            }
 
 
+            /*
             if(videoFrame == nullptr){
                 if(videoFrameQueue != nullptr){
                     videoFrameQueue->FrontPop(&videoFrame);
@@ -61,10 +83,12 @@ namespace EyerPlayer {
                     }
                 }
             }
+            */
 
 
 
-            
+
+
             if(audioFrame == nullptr){
                 if(audioFrameQueue != nullptr){
                     audioFrameQueue->FrontPop(&audioFrame);
@@ -82,6 +106,8 @@ namespace EyerPlayer {
                 }
             }
         }
+
+        Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
         EyerLog("PlayCtr Thread End\n");
     }
 

@@ -5,8 +5,9 @@
 #include "EyerEventQueue/EyerEventQueue.hpp"
 #include "EyerPlayerThread.hpp"
 #include "EyerPlayerThreadManager.hpp"
+#include "EyerPlayer.hpp"
 
-namespace EyerPlayer 
+namespace Eyer
 {
     class EyerPlayerEventManager : public Eyer::EyerThread 
     {
@@ -22,9 +23,13 @@ namespace EyerPlayer
         int SetGLCtx(Eyer::EyerGLContextThread * _glCtx);
         int UnbindGLCtx();
 
+        int SetSurface(jobject _surface);
+        int SetCallback(EyerPlayerCallback * callback);
+
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         EyerPlayerThreadManager * playerManager = nullptr;
+        EyerPlayerCallback * callback = nullptr;
     };
 }
 

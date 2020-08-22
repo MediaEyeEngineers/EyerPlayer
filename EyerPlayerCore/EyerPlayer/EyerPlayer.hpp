@@ -2,9 +2,11 @@
 #define	EYER_PLAYER_H
 
 #include <string>
+#include <jni.h>
 #include "EyerGLContext/EyerGLContext.hpp"
+#include "MediaInfo.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
 
     enum EventOpenStatus
     {
@@ -22,6 +24,23 @@ namespace EyerPlayer {
 
     class EyerPlayerPrivate;
 
+    class EyerPlayerAndroidSurface
+    {
+    public:
+
+    };
+
+    class EyerPlayerCallback{
+    public:
+        EyerPlayerCallback();
+        ~EyerPlayerCallback();
+
+        int OnOpen(MediaInfo & mediaInfo);
+
+    public:
+        jobject callback = nullptr;
+    };
+
     class EyerPlayer
     {
     public:
@@ -30,6 +49,9 @@ namespace EyerPlayer {
 
         int BindGLContext(Eyer::EyerGLContextThread * ctx);
         int UnBindGLContext();
+
+        int SetSurface(jobject surface);
+        int SetCallback(EyerPlayerCallback * callback);
 
         int Open(std::string url);
 

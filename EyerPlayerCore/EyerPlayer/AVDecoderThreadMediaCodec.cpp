@@ -3,11 +3,11 @@
 
 #include "EyerCodec/EyerCodec.hpp"
 
-namespace EyerPlayer {
-    AVDecoderThreadMediaCodec::AVDecoderThreadMediaCodec(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager)
+namespace Eyer {
+    AVDecoderThreadMediaCodec::AVDecoderThreadMediaCodec(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager, jobject _surface)
             : AVDecoderThread(_stream, _frameQueueManager)
     {
-
+        surface = _surface;
     }
 
     AVDecoderThreadMediaCodec::~AVDecoderThreadMediaCodec()
@@ -19,13 +19,16 @@ namespace EyerPlayer {
     {
         EyerLog("AVDecoder MediaCodec Thread Start\n");
 
-        Eyer::EyerMediaCodec mediaCodec;
-        mediaCodec.BindDecoderThread();
-        mediaCodec.BindPlayCtrThread();
+        Eyer::EyerAVBitstreamFilter bitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
 
-        mediaCodec.Init(stream);
+        frameQueueManager->GetMediaCodecQueueInit(stream, surface);
+        Eyer::EyerMediaCodec * mediaCodec = nullptr;
+        frameQueueManager->GetMediaCodecQueue(&mediaCodec);
+
         // 解码
         while (!stopFlag) {
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+
             Eyer::EyerAVPacket * pkt = nullptr;
             pktQueue.FrontPop(&pkt);
             if (pkt == nullptr) {
@@ -42,12 +45,21 @@ namespace EyerPlayer {
 
             cacheSize -= pkt->GetSize();
 
-            mediaCodec.SendPacket(pkt);
-
-            while(1){
-                int ret = mediaCodec.RecvFrameRender();
+            bitstreamFilter.SendPacket(pkt);
+            while(!stopFlag){
+                Eyer::EyerAVPacket annexbPkt;
+                int ret = bitstreamFilter.ReceivePacket(&annexbPkt);
                 if(ret){
                     break;
+                }
+
+                stream.ScalerPacketPTS(annexbPkt);
+
+                while(!stopFlag){
+                    ret = mediaCodec->SendPacket(&annexbPkt);
+                    if(ret == 0){
+                        break;
+                    }
                 }
             }
 
@@ -56,6 +68,8 @@ namespace EyerPlayer {
                 pkt = nullptr;
             }
         }
+
+        Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
 
         EyerLog("AVDecoder MediaCodec Thread Stop\n");
     }

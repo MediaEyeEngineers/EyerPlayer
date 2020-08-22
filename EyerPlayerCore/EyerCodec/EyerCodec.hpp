@@ -13,25 +13,17 @@ namespace Eyer
         EyerMediaCodec();
         ~EyerMediaCodec();
 
-        int Init(EyerAVStream & stream);
+        int Init(EyerAVStream & stream, jobject surface);
 
-        int BindDecoderThread();
-        int BindPlayCtrThread();
-
-        int SendPacket(Eyer::EyerAVPacket *pkt );
+        int SendPacket(Eyer::EyerAVPacket * pkt);
         int RecvFrameRender();
 
+        int DequeueOutputBuffer();
+        long GetOutTime();
+        int RenderFrame(int outindex);
+
     private:
-        Eyer::EyerAVBitstreamFilter * bitstreamFilter = nullptr;
-
-        JNIEnv * decoderEnv = nullptr;
-        JNIEnv * playctrEnv = nullptr;
-
-        jclass eyerMediaCodecClass = nullptr;
         jobject eyerMediaCodec = nullptr;
-
-        jmethodID eyerMediaCodecMethod_Send = nullptr;
-        jmethodID eyerMediaCodecMethod_RecvAndRender = nullptr;
     };
 }
 

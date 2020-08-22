@@ -53,6 +53,11 @@ namespace Eyer
         return piml->packet->pts;
     }
 
+    double EyerAVPacket::GetSecPTS()
+    {
+        return piml->ptsSec;
+    }
+
     uint64_t EyerAVPacket::GetDTS()
     {
         return piml->packet->dts;

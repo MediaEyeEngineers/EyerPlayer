@@ -1,7 +1,7 @@
 #include "EyerPlayerThread.hpp"
 #include "EventTag.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     AVDecoderThread::AVDecoderThread(Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager)
     {
         frameQueueManager = _frameQueueManager;

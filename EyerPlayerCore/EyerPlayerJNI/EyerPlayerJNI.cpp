@@ -37,6 +37,30 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 
 
+
+    // 初始化 MediaCodec 的 class loader
+    jclass eyerCallback_ClassLoaderClass = env->FindClass("com/eyer/eyerplayer/callback/EyerCallback");
+    if(eyerCallback_ClassLoaderClass == nullptr){
+        EyerLog("FFFFF Find EyerCallback Class Fail\n");
+    }
+
+    jmethodID eyerCallback_InitMethodId = env->GetMethodID(eyerCallback_ClassLoaderClass, "<init>", "()V");
+    if(eyerCallback_InitMethodId == nullptr){
+        EyerLog("FFFFF GetMethodID Fail\n");
+    }
+
+    jobject eyerCallback = env->NewObject(eyerCallback_ClassLoaderClass, eyerCallback_InitMethodId);
+    if(eyerCallback == nullptr){
+        EyerLog("FFFFF NewObject Fail\n");
+    }
+
+    Eyer::EyerJNIEnvManager::eyerCallback_ClassLoader = env->NewGlobalRef(eyerCallback);
+
+    env->DeleteLocalRef(eyerCallback_ClassLoaderClass);
+    env->DeleteLocalRef(eyerCallback);
+
+
+
     EyerLog("JavaVM GetEnv Success\n");
     return JNI_VERSION_1_6;
 }
@@ -44,15 +68,38 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1init
 (JNIEnv * env, jclass)
 {
-    EyerPlayer::EyerPlayer * player = new EyerPlayer::EyerPlayer();
+    Eyer::EyerPlayer * player = new Eyer::EyerPlayer();
     return (jlong)player;
 }
 
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1uninit
 (JNIEnv *, jclass, jlong playerJNI)
 {
-    EyerPlayer::EyerPlayer * player = (EyerPlayer::EyerPlayer *)playerJNI;
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
     delete player;
+    return 0;
+}
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1surface
+(JNIEnv * env, jclass, jlong playerJNI, jobject surface)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    jobject surfaceRef = env->NewGlobalRef(surface);
+    player->SetSurface(surfaceRef);
+
+    return 0;
+}
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1callback
+(JNIEnv * env, jclass, jlong playerJNI, jobject callback)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    jobject callbackRef = env->NewGlobalRef(callback);
+
+    Eyer::EyerPlayerCallback * playerCallback = new Eyer::EyerPlayerCallback();
+    playerCallback->callback = callbackRef;
+    player->SetCallback(playerCallback);
+
     return 0;
 }
 
@@ -60,26 +107,8 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
 (JNIEnv * env, jclass, jlong playerJNI, jstring urlJNI)
 {
     char * url = jstringtochar(env, urlJNI);
-    EyerPlayer::EyerPlayer * player = (EyerPlayer::EyerPlayer *)playerJNI;
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
     int ret = player->Open(url);
     free(url);
     return ret;
-}
-
-
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1set_1gl_1ctx
-(JNIEnv *, jclass, jlong playerJNI, jlong glCtxJNI)
-{
-    EyerPlayer::EyerPlayer * player = (EyerPlayer::EyerPlayer *)playerJNI;
-    Eyer::EyerGLContextThread * glContextThread = (Eyer::EyerGLContextThread *)glCtxJNI;
-
-    return player->BindGLContext(glContextThread);
-}
-
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1unset_1gl_1ctx
-(JNIEnv *, jclass, jlong playerJNI)
-{
-    EyerPlayer::EyerPlayer * player = (EyerPlayer::EyerPlayer *)playerJNI;
-
-    return player->UnBindGLContext();
 }

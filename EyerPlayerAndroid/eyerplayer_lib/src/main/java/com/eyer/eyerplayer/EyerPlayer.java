@@ -1,26 +1,15 @@
 package com.eyer.eyerplayer;
 
+import android.view.Surface;
+
+import com.eyer.eyerplayer.callback.EyerCallback;
+
 public class EyerPlayer {
 
     private long nativeId = 0;
 
     public EyerPlayer(){
         nativeId = EyerPlayerJNI.player_init();
-    }
-
-    private int SetGLCtx(EyerPlayerGLContext glCtx){
-        return EyerPlayerJNI.player_set_gl_ctx(nativeId, glCtx.getNativeId());
-    }
-    private int UnsetGLCtx(){
-        return EyerPlayerJNI.player_unset_gl_ctx(nativeId);
-    }
-
-    public int SetPlayerView(EyerPlayerView playerView){
-        return SetGLCtx(playerView.getGLCtx());
-    }
-
-    public int UnsetPlayerView(){
-        return UnsetGLCtx();
     }
 
     public void destory(){
@@ -30,19 +19,29 @@ public class EyerPlayer {
         }
     }
 
-    public int Open(String url){
+    public int setListener(EyerPlayerListener listener) {
+        EyerCallback callback = new EyerCallback(listener);
+        EyerPlayerJNI.player_set_callback(nativeId, callback);
+        return 0;
+    }
+
+    public int setSurface(Surface surface){
+        return EyerPlayerJNI.player_set_surface(nativeId, surface);
+    }
+
+    public int open(String url){
         return EyerPlayerJNI.player_open(nativeId, url);
     }
 
-    public int Close(){
+    public int stop(){
         return 0;
     }
 
-    public int Play(){
+    public int play(){
         return 0;
     }
 
-    public int Pause() {
+    public int pause() {
         return 0;
     }
 }
