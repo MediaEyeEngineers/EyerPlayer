@@ -113,6 +113,20 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
     return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1play
+(JNIEnv *, jclass, jlong playerJNI)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    return player->Play();
+}
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1pause
+(JNIEnv *, jclass, jlong playerJNI)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    return player->Pause();
+}
+
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1stop
 (JNIEnv *, jclass, jlong playerJNI)
 {

@@ -28,6 +28,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btn_play"
+            android:text="Play"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_pause"
+            android:text="Pause"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/btn_stop"
             android:text="Stop"/>
     </LinearLayout>

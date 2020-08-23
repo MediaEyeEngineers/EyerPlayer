@@ -117,6 +117,8 @@ namespace Eyer {
 
         std::mutex mut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
+
+        double videoTime = 0.0;
     };
 }
 

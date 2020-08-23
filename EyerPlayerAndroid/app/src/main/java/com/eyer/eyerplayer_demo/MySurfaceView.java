@@ -41,6 +41,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return player.open(url);
     }
 
+    public int play(){
+        return player.play();
+    }
+
+    public int pause(){
+        return player.pause();
+    }
+
     public int stop(){
         return player.stop();
     }

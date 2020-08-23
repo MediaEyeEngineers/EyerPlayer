@@ -32,6 +32,8 @@ namespace Eyer {
             return -1;
         }
 
+        frameQueueManager->ClearAndDelete();
+
         readerThread = new AVReaderThread(url, openEventId, eventQueue, frameQueueManager);
         readerThread->SetSurface(surface);
         readerThread->Start();
@@ -45,36 +47,23 @@ namespace Eyer {
             return -1;
         }
 
-        if(playerCtr != nullptr){
-            playerCtr->Stop();
-            delete playerCtr;
-            playerCtr = nullptr;
-        }
+        if(playerCtr == nullptr){
+            playerCtr = new AVPlayCtrThread(frameQueueManager);
 
-        playerCtr = new AVPlayCtrThread(frameQueueManager);
-
-        if(playerCtr != nullptr){
             glCtxMut.lock();
             playerCtr->SetGLCtx(glCtx);
             glCtxMut.unlock();
-        }
 
-        playerCtr->Start();
+            playerCtr->Start();
+        }
 
         return 0;
     }
 
     int EyerPlayerThreadManager::Pause()
     {
-        return 0;
-    }
-
-    int EyerPlayerThreadManager::Stop()
-    {
-        if(readerThread != nullptr){
-            readerThread->Stop();
-            delete readerThread;
-            readerThread = nullptr;
+        if(playerCtr == nullptr){
+            return -1;
         }
 
         if(playerCtr != nullptr){
@@ -82,6 +71,26 @@ namespace Eyer {
             delete playerCtr;
             playerCtr = nullptr;
         }
+
+        return 0;
+    }
+
+    int EyerPlayerThreadManager::Stop()
+    {
+        if(playerCtr != nullptr){
+            playerCtr->Stop();
+            delete playerCtr;
+            playerCtr = nullptr;
+        }
+
+        if(readerThread != nullptr){
+            readerThread->Stop();
+            delete readerThread;
+            readerThread = nullptr;
+        }
+
+        frameQueueManager->ClearAndDelete();
+        frameQueueManager->GetMediaCodecQueueUninit();
 
         return 0;
     }

@@ -21,6 +21,7 @@ namespace Eyer {
         int ClearAndDelete();
 
         int GetMediaCodecQueueInit(Eyer::EyerAVStream & stream, jobject surface);
+        int GetMediaCodecQueueUninit();
         int GetMediaCodecQueue(Eyer::EyerMediaCodec * * mediaCodecQueue);
 
     private:

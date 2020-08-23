@@ -31,13 +31,15 @@ namespace Eyer {
         int outindex = -1;
         long videoFrameTime = 0;
 
+        double dTime = 0.0;
+
         while(!stopFlag){
 
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             long long nowTime = Eyer::EyerTime::GetTime();
 
-            double dTime = (nowTime - startTime) / 1000.0;
+            dTime = (nowTime - startTime) / 1000.0;
 
             if(mediaCodec == nullptr){
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
@@ -106,6 +108,8 @@ namespace Eyer {
                 }
             }
         }
+
+        videoTime = dTime;
 
         Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
         EyerLog("PlayCtr Thread End\n");

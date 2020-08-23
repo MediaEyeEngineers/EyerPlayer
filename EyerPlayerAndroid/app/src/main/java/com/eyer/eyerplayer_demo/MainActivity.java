@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     // private EyerPlayer player = null;
     private Button btn_open = null;
     private Button btn_stop = null;
+    private Button btn_play = null;
+    private Button btn_pause = null;
 
     private MySurfaceView video_view = null;
 
@@ -39,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
         btn_open = findViewById(R.id.btn_open);
         btn_stop = findViewById(R.id.btn_stop);
+        btn_pause = findViewById(R.id.btn_pause);
+        btn_play = findViewById(R.id.btn_play);
 
         btn_open.setOnClickListener(new MyClickListener());
+        btn_play.setOnClickListener(new MyClickListener());
+        btn_pause.setOnClickListener(new MyClickListener());
         btn_stop.setOnClickListener(new MyClickListener());
     }
 
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
+                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 Log.e("MainActivity", videoPath);
 
                 File videoFile = new File(videoPath);
@@ -97,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 video_view.open(videoPath);
+            }
+            if(view == btn_play){
+                video_view.play();
+            }
+            if(view == btn_pause){
+                video_view.pause();
             }
             if(view == btn_stop){
                 video_view.stop();

@@ -38,10 +38,10 @@ public class EyerPlayer {
     }
 
     public int play(){
-        return 0;
+        return EyerPlayerJNI.player_play(nativeId);
     }
 
     public int pause() {
-        return 0;
+        return EyerPlayerJNI.player_pause(nativeId);
     }
 }

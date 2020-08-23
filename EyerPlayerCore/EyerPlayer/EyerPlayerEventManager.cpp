@@ -51,7 +51,20 @@ namespace Eyer
                 EyerLog("Url: %s\n", openRequest->url.str);
 
                 playerManager->Open(openRequest->url, openRequest->GetRequestId(), eventQueue);
+            }
+
+            if(event->GetType() == EventType::PLAYRequest){
+                EventPlayRequest * playRequest = (EventPlayRequest *)event;
+                EyerLog("PlayRequest\n");
+
                 playerManager->Play();
+            }
+
+            if(event->GetType() == EventType::PAUSERequest){
+                EventPauseRequest * playRequest = (EventPauseRequest *)event;
+                EyerLog("PauseRequest\n");
+
+                playerManager->Pause();
             }
 
             if(event->GetType() == EventType::STOPRequest){
