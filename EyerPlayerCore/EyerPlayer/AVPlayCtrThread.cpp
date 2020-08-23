@@ -1,19 +1,29 @@
 #include "EyerGLRenderTask/YUVRenderTask.hpp"
 #include "EyerPlayerThread.hpp"
 #include "EventTag.hpp"
+#include "EyerOpenSL/EyerOpenSL.hpp"
 
 namespace Eyer {
-    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager)
+    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager, double _videoTime)
     {
+        videoTime = _videoTime;
         frameQueueManager = _frameQueueManager;
+
+        opensl = new EyerOpenSL();
     }
 
     AVPlayCtrThread::~AVPlayCtrThread()
     {
+        if(opensl != nullptr){
+            delete opensl;
+            opensl = nullptr;
+        }
     }
 
     void AVPlayCtrThread::Run()
     {
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+
         EyerLog("PlayCtr Thread Start\n");
 
         AVFrameQueue * videoFrameQueue = nullptr;
@@ -29,17 +39,30 @@ namespace Eyer {
 
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
         int outindex = -1;
-        long videoFrameTime = 0;
+        long long videoFrameTime = 0;
 
-        double dTime = 0.0;
-
+        long long pauseingTime = 0;
         while(!stopFlag){
 
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
-            long long nowTime = Eyer::EyerTime::GetTime();
+            if(status == AVPlayCtrStatus::STATUS_PAUSEING){
+                long long pauseStart = Eyer::EyerTime::GetTime();
+                while(!stopFlag){
+                    Eyer::EyerTime::EyerSleepMilliseconds(100);
+                    if(status == AVPlayCtrStatus::STATUS_PLAYING){
+                        break;
+                    }
+                }
+                long long pauseEnd = Eyer::EyerTime::GetTime();
 
-            dTime = (nowTime - startTime) / 1000.0;
+                pauseingTime += (pauseEnd - pauseStart);
+            }
+
+            long long nowTime = Eyer::EyerTime::GetTime() - pauseingTime;
+
+            double dTime = (nowTime - startTime) / 1000.0;
+            videoTime = dTime;
 
             if(mediaCodec == nullptr){
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
@@ -102,17 +125,26 @@ namespace Eyer {
                     // Play !!!
                     // EyerLog("Audio Frame: %f\n", audioFrame->timePts);
                     if(audioFrame != nullptr){
-                        delete audioFrame;
+                        opensl->PutFrame(audioFrame);
                         audioFrame = nullptr;
+                        // delete audioFrame;
+                        // audioFrame = nullptr;
                     }
                 }
             }
         }
 
-        videoTime = dTime;
-
         Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
+
         EyerLog("PlayCtr Thread End\n");
+    }
+
+    int AVPlayCtrThread::SetStatus(AVPlayCtrStatus _status)
+    {
+        statusMut.lock();
+        status = _status;
+        statusMut.unlock();
+        return 0;
     }
 
     int AVPlayCtrThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
@@ -121,5 +153,10 @@ namespace Eyer {
         glCtx = _glCtx;
         mut.unlock();
         return 0;
+    }
+
+    double AVPlayCtrThread::GetVideoTime()
+    {
+        return videoTime;
     }
 }

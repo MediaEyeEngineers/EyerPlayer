@@ -36,6 +36,7 @@ namespace Eyer {
 
     int AVFrameQueueManager::GetMediaCodecQueueUninit()
     {
+        std::lock_guard<std::mutex> lg(mediaCodecQueueMut);
         if(mediaCodecQueue != nullptr){
             mediaCodecQueue->Uninit();
             delete mediaCodecQueue;

@@ -229,6 +229,48 @@ namespace Eyer {
     }
 
 
+    int EyerAVFrame::GetAudioPackedData(unsigned char * data)
+    {
+        EyerLog("Channel: %d\n", piml->frame->channels);
+        int sizePerSample = av_get_bytes_per_sample((AVSampleFormat)piml->frame->format);
+        int bufferSize = sizePerSample * piml->frame->nb_samples * piml->frame->channels;
+        if(data == nullptr){
+            return bufferSize;
+        }
+
+        // 判断是 Packed 还是 Plane
+        int isPanar = av_sample_fmt_is_planar((AVSampleFormat)piml->frame->format);
+        if(isPanar){
+            // EyerLog("Panar\n");
+            SwrContext * swrCtx = swr_alloc_set_opts(
+                    NULL,
+                    piml->frame->channel_layout,
+                    // av_get_packed_sample_fmt((AVSampleFormat)piml->frame->format),
+                    AVSampleFormat::AV_SAMPLE_FMT_S32,
+                    piml->frame->sample_rate,
+
+                    piml->frame->channel_layout,
+                    (AVSampleFormat)piml->frame->format,
+                    piml->frame->sample_rate,
+
+                    0,
+                    NULL
+            );
+
+
+            swr_init(swrCtx);
+
+            int ret = swr_convert(swrCtx, &data, piml->frame->nb_samples, (const uint8_t **)piml->frame->data, piml->frame->nb_samples);
+
+            swr_free(&swrCtx);
+        }
+        else{
+            // EyerLog("Packed\n");
+            memcpy(data, piml->frame->data[0], bufferSize);
+        }
+
+        return 0;
+    }
 
 
 

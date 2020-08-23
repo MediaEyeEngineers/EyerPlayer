@@ -48,7 +48,7 @@ namespace Eyer {
         }
 
         if(playerCtr == nullptr){
-            playerCtr = new AVPlayCtrThread(frameQueueManager);
+            playerCtr = new AVPlayCtrThread(frameQueueManager, videoTime);
 
             glCtxMut.lock();
             playerCtr->SetGLCtx(glCtx);
@@ -56,6 +56,8 @@ namespace Eyer {
 
             playerCtr->Start();
         }
+
+        playerCtr->SetStatus(AVPlayCtrStatus::STATUS_PLAYING);
 
         return 0;
     }
@@ -66,11 +68,7 @@ namespace Eyer {
             return -1;
         }
 
-        if(playerCtr != nullptr){
-            playerCtr->Stop();
-            delete playerCtr;
-            playerCtr = nullptr;
-        }
+        playerCtr->SetStatus(AVPlayCtrStatus::STATUS_PAUSEING);
 
         return 0;
     }
@@ -91,6 +89,8 @@ namespace Eyer {
 
         frameQueueManager->ClearAndDelete();
         frameQueueManager->GetMediaCodecQueueUninit();
+
+        videoTime = 0.0;
 
         return 0;
     }

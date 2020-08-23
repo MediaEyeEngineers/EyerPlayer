@@ -20,6 +20,7 @@ target_link_libraries (EyerPlayerJNI
 
         EyerThread
         EyerGLShader
+        EyerOpenSL
         EyerJNI
         EyerCodec
         EyerAV

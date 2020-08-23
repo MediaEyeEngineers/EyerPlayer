@@ -93,9 +93,11 @@ public class MainActivity extends AppCompatActivity {
             if(view == btn_open){
                 String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_1080p.mp4";
+
                 Log.e("MainActivity", videoPath);
 
                 File videoFile = new File(videoPath);
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("MainActivity", videoFile.canRead() + "");
                 }
 
+                // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
                 video_view.open(videoPath);
             }
             if(view == btn_play){
