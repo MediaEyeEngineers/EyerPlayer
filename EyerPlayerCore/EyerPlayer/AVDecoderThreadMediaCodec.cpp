@@ -60,7 +60,9 @@ namespace Eyer {
 
                     if (index >= 0) {
                         mediaCodec->putInputData(index, annexbPkt.GetDataPtr(), annexbPkt.GetSize());
-                        mediaCodec->queueInputBuffer(index, 0, annexbPkt.GetSize(), 0, 0);
+                        mediaCodec->queueInputBuffer(index, 0, annexbPkt.GetSize(), (double)(annexbPkt.GetSecPTS() * 1000.0), 0);
+
+                        break;
                     }
                 }
             }
