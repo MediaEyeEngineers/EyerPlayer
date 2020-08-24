@@ -10,8 +10,11 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.eyer.eyerplayer.EyerPlayer;
+import com.eyer.eyerplayer.EyerPlayerListener;
+import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 import java.io.File;
 
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_play = null;
     private Button btn_pause = null;
 
+    private TextView log_textview = null;
+
     private MySurfaceView video_view = null;
 
     @Override
@@ -38,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
 
         video_view = findViewById(R.id.video_view);
+        video_view.setListener(new MyEyerPlayerListener());
 
         btn_open = findViewById(R.id.btn_open);
         btn_stop = findViewById(R.id.btn_stop);
         btn_pause = findViewById(R.id.btn_pause);
         btn_play = findViewById(R.id.btn_play);
+        log_textview = findViewById(R.id.log_textview);
 
         btn_open.setOnClickListener(new MyClickListener());
         btn_play.setOnClickListener(new MyClickListener());
@@ -83,6 +90,25 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class MyEyerPlayerListener implements EyerPlayerListener
+    {
+        @Override
+        public int onOpen(int status, EyerMediaInfo mediaInfo) {
+            String log = "open: ";
+            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
+                log += "success";
+            }
+            if(status == EyerPlayerListener.OPEN_STATUS_FAIL){
+                log += "fail";
+            }
+            if(status == EyerPlayerListener.OPEN_STATUS_BUSY){
+                log += "busy";
+            }
+            log_textview.setText(log);
+            return 0;
         }
     }
 

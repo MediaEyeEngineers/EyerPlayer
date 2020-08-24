@@ -107,14 +107,26 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    private EyerPlayerListener listener = null;
+    public int setListener(EyerPlayerListener listener){
+        this.listener = listener;
+        return 0;
+    }
+
 
     private class MyEyerPlayerListener implements EyerPlayerListener
     {
         @Override
         public int onOpen(int status, EyerMediaInfo mediaInfo) {
-            videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
-            videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
-            requestLayout();
+            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
+                videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
+                videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
+                requestLayout();
+            }
+
+            if(listener != null){
+                listener.onOpen(status, mediaInfo);
+            }
             return 0;
         }
     }
