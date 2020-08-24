@@ -79,13 +79,11 @@ namespace Eyer
             else if(event->GetType() == EventType::OPENResponse){
                 EventOpenResponse * openResponse = (EventOpenResponse *)event;
                 EyerLog("EventOpenResponse\n");
+                MediaInfo mediaInfo;
                 if(openResponse->status == EventOpenStatus::OPEN_STATUS_SUCCESS){
                     EyerLog("EventOpenResponse OPEN_STATUS_SUCCESS\n");
-                    MediaInfo mediaInfo = openResponse->mediaInfo;
                     mediaInfo.Print();
-                    if(callback != nullptr){
-                        callback->OnOpen(mediaInfo);
-                    }
+                    mediaInfo = openResponse->mediaInfo;
                 }
                 else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){
                     EyerLog("EventOpenResponse OPEN_STATUS_FAIL\n");
@@ -95,6 +93,9 @@ namespace Eyer
                 }
                 else{
                     EyerLog("EventOpenResponse UNKNOW\n");
+                }
+                if(callback != nullptr){
+                    callback->OnOpen(openResponse->status, mediaInfo);
                 }
             }
 

@@ -125,12 +125,9 @@ namespace Eyer {
                 // 判断音频是否应该播放
                 if(audioFrame->timePts <= dTime){
                     // Play !!!
-                    // EyerLog("Audio Frame: %f\n", audioFrame->timePts);
                     if(audioFrame != nullptr){
                         opensl->PutFrame(audioFrame);
                         audioFrame = nullptr;
-                        // delete audioFrame;
-                        // audioFrame = nullptr;
                     }
                 }
             }

@@ -10,9 +10,9 @@ namespace Eyer {
 
     enum EventOpenStatus
     {
-        OPEN_STATUS_SUCCESS = 1,
-        OPEN_STATUS_FAIL = 2,
-        OPEN_STATUS_BUSY = -1
+        OPEN_STATUS_SUCCESS = 0,
+        OPEN_STATUS_FAIL = -1,
+        OPEN_STATUS_BUSY = -2
     };
 
     enum EventStopStatus
@@ -35,7 +35,7 @@ namespace Eyer {
         EyerPlayerCallback();
         ~EyerPlayerCallback();
 
-        int OnOpen(MediaInfo & mediaInfo);
+        int OnOpen(EventOpenStatus status, MediaInfo & mediaInfo);
 
     public:
         jobject callback = nullptr;

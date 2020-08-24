@@ -111,11 +111,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private class MyEyerPlayerListener implements EyerPlayerListener
     {
         @Override
-        public int onOpen(EyerMediaInfo mediaInfo) {
+        public int onOpen(int status, EyerMediaInfo mediaInfo) {
             videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
             videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
             requestLayout();
-
             return 0;
         }
     }
