@@ -70,14 +70,16 @@ namespace Eyer {
 
             if(mediaCodec != nullptr){
                 if(outindex < 0){
-                    outindex = mediaCodec->DequeueOutputBuffer();
-                    videoFrameTime = mediaCodec->GetOutTime();
+                    outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
+                    if(outindex >= 0){
+                        videoFrameTime = mediaCodec->getOutTime();
+                    }
                 }
 
                 if(outindex >= 0){
                     double timePts = videoFrameTime / 1000.0;
                     if (timePts <= dTime) {
-                        mediaCodec->RenderFrame(outindex);
+                        mediaCodec->releaseOutputBuffer(outindex, true);
                         outindex = -1;
                     }
                 }

@@ -231,7 +231,7 @@ namespace Eyer {
 
     int EyerAVFrame::GetAudioPackedData(unsigned char * data)
     {
-        EyerLog("Channel: %d\n", piml->frame->channels);
+        /// EyerLog("Channel: %d\n", piml->frame->channels);
         int sizePerSample = av_get_bytes_per_sample((AVSampleFormat)piml->frame->format);
         int bufferSize = sizePerSample * piml->frame->nb_samples * piml->frame->channels;
         if(data == nullptr){
