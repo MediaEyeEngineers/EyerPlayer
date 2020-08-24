@@ -3,35 +3,33 @@
 #include "EyerJNI/EyerJNIEnvManager.h"
 #include <jni.h>
 
-namespace Eyer
-{
-    EyerMediaCodec::EyerMediaCodec()
-    {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+namespace Eyer {
+    EyerMediaCodec::EyerMediaCodec() {
+
     }
 
-    EyerMediaCodec::~EyerMediaCodec()
-    {
+    EyerMediaCodec::~EyerMediaCodec() {
+
     }
 
-    int EyerMediaCodec::Init(EyerAVStream & stream, jobject surface)
-    {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+    int EyerMediaCodec::Init(EyerAVStream &stream, jobject surface) {
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
-        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        jclass eyerMediaCodecClass = env->GetObjectClass(
+                Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
 
         jmethodID eyerMediaCodecMethod = env->GetMethodID(eyerMediaCodecClass, "<init>", "()V");
-        if(eyerMediaCodecMethod == nullptr){
+        if (eyerMediaCodecMethod == nullptr) {
             EyerLog("MediaCodec Thread: GetMethodID Fail\n");
         }
 
 
         jobject _eyerMediaCodec = env->NewObject(eyerMediaCodecClass, eyerMediaCodecMethod);
-        if(_eyerMediaCodec == nullptr){
+        if (_eyerMediaCodec == nullptr) {
             EyerLog("MediaCodec Thread: EyerMediaCodec Class Fail\n");
         }
 
@@ -39,29 +37,31 @@ namespace Eyer
 
 
         // 调用 Init 函数
-        jmethodID eyerMediaCodecMethod_Init = env->GetMethodID(eyerMediaCodecClass, "init", "(IILandroid/view/Surface;)I");
-        if(eyerMediaCodecMethod_Init == nullptr){
+        jmethodID eyerMediaCodecMethod_Init = env->GetMethodID(eyerMediaCodecClass, "init",
+                                                               "(IILandroid/view/Surface;)I");
+        if (eyerMediaCodecMethod_Init == nullptr) {
             EyerLog("MediaCodec Thread: Init GetMethodID Fail\n");
         }
 
-        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(), stream.GetHeight(), surface);
+        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Init, stream.GetWidth(),
+                                     stream.GetHeight(), surface);
         EyerLog("MediaCodec Thread: MediaCodec init: %d\n", ret);
 
         return 0;
     }
 
-    int EyerMediaCodec::Uninit()
-    {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+    int EyerMediaCodec::Uninit() {
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
         // 查询 RecvAndRender 函数
-        jmethodID eyerMediaCodecMethod_Uninit = env->GetMethodID(eyerMediaCodecClass, "uninit", "()I");
-        if(eyerMediaCodecMethod_Uninit == nullptr){
+        jmethodID eyerMediaCodecMethod_Uninit = env->GetMethodID(eyerMediaCodecClass, "uninit",
+                                                                 "()I");
+        if (eyerMediaCodecMethod_Uninit == nullptr) {
             EyerLog("MediaCodec Thread: Uniinit GetMethodID Fail\n");
         }
 
@@ -70,120 +70,118 @@ namespace Eyer
         return ret;
     }
 
-    int EyerMediaCodec::SendPacket(Eyer::EyerAVPacket * annexbPkt)
+    int EyerMediaCodec::dequeueInputBuffer(long long timeoutUs)
     {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        jmethodID eyerMediaCodecMethod_Send = env->GetMethodID(eyerMediaCodecClass, "send", "([BJ)I");
-        if(eyerMediaCodecMethod_Send == nullptr){
-            EyerLog("MediaCodec Thread: send GetMethodID Fail\n");
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "dequeueInputBuffer", "(J)I");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
+        return env->CallIntMethod(eyerMediaCodec, jmethodId, timeoutUs);
+    }
 
-        int ret = 0;
+    int EyerMediaCodec::putInputData(int index, unsigned char *data, int size)
+    {
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
-        jbyteArray jData = env->NewByteArray(annexbPkt->GetSize());
-        env->SetByteArrayRegion(jData, 0, annexbPkt->GetSize(), (jbyte*)annexbPkt->GetDataPtr());
-        jlong time = (jlong)(annexbPkt->GetSecPTS() * 1000);
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if (eyerMediaCodecClass == nullptr) {
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
 
-        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Send, jData, time);
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "putInputData", "(I[B)I");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
+        }
 
+        jbyteArray jData = env->NewByteArray(size);
+        env->SetByteArrayRegion(jData, 0, size, (jbyte *)data);
+        int ret =  env->CallIntMethod(eyerMediaCodec, jmethodId, index, jData);
         env->DeleteLocalRef(jData);
 
         return ret;
     }
 
-    int EyerMediaCodec::RecvFrameRender()
+    void EyerMediaCodec::queueInputBuffer(int index, int offset, int size, long long presentationTimeUs, int flags)
     {
-        int ret = 0;
-
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        // 查询 RecvAndRender 函数
-        jmethodID eyerMediaCodecMethod_RecvAndRender = env->GetMethodID(eyerMediaCodecClass, "recvAndRender", "()I");
-        if(eyerMediaCodecMethod_RecvAndRender == nullptr){
-            EyerLog("MediaCodec Thread: recvAndRender GetMethodID Fail\n");
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "queueInputBuffer", "(IIIJI)V");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
-        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_RecvAndRender);
-
-        return ret;
+        env->CallVoidMethod(eyerMediaCodec, jmethodId, index, offset, size, presentationTimeUs, flags);
     }
 
 
 
 
 
-    int EyerMediaCodec::DequeueOutputBuffer()
-    {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
-        int ret = 0;
+
+
+
+    int EyerMediaCodec::dequeueOutputBuffer(long long timeoutUs)
+    {
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        // 查询 dequeueOutputBuffer 函数
-        jmethodID eyerMediaCodecMethod_DequeueOutputBuffer = env->GetMethodID(eyerMediaCodecClass, "dequeueOutputBuffer", "()I");
-        if(eyerMediaCodecMethod_DequeueOutputBuffer == nullptr){
-            EyerLog("MediaCodec Thread: DequeueOutputBuffer GetMethodID Fail\n");
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "dequeueOutputBuffer", "(J)I");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
-        ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_DequeueOutputBuffer);
-
-        return ret;
+        return env->CallIntMethod(eyerMediaCodec, jmethodId, timeoutUs);
     }
 
-    long EyerMediaCodec::GetOutTime()
+    long long EyerMediaCodec::getOutTime()
     {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        // 查询 getOutTime 函数
-        jmethodID eyerMediaCodecMethod_getOutTime = env->GetMethodID(eyerMediaCodecClass, "getOutTime", "()J");
-        if(eyerMediaCodecMethod_getOutTime == nullptr){
-            EyerLog("MediaCodec Thread: GetTime GetMethodID Fail\n");
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "getOutTime", "()J");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
-        long ret = env->CallLongMethod(eyerMediaCodec, eyerMediaCodecMethod_getOutTime);
-
-        return ret;
+        return env->CallLongMethod(eyerMediaCodec, jmethodId);
     }
 
-    int EyerMediaCodec::RenderFrame(int outindex)
+    int EyerMediaCodec::releaseOutputBuffer(int index, bool render)
     {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
-        if(eyerMediaCodecClass == nullptr){
+        if (eyerMediaCodecClass == nullptr) {
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        // 查询 getOutTime 函数
-        jmethodID eyerMediaCodecMethod_renderFrame = env->GetMethodID(eyerMediaCodecClass, "renderFrame", "(I)I");
-        if(eyerMediaCodecMethod_renderFrame == nullptr){
-            EyerLog("MediaCodec Thread: renderFrame GetMethodID Fail\n");
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "releaseOutputBuffer", "(IZ)I");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
-        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_renderFrame, outindex);
-
-        return ret;
-
+        return env->CallIntMethod(eyerMediaCodec, jmethodId, index, render);
     }
 }

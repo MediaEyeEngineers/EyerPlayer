@@ -14,6 +14,8 @@ public class EyerMediaCodec {
 
     private MediaCodec mediaCodec = null;
 
+    private MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+
     public int init(int width, int height, Surface surface){
         displayDecoders();
         Log.e("EyerMediaCodec", "width: " + width + " height: " + height);
@@ -41,6 +43,52 @@ public class EyerMediaCodec {
 
         return 0;
     }
+
+
+    /// Input
+    public int dequeueInputBuffer(long timeoutUs){
+        return mediaCodec.dequeueInputBuffer(timeoutUs);
+    }
+    public int putInputData(int index, byte[] data){
+        ByteBuffer inputBuf = mediaCodec.getInputBuffers()[index];
+        inputBuf.clear();
+        inputBuf.put(data);
+
+        return 0;
+    }
+
+    public void queueInputBuffer(int index, int offset, int size, long presentationTimeUs, int flags) {
+        mediaCodec.queueInputBuffer(index, offset, size, presentationTimeUs, flags);
+    }
+
+
+
+    /// Output
+    public int dequeueOutputBuffer(long timeoutUs) {
+        int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, timeoutUs);
+        return outindex;
+    }
+
+    public long getOutTime(){
+        return bufferInfo.presentationTimeUs;
+    }
+
+    public int releaseOutputBuffer(int index, boolean render){
+        ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[index];
+        mediaCodec.releaseOutputBuffer(index, true);
+
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+
 
     public int send(byte[] data, long time){
         int inputBufIndex = mediaCodec.dequeueInputBuffer(1000);
@@ -71,23 +119,7 @@ public class EyerMediaCodec {
         return -1;
     }
 
-    private MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 
-    public int dequeueOutputBuffer(){
-        int outindex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1000);
-        return outindex;
-    }
-
-    public long getOutTime(){
-        return bufferInfo.presentationTimeUs;
-    }
-
-    public int renderFrame(int outindex){
-        ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[outindex];
-        mediaCodec.releaseOutputBuffer(outindex, true);
-
-        return 0;
-    }
 
 
 

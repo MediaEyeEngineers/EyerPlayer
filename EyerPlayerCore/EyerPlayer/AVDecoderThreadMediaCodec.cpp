@@ -55,11 +55,12 @@ namespace Eyer {
 
                 stream.ScalerPacketPTS(annexbPkt);
 
-                while(!stopFlag){
-                    Eyer::EyerTime::EyerSleepMilliseconds(1);
-                    ret = mediaCodec->SendPacket(&annexbPkt);
-                    if(ret == 0){
-                        break;
+                while(!stopFlag) {
+                    int index = mediaCodec->dequeueInputBuffer(1000 * 100);
+
+                    if (index >= 0) {
+                        mediaCodec->putInputData(index, annexbPkt.GetDataPtr(), annexbPkt.GetSize());
+                        mediaCodec->queueInputBuffer(index, 0, annexbPkt.GetSize(), 0, 0);
                     }
                 }
             }

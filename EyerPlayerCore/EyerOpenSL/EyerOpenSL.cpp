@@ -6,7 +6,7 @@ namespace Eyer
 {
     void bufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue, void *pContext) {
 
-        EyerLog("bufferQueueCallback\n");
+        // EyerLog("bufferQueueCallback\n");
 
 
         EyerAVFrame * audioFrame = nullptr;
@@ -14,7 +14,7 @@ namespace Eyer
         ((EyerOpenSL *)pContext)->GetFrame(&audioFrame);
         if(audioFrame != nullptr){
             int bufferLen = audioFrame->GetAudioPackedData(nullptr);
-            EyerLog("BufferLen: %d\n", bufferLen);
+            // EyerLog("BufferLen: %d\n", bufferLen);
 
             unsigned char * buf = (unsigned char *)malloc(bufferLen);
             audioFrame->GetAudioPackedData(buf);

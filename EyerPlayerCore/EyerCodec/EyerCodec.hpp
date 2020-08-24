@@ -13,6 +13,27 @@ namespace Eyer
         EyerMediaCodec();
         ~EyerMediaCodec();
 
+        int         Init(EyerAVStream & stream, jobject surface);
+        int         Uninit();
+
+        int         dequeueInputBuffer(long long timeoutUs);
+        int         putInputData(int index, unsigned char * data, int size);
+        void        queueInputBuffer(int index, int offset, int size, long long presentationTimeUs, int flags);
+
+        int         dequeueOutputBuffer(long long timeoutUs);
+        long long   getOutTime();
+        int         releaseOutputBuffer(int index, bool render);
+
+    private:
+        jobject eyerMediaCodec = nullptr;
+    };
+
+    class EyerMediaCodec2
+    {
+    public:
+        EyerMediaCodec2();
+        ~EyerMediaCodec2();
+
         int Init(EyerAVStream & stream, jobject surface);
         int Uninit();
 
