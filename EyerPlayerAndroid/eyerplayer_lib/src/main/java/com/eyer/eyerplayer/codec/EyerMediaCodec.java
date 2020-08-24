@@ -42,24 +42,6 @@ public class EyerMediaCodec {
         return 0;
     }
 
-    private void displayDecoders() {
-        MediaCodecList list = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            list = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
-        }
-        MediaCodecInfo[] codecs = new MediaCodecInfo[0];
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            codecs = list.getCodecInfos();
-        }
-        if(list != null) {
-            for (MediaCodecInfo codec : codecs) {
-                if (codec.isEncoder())
-                    continue;
-                Log.e("EyerMediaCodec", "Decoder Name: " + codec.getName());
-            }
-        }
-    }
-
     public int send(byte[] data, long time){
         int inputBufIndex = mediaCodec.dequeueInputBuffer(1000);
 
@@ -105,5 +87,30 @@ public class EyerMediaCodec {
         mediaCodec.releaseOutputBuffer(outindex, true);
 
         return 0;
+    }
+
+
+
+
+
+
+
+
+    private void displayDecoders() {
+        MediaCodecList list = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            list = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
+        }
+        MediaCodecInfo[] codecs = new MediaCodecInfo[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            codecs = list.getCodecInfos();
+        }
+        if(list != null) {
+            for (MediaCodecInfo codec : codecs) {
+                if (codec.isEncoder())
+                    continue;
+                Log.e("EyerMediaCodec", "Decoder Name: " + codec.getName());
+            }
+        }
     }
 }

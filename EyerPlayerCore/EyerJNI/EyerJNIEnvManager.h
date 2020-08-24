@@ -8,6 +8,9 @@ namespace Eyer{
     public:
         static JavaVM * jvm;
         static jobject eyerMediaCodec_ClassLoader;
+        static jobject eyerCallback_ClassLoader;
+
+        static JNIEnv * AttachCurrentThread();
     };
 }
 

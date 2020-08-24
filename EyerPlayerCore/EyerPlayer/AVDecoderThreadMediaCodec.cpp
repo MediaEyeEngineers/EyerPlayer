@@ -56,6 +56,7 @@ namespace Eyer {
                 stream.ScalerPacketPTS(annexbPkt);
 
                 while(!stopFlag){
+                    Eyer::EyerTime::EyerSleepMilliseconds(1);
                     ret = mediaCodec->SendPacket(&annexbPkt);
                     if(ret == 0){
                         break;

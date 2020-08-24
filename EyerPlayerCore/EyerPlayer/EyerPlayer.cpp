@@ -45,16 +45,42 @@ namespace Eyer
 
     int EyerPlayer::Play()
     {
+        long long requestId = piml->eventManager->GenId();
+
+        EventPlayRequest * event = new EventPlayRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
+
         return 0;
     }
 
     int EyerPlayer::Pause()
     {
+        long long requestId = piml->eventManager->GenId();
+
+        EventPauseRequest * event = new EventPauseRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
         return 0;
     }
 
     int EyerPlayer::Stop()
     {
+        long long requestId = piml->eventManager->GenId();
+
+        EventStopRequest * event = new EventStopRequest();
+        event->SetFrom(EventTag::PLAYER);
+        event->SetTo(EventTag::EVENT_MANAGER);
+        event->SetRequestId(requestId);
+
+        piml->eventManager->PushEvent(event);
+
         return 0;
     }
 

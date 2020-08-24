@@ -1,6 +1,7 @@
 #ifndef EYERPLAYERLIB_THREAD_H
 #define EYERPLAYERLIB_THREAD_H
 
+#include "EyerOpenSL/EyerOpenSL.hpp"
 #include "EyerCore/EyerCore.hpp"
 #include "EyerThread/EyerThread.hpp"
 #include "EyerAV/EyerAV.hpp"
@@ -102,21 +103,35 @@ namespace Eyer {
      * Play Ctr
      *
      */
+    enum AVPlayCtrStatus{
+        STATUS_PLAYING = 1,
+        STATUS_PAUSEING = 2
+    };
     class AVPlayCtrThread : public Eyer::EyerThread
     {
     public:
-        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager);
+        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager, double videoTime);
         ~AVPlayCtrThread();
 
         virtual void Run();
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
 
+        int SetStatus(AVPlayCtrStatus status);
+
+        double GetVideoTime();
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
 
         std::mutex mut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
+
+        std::mutex statusMut;
+        AVPlayCtrStatus status = AVPlayCtrStatus::STATUS_PLAYING;
+
+        double videoTime = 0.0;
+
+        EyerOpenSL * opensl = nullptr;
     };
 }
 

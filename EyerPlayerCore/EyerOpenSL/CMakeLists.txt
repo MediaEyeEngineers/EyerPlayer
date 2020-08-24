@@ -1,27 +1,10 @@
 include_directories (../)
 include_directories (./)
-include_directories (../EyerAV)
+
 
 add_library(
-        EyerPlayer
-        EyerPlayer.cpp
-        EyerPlayerEventManager.cpp
-        EventTag.cpp
-
-        AVReaderThread.cpp
-        AVDecoderThread.cpp
-        AVPlayCtrThread.cpp
-        AVDecoderThreadSoftware.cpp
-        AVDecoderThreadMediaCodec.cpp
-
-        MediaInfo.cpp
-        StreamInfo.cpp
-
-        EyerPlayerThreadManager.cpp
-
-        AVFrameQueueManager.cpp
-        EyerPlayerCallback.cpp
-
+        EyerOpenSL
+        EyerOpenSL.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -37,12 +20,13 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-        EyerPlayer.hpp
+        Shader.hpp
+        ShaderH.hpp
         )
 
-INSTALL(FILES ${head_files} DESTINATION include/EyerPlayer)
+INSTALL(FILES ${head_files} DESTINATION include/EyerOpenSL)
 INSTALL(
-        TARGETS EyerPlayer
+        TARGETS EyerOpenSL
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

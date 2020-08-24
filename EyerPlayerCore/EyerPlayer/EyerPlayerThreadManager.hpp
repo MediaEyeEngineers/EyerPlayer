@@ -28,6 +28,8 @@ namespace Eyer {
         std::mutex glCtxMut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
         jobject surface = nullptr;
+
+        double videoTime = 0.0;
     };
 }
 

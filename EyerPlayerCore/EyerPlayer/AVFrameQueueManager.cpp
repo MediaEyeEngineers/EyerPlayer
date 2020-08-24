@@ -34,6 +34,17 @@ namespace Eyer {
         return 0;
     }
 
+    int AVFrameQueueManager::GetMediaCodecQueueUninit()
+    {
+        std::lock_guard<std::mutex> lg(mediaCodecQueueMut);
+        if(mediaCodecQueue != nullptr){
+            mediaCodecQueue->Uninit();
+            delete mediaCodecQueue;
+            mediaCodecQueue = nullptr;
+        }
+        return 0;
+    }
+
     int AVFrameQueueManager::GetMediaCodecQueue(Eyer::EyerMediaCodec * * _mediaCodecQueue)
     {
         std::lock_guard<std::mutex> lg(mediaCodecQueueMut);

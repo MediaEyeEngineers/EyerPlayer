@@ -7,14 +7,7 @@ namespace Eyer
 {
     EyerMediaCodec::EyerMediaCodec()
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
     }
 
     EyerMediaCodec::~EyerMediaCodec()
@@ -23,14 +16,7 @@ namespace Eyer
 
     int EyerMediaCodec::Init(EyerAVStream & stream, jobject surface)
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){
@@ -64,16 +50,29 @@ namespace Eyer
         return 0;
     }
 
+    int EyerMediaCodec::Uninit()
+    {
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if(eyerMediaCodecClass == nullptr){
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
+
+        // 查询 RecvAndRender 函数
+        jmethodID eyerMediaCodecMethod_Uninit = env->GetMethodID(eyerMediaCodecClass, "uninit", "()I");
+        if(eyerMediaCodecMethod_Uninit == nullptr){
+            EyerLog("MediaCodec Thread: Uniinit GetMethodID Fail\n");
+        }
+
+        int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Uninit);
+
+        return ret;
+    }
+
     int EyerMediaCodec::SendPacket(Eyer::EyerAVPacket * annexbPkt)
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){
@@ -103,14 +102,7 @@ namespace Eyer
     {
         int ret = 0;
 
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){
@@ -134,14 +126,7 @@ namespace Eyer
 
     int EyerMediaCodec::DequeueOutputBuffer()
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         int ret = 0;
 
@@ -163,14 +148,7 @@ namespace Eyer
 
     long EyerMediaCodec::GetOutTime()
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){
@@ -190,14 +168,7 @@ namespace Eyer
 
     int EyerMediaCodec::RenderFrame(int outindex)
     {
-        JNIEnv * env = nullptr;
-        int status = Eyer::EyerJNIEnvManager::jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-        if (status < 0) {
-            Eyer::EyerJNIEnvManager::jvm->AttachCurrentThread(&env, NULL);
-        }
-        if(env == nullptr) {
-            EyerLog("AttachCurrentThread Fail\n");
-        }
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
 
         jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
         if(eyerMediaCodecClass == nullptr){

@@ -51,7 +51,27 @@ namespace Eyer
                 EyerLog("Url: %s\n", openRequest->url.str);
 
                 playerManager->Open(openRequest->url, openRequest->GetRequestId(), eventQueue);
+            }
+
+            if(event->GetType() == EventType::PLAYRequest){
+                EventPlayRequest * playRequest = (EventPlayRequest *)event;
+                EyerLog("PlayRequest\n");
+
                 playerManager->Play();
+            }
+
+            if(event->GetType() == EventType::PAUSERequest){
+                EventPauseRequest * playRequest = (EventPauseRequest *)event;
+                EyerLog("PauseRequest\n");
+
+                playerManager->Pause();
+            }
+
+            if(event->GetType() == EventType::STOPRequest){
+                EventStopRequest * stopRequest = (EventStopRequest *)event;
+                EyerLog("StopRequest\n");
+
+                playerManager->Stop();
             }
 
 
@@ -64,7 +84,7 @@ namespace Eyer
                     MediaInfo mediaInfo = openResponse->mediaInfo;
                     mediaInfo.Print();
                     if(callback != nullptr){
-
+                        callback->OnOpen(mediaInfo);
                     }
                 }
                 else if(openResponse->status == EventOpenStatus::OPEN_STATUS_FAIL){
