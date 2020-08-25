@@ -53,6 +53,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return player.stop();
     }
 
+    public int seek(double time) {
+        return player.seek(time);
+    }
+
     private void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.setKeepScreenOn(true);

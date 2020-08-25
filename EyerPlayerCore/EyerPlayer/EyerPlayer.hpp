@@ -62,6 +62,8 @@ namespace Eyer {
 
         int Stop();
 
+        int Seek(double time);
+
     private:
         EyerPlayerPrivate * piml = nullptr;
     };

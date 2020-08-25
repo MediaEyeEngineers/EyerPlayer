@@ -8,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.eyer.eyerplayer.EyerPlayer;
@@ -34,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView log_textview = null;
 
-    private ProgressBar progress_bar = null;
+    private SeekBar progress_seek_bar = null;
 
     private MySurfaceView video_view = null;
+
+    private boolean isSeeking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +58,15 @@ public class MainActivity extends AppCompatActivity {
         btn_play = findViewById(R.id.btn_play);
         log_textview = findViewById(R.id.log_textview);
 
-        progress_bar = findViewById(R.id.progress_bar);
-        progress_bar.setMax(100);
+        progress_seek_bar = findViewById(R.id.progress_seek_bar);
+        progress_seek_bar.setMax(100);
 
         btn_open.setOnClickListener(new MyClickListener());
         btn_play.setOnClickListener(new MyClickListener());
         btn_pause.setOnClickListener(new MyClickListener());
         btn_stop.setOnClickListener(new MyClickListener());
+
+        progress_seek_bar.setOnTouchListener(new MySeekBarOnTouchListener());
     }
 
     @Override
@@ -119,7 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int onProgress(double progress) {
-            progress_bar.setProgress((int)(100 * progress));
+            if(!isSeeking){
+                progress_seek_bar.setProgress((int)(100 * progress));
+            }
             return 0;
         }
     }
@@ -132,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
+                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_1080p.mp4";
 
                 Log.e("MainActivity", videoPath);
@@ -155,6 +163,25 @@ public class MainActivity extends AppCompatActivity {
             if(view == btn_stop){
                 video_view.stop();
             }
+        }
+    }
+
+    private class MySeekBarOnTouchListener implements View.OnTouchListener
+    {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                isSeeking = true;
+            }
+            if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                isSeeking = false;
+                SeekBar seekBar = (SeekBar)view;
+                int progress = seekBar.getProgress();
+                Log.e("SeekBar", "progress: " + progress);
+
+                video_view.seek(progress / 100.0 * 1000.0);
+            }
+            return false;
         }
     }
 }

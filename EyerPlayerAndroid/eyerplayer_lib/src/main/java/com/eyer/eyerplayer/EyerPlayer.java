@@ -46,4 +46,8 @@ public class EyerPlayer {
     public int pause() {
         return EyerPlayerJNI.player_pause(nativeId);
     }
+
+    public int seek(double time){
+        return 0;
+    }
 }

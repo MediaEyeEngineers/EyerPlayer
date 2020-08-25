@@ -73,6 +73,11 @@ namespace Eyer
                 playerManager->Stop();
             }
 
+            if(event->GetType() == EventType::SEEKRequest){
+                EventSeekRequest * seekRequest = (EventSeekRequest *)event;
+                EyerLog("SeekRequest\n");
+            }
+
 
 
             else if(event->GetType() == EventType::OPENResponse){
