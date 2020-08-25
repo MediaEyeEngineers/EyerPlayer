@@ -9,6 +9,7 @@ import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 public class EyerCallback {
 
     private static final int MSG_ID_ONOPEN = 0x000001;
+    private static final int MSG_ID_PROCESS = 0x000002;
 
     private CallbackHandle handle = null;
 
@@ -42,6 +43,20 @@ public class EyerCallback {
         return 0;
     }
 
+    public int onProgress(double process) {
+        if(handle == null){
+            return -1;
+        }
+        Message msg = new Message();
+        msg.what = MSG_ID_PROCESS;
+
+        msg.obj = process;
+
+        handle.sendMessage(msg);
+
+        return 0;
+    }
+
     private class CallbackHandle extends Handler
     {
         private EyerPlayerListener listener = null;
@@ -56,6 +71,10 @@ public class EyerCallback {
             if(msg.what == MSG_ID_ONOPEN){
                 OpenCallbackInfo openCallbackInfo = (OpenCallbackInfo)msg.obj;
                 this.listener.onOpen(openCallbackInfo.openStatus, openCallbackInfo.mediaInfo);
+            }
+            if(msg.what == MSG_ID_PROCESS){
+                double progress = (double)msg.obj;
+                this.listener.onProgress(progress);
             }
         }
     }

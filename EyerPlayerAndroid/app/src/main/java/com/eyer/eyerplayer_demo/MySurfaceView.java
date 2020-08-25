@@ -129,5 +129,13 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
             return 0;
         }
+
+        @Override
+        public int onProgress(double process) {
+            if(listener != null){
+                listener.onProgress(process);
+            }
+            return 0;
+        }
     }
 }

@@ -207,6 +207,8 @@ namespace Eyer {
         }
 
         double playTime = 0.0f;
+
+        double progress = 0.0;
     };
 
 

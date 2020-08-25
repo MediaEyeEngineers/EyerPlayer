@@ -37,4 +37,23 @@ namespace Eyer
 
         return ret;
     }
+
+    int EyerPlayerCallback::OnProgress(double process)
+    {
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+
+        jclass eyerCallbackClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerCallback_ClassLoader);
+        if(eyerCallbackClass == nullptr){
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
+
+        jmethodID eyerCallbackMethod_onProgress = env->GetMethodID(eyerCallbackClass, "onProgress", "(D)I");
+        if(eyerCallbackMethod_onProgress == nullptr){
+            EyerLog("MediaCodec Thread: onProgress GetMethodID Fail\n");
+        }
+
+        int ret = env->CallIntMethod(callback, eyerCallbackMethod_onProgress, process);
+
+        return ret;
+    }
 }

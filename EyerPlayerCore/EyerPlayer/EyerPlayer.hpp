@@ -3,6 +3,7 @@
 
 #include <string>
 #include <jni.h>
+
 #include "EyerGLContext/EyerGLContext.hpp"
 #include "MediaInfo.hpp"
 
@@ -35,7 +36,8 @@ namespace Eyer {
         EyerPlayerCallback();
         ~EyerPlayerCallback();
 
-        int OnOpen(EventOpenStatus status, MediaInfo & mediaInfo);
+        int OnOpen       (EventOpenStatus status, MediaInfo & mediaInfo);
+        int OnProgress   (double process);
 
     public:
         jobject callback = nullptr;

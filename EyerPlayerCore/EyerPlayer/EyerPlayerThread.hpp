@@ -10,6 +10,8 @@
 #include "PlayerQueueManager.hpp"
 #include "EyerGLContext/EyerGLContext.hpp"
 #include "EyerCodec/EyerCodec.hpp"
+#include "EyerPlayerThread.hpp"
+#include "MediaInfo.hpp"
 
 namespace Eyer {
     class AVReaderThread;
@@ -21,6 +23,12 @@ namespace Eyer {
      * Reader
      *
      */
+    enum AVReaderStatus
+    {
+        READER_STATUS_WAIT = 1,
+        READER_STATUS_OPEN_SUCCESS = 2,
+        READER_STATUS_OPEN_FAIL = 3,
+    };
     class AVReaderThread : public Eyer::EyerThread
     {
     public:
@@ -31,6 +39,9 @@ namespace Eyer {
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int SetSurface(jobject _surface);
 
+        AVReaderStatus GetAVReaderStatus();
+        int GetMediaInfo(MediaInfo & mediaInfo);
+
     private:
         Eyer::EyerString url;
         long long openEventId = -1;
@@ -40,6 +51,9 @@ namespace Eyer {
         AVDecoderThread * videoThread = nullptr;
 
         AVFrameQueueManager * frameQueueManager = nullptr;
+
+        MediaInfo mediaInfo;
+        AVReaderStatus status = AVReaderStatus::READER_STATUS_WAIT;
 
         Eyer::EyerGLContextThread * glCtx = nullptr;
         jobject surface = nullptr;
@@ -110,7 +124,7 @@ namespace Eyer {
     class AVPlayCtrThread : public Eyer::EyerThread
     {
     public:
-        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager, double videoTime);
+        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager, EyerEventQueue * eventQueue, MediaInfo & mediaInfo, double videoTime);
         ~AVPlayCtrThread();
 
         virtual void Run();
@@ -118,10 +132,9 @@ namespace Eyer {
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
 
         int SetStatus(AVPlayCtrStatus status);
-
-        double GetVideoTime();
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
+        EyerEventQueue * eventQueue = nullptr;
 
         std::mutex mut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
@@ -129,9 +142,9 @@ namespace Eyer {
         std::mutex statusMut;
         AVPlayCtrStatus status = AVPlayCtrStatus::STATUS_PLAYING;
 
-        double videoTime = 0.0;
-
         EyerOpenSL * opensl = nullptr;
+
+        MediaInfo mediaInfo;
     };
 }
 

@@ -3,7 +3,6 @@
 
 #include "EyerThread/EyerThread.hpp"
 #include "EyerEventQueue/EyerEventQueue.hpp"
-#include "EyerPlayerThread.hpp"
 #include "EyerPlayerThreadManager.hpp"
 #include "EyerPlayer.hpp"
 
@@ -27,7 +26,7 @@ namespace Eyer
         int SetCallback(EyerPlayerCallback * callback);
 
     private:
-        Eyer::EyerEventQueue * eventQueue = nullptr;
+        EyerEventQueue * eventQueue = nullptr;
         EyerPlayerThreadManager * playerManager = nullptr;
         EyerPlayerCallback * callback = nullptr;
     };

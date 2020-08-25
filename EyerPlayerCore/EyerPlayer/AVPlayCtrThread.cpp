@@ -2,12 +2,15 @@
 #include "EyerPlayerThread.hpp"
 #include "EventTag.hpp"
 #include "EyerOpenSL/EyerOpenSL.hpp"
+#include "EyerPlayerEventManager.hpp"
+#include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager, double _videoTime)
+    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager, EyerEventQueue * _eventQueue, MediaInfo & _mediaInfo, double _videoTime)
     {
-        videoTime = _videoTime;
+        mediaInfo = _mediaInfo;
         frameQueueManager = _frameQueueManager;
+        eventQueue = _eventQueue;
 
         opensl = new EyerOpenSL();
     }
@@ -42,6 +45,9 @@ namespace Eyer {
         long long videoFrameTime = 0;
 
         long long pauseingTime = 0;
+
+
+        long long lastProcessTime = Eyer::EyerTime::GetTime();
         while(!stopFlag){
 
             Eyer::EyerTime::EyerSleepMilliseconds(1);
@@ -61,8 +67,29 @@ namespace Eyer {
 
             long long nowTime = Eyer::EyerTime::GetTime() - pauseingTime;
 
+
             double dTime = (nowTime - startTime) / 1000.0;
-            videoTime = dTime;
+
+            double progress = dTime / mediaInfo.GetDuration();
+            if(progress >= 1.0){
+                break;
+            }
+
+            long long processNowTime = Eyer::EyerTime::GetTime();
+            if(processNowTime - lastProcessTime >= 1000){
+                long long requestId = 1;
+                EventProgressRequest * progressRequest = new EventProgressRequest();
+                progressRequest->SetFrom(EventTag::EVENT_PLAYER_CTR);
+                progressRequest->SetTo(EventTag::EVENT_MANAGER);
+                progressRequest->SetRequestId(requestId);
+                progressRequest->progress = progress;
+                eventQueue->Push(progressRequest);
+                lastProcessTime = processNowTime;
+            }
+
+
+
+
 
             if(mediaCodec == nullptr){
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
@@ -133,6 +160,7 @@ namespace Eyer {
             }
         }
 
+
         Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
 
         EyerLog("PlayCtr Thread End\n");
@@ -152,10 +180,5 @@ namespace Eyer {
         glCtx = _glCtx;
         mut.unlock();
         return 0;
-    }
-
-    double AVPlayCtrThread::GetVideoTime()
-    {
-        return videoTime;
     }
 }

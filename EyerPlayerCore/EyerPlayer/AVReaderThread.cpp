@@ -39,21 +39,34 @@ namespace Eyer {
         return 0;
     }
 
+    AVReaderStatus AVReaderThread::GetAVReaderStatus()
+    {
+        return status;
+    }
+
+    int AVReaderThread::GetMediaInfo(MediaInfo & _mediaInfo)
+    {
+        _mediaInfo = mediaInfo;
+        return 0;
+    }
+
     void AVReaderThread::Run()
     {
         EyerLog("AVReader Thread Start\n");
 
         EventOpenResponse * event = nullptr;
-        MediaInfo mediaInfo;
         int videoStreamIndex = -1;
         int audioStreamIndex = -1;
 
-        
+        double duration = 0.0;
+
         Eyer::EyerAVReader reader(url);
         int ret = reader.Open();
 
         if(ret){
             EyerLog("AVReader Thread Open Error: %d\n", ret);
+
+            status = AVReaderStatus::READER_STATUS_OPEN_FAIL;
 
             event = new EventOpenResponse();
             event->SetFrom(EventTag::EVENT_AVREADER);
@@ -95,6 +108,11 @@ namespace Eyer {
             audioThread = new AVDecoderThreadSoftware(audioStream, frameQueueManager);
             audioThread->Start();
         }
+
+        status = AVReaderStatus::READER_STATUS_OPEN_SUCCESS;
+
+        duration = reader.GetDuration();
+        mediaInfo.SetDuration(duration);
 
         event = new EventOpenResponse();
         event->SetFrom(EventTag::EVENT_AVREADER);

@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eyer.eyerplayer.EyerPlayer;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView log_textview = null;
 
+    private ProgressBar progress_bar = null;
+
     private MySurfaceView video_view = null;
 
     @Override
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         btn_pause = findViewById(R.id.btn_pause);
         btn_play = findViewById(R.id.btn_play);
         log_textview = findViewById(R.id.log_textview);
+
+        progress_bar = findViewById(R.id.progress_bar);
+        progress_bar.setMax(100);
 
         btn_open.setOnClickListener(new MyClickListener());
         btn_play.setOnClickListener(new MyClickListener());
@@ -97,17 +103,23 @@ public class MainActivity extends AppCompatActivity {
     {
         @Override
         public int onOpen(int status, EyerMediaInfo mediaInfo) {
-            String log = "open: ";
+            String log = "open video ";
             if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
-                log += "success";
+                log += "success.";
             }
             if(status == EyerPlayerListener.OPEN_STATUS_FAIL){
-                log += "fail";
+                log += "fail.";
             }
             if(status == EyerPlayerListener.OPEN_STATUS_BUSY){
-                log += "busy";
+                log += "busy, stop first.";
             }
             log_textview.setText(log);
+            return 0;
+        }
+
+        @Override
+        public int onProgress(double progress) {
+            progress_bar.setProgress((int)(100 * progress));
             return 0;
         }
     }
@@ -121,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_1080p.mp4";
 
                 Log.e("MainActivity", videoPath);

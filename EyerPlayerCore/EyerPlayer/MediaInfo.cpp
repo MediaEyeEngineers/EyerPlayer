@@ -21,6 +21,7 @@ namespace Eyer {
     {
         audioStream = mediaInfo.audioStream;
         videoStream = mediaInfo.videoStream;
+        duration = mediaInfo.duration;
         return *this;
     }
 
@@ -31,6 +32,17 @@ namespace Eyer {
         EyerLog("Width: %d, Height: %d\n", videoStream.GetWidth(), videoStream.GetHeight());
         EyerLog("Audio Stream\n");
         EyerLog("==========================MediaInfo==========================\n");
+        return 0;
+    }
+
+    double MediaInfo::GetDuration()
+    {
+        return duration;
+    }
+
+    int MediaInfo::SetDuration(double _duration)
+    {
+        duration = _duration;
         return 0;
     }
 }
