@@ -62,4 +62,32 @@ namespace Eyer
     {
         isRun = 0;
     }
+
+
+
+
+    int EyerThread::StartEventLoop()
+    {
+        isEventLooping = 1;
+        return 0;
+    }
+
+    int EyerThread::StopEventLoop()
+    {
+        isEventLooping = 0;
+        return 0;
+    }
+
+    int EyerThread::EventLoop()
+    {
+        if(!isEventLooping){
+            return -1;
+        }
+
+        while(isEventLooping){
+            
+        }
+
+        return 0;
+    }
 }

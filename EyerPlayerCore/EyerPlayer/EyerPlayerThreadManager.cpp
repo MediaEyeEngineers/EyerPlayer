@@ -103,6 +103,12 @@ namespace Eyer {
         return 0;
     }
 
+    int EyerPlayerThreadManager::Seek(double time)
+    {
+
+        return 0;
+    }
+
     int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
         glCtxMut.lock();

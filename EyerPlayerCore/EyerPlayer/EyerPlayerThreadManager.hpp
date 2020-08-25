@@ -13,6 +13,7 @@ namespace Eyer {
         int Play();
         int Pause();
         int Stop();
+        int Seek(double time);
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int UnbindGLCtx();
