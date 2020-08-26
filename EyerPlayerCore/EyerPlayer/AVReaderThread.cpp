@@ -5,6 +5,7 @@
 
 namespace Eyer {
     AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
+        : reader(_url)
     {
         url = _url;
         openEventId = _openEventId;
@@ -50,6 +51,18 @@ namespace Eyer {
         return 0;
     }
 
+    int AVReaderThread::Seek(double time)
+    {
+        if(audioThread != nullptr){
+            audioThread->ClearAllPacket();
+        }
+        if(videoThread != nullptr){
+            videoThread->ClearAllPacket();
+        }
+        reader.SeekFrame(0, time);
+        return 0;
+    }
+
     void AVReaderThread::Run()
     {
         EyerLog("AVReader Thread Start\n");
@@ -60,7 +73,7 @@ namespace Eyer {
 
         double duration = 0.0;
 
-        Eyer::EyerAVReader reader(url);
+
         int ret = reader.Open();
 
         if(ret){
@@ -125,9 +138,11 @@ namespace Eyer {
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
+            EventLoop();
+
             int cacheSize = videoThread->GetPacketSize() + audioThread->GetPacketSize();
             // EyerLog("Cache Size: %d\n", cacheSize);
-            if(cacheSize >= 1024 * 1024 * 10){
+            if(cacheSize >= 1024 * 1024 * 2){
                 continue;
             }
 
@@ -181,4 +196,5 @@ namespace Eyer {
 
         EyerLog("AVReader Thread Stop\n");
     }
+
 }

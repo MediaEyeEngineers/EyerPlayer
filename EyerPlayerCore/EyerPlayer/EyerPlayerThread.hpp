@@ -34,7 +34,10 @@ namespace Eyer {
     public:
         AVReaderThread(Eyer::EyerString url, long long openEventId, Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * frameQueueManager);
         ~AVReaderThread();
+
         virtual void Run();
+
+        int Seek(double time);
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int SetSurface(jobject _surface);
@@ -57,6 +60,8 @@ namespace Eyer {
 
         Eyer::EyerGLContextThread * glCtx = nullptr;
         jobject surface = nullptr;
+
+        Eyer::EyerAVReader reader;
     };
 
 
@@ -77,6 +82,8 @@ namespace Eyer {
 
         int GetPacketCount();
         int GetPacketSize();
+
+        int ClearAllPacket();
 
     protected:
         Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;

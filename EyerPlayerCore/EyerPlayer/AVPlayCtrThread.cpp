@@ -52,6 +52,8 @@ namespace Eyer {
 
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
+            EventLoop();
+
             if(status == AVPlayCtrStatus::STATUS_PAUSEING){
                 long long pauseStart = Eyer::EyerTime::GetTime();
                 while(!stopFlag){

@@ -48,6 +48,6 @@ public class EyerPlayer {
     }
 
     public int seek(double time){
-        return 0;
+        return EyerPlayerJNI.player_seek(nativeId, time);
     }
 }

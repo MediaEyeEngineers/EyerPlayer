@@ -105,6 +105,15 @@ namespace Eyer {
 
     int EyerPlayerThreadManager::Seek(double time)
     {
+        if(readerThread == nullptr){
+            return -1;
+        }
+
+        SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
+        readerThread->PushEvent(&seekReaderRunnable);
+
+        readerThread->StartEventLoop();
+        readerThread->StopEventLoop();
 
         return 0;
     }

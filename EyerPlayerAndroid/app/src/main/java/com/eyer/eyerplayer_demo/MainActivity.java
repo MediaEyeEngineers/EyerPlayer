@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_1080p.mp4";
 
                 Log.e("MainActivity", videoPath);
@@ -179,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
                 int progress = seekBar.getProgress();
                 Log.e("SeekBar", "progress: " + progress);
 
-                video_view.seek(progress / 100.0 * 1000.0);
+                // video_view.seek(progress / 100.0 * 1000.0);
+                video_view.seek(20.0);
             }
             return false;
         }

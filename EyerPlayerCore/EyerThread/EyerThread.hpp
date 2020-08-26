@@ -25,6 +25,9 @@ namespace Eyer
         int Start();
 
 
+
+        int PushEvent(EyerRunnable * event);
+
         int StartEventLoop();
         int StopEventLoop();
 

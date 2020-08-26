@@ -76,6 +76,8 @@ namespace Eyer
             if(event->GetType() == EventType::SEEKRequest){
                 EventSeekRequest * seekRequest = (EventSeekRequest *)event;
                 EyerLog("SeekRequest\n");
+
+                playerManager->Seek(seekRequest->time);
             }
 
 
