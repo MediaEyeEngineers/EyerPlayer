@@ -74,7 +74,7 @@ namespace Eyer {
     {
     public:
         AVDecoderThread(Eyer::EyerAVStream & stream, AVFrameQueueManager * frameQueueManager);
-        ~AVDecoderThread();
+        virtual ~AVDecoderThread();
 
         virtual void Run() = 0;
 
@@ -84,7 +84,7 @@ namespace Eyer {
         int GetPacketSize();
 
         int ClearAllPacket();
-
+        virtual int FlushDecoder() = 0;
     protected:
         Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;
 
@@ -102,6 +102,8 @@ namespace Eyer {
 
         virtual void Run();
 
+        virtual int FlushDecoder();
+
     private:
         Eyer::EyerAVDecoder decoder;
     };
@@ -113,6 +115,8 @@ namespace Eyer {
         ~AVDecoderThreadMediaCodec();
 
         virtual void Run();
+
+        virtual int FlushDecoder();
 
     private:
         jobject surface = nullptr;

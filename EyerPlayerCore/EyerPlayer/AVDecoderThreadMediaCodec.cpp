@@ -15,6 +15,16 @@ namespace Eyer {
 
     }
 
+    int AVDecoderThreadMediaCodec::FlushDecoder()
+    {
+        Eyer::EyerMediaCodec * mediaCodec = nullptr;
+        frameQueueManager->GetMediaCodecQueue(&mediaCodec);
+        if(mediaCodec != nullptr){
+            // mediaCodec->flush();
+        }
+        return 0;
+    }
+
     void AVDecoderThreadMediaCodec::Run()
     {
         EyerLog("AVDecoder MediaCodec Thread Start\n");
@@ -29,6 +39,8 @@ namespace Eyer {
         while (!stopFlag) {
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
+            EventLoop();
+
             Eyer::EyerAVPacket * pkt = nullptr;
             pktQueue.FrontPop(&pkt);
             if (pkt == nullptr) {
@@ -40,7 +52,13 @@ namespace Eyer {
                     delete pkt;
                     pkt = nullptr;
                 }
-                break;
+                // break;
+
+                continue;
+            }
+
+            if (pkt == nullptr) {
+                continue;
             }
 
             cacheSize -= pkt->GetSize();

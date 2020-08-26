@@ -24,6 +24,8 @@ namespace Eyer
         long long   getOutTime();
         int         releaseOutputBuffer(int index, bool render);
 
+        int         flush();
+
     private:
         jobject eyerMediaCodec = nullptr;
     };

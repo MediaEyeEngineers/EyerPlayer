@@ -71,10 +71,11 @@ namespace Eyer {
 
 
             double dTime = (nowTime - startTime) / 1000.0;
+            dTime += 60;
 
             double progress = dTime / mediaInfo.GetDuration();
             if(progress >= 1.0){
-                break;
+                // break;
             }
 
             long long processNowTime = Eyer::EyerTime::GetTime();
@@ -93,7 +94,7 @@ namespace Eyer {
 
 
 
-            if(mediaCodec == nullptr){
+            if(mediaCodec == nullptr){  
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
             }
 

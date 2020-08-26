@@ -54,12 +54,23 @@ namespace Eyer {
     int AVReaderThread::Seek(double time)
     {
         if(audioThread != nullptr){
-            audioThread->ClearAllPacket();
+            EyerLog("Audio Decoder Seek\n");
+            SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
+            audioThread->PushEvent(&seekDecoderRunnable);
+            audioThread->StartEventLoop();
+            audioThread->StopEventLoop();
         }
         if(videoThread != nullptr){
-            videoThread->ClearAllPacket();
+            EyerLog("Video Decoder Seek\n");
+            SEEK_Decoder_Runnable seekDecoderRunnable(videoThread);
+            videoThread->PushEvent(&seekDecoderRunnable);
+            videoThread->StartEventLoop();
+            videoThread->StopEventLoop();
         }
-        reader.SeekFrame(0, time);
+
+        EyerLog("Reader Seek\n");
+        reader.Seek(time);
+
         return 0;
     }
 
@@ -135,6 +146,8 @@ namespace Eyer {
         event->mediaInfo = mediaInfo;
         eventQueue->Push(event);
 
+        reader.Seek(60);
+
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
@@ -157,12 +170,11 @@ namespace Eyer {
                 }
 
                 // 发送一个空的 packet 出去
-
                 packet = new Eyer::EyerAVPacket();
                 packet->SetLast();
                 videoThread->SendPacket(packet);
 
-                break;
+                continue;
             }
 
             if(packet->GetStreamId() == videoStreamIndex){
@@ -175,11 +187,6 @@ namespace Eyer {
                 delete packet;
             }
         }
-
-        while(!stopFlag) {
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
-        }
-
 
     END:
         //销毁两个线程

@@ -86,6 +86,11 @@ public class EyerMediaCodec {
 
 
 
+    public int flush(){
+        mediaCodec.flush();
+        return 0;
+    }
+
 
 
 
@@ -145,4 +150,5 @@ public class EyerMediaCodec {
             }
         }
     }
+
 }

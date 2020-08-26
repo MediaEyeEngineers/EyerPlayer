@@ -199,6 +199,7 @@ namespace Eyer
 
         double GetDuration();
 
+        int Seek(double time);
         int SeekFrame(int streamIndex, int64_t timestamp);
         int SeekFrame(int streamIndex, double timestamp);
 

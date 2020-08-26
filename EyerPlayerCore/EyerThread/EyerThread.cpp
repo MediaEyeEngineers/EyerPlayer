@@ -78,35 +78,27 @@ namespace Eyer
 
     int EyerThread::StartEventLoop()
     {
-        isEventLooping = 1;
+        eventLoopMut.lock();
+        eventLooping = 1;
         return 0;
     }
 
     int EyerThread::StopEventLoop()
     {
-        if(isEventLooping == 0){
-            return -1;
-        }
+        eventLoopMut.lock();
 
-        for(;;){
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
-            if(eventQueue.size() <= 0){
-                break;
-            }
-        }
+        eventLoopMut.unlock();
 
-        isEventLooping = 0;
+        eventLooping = 0;
 
         return 0;
     }
 
     int EyerThread::EventLoop()
     {
-        if(!isEventLooping){
+        if(eventLooping == 0){
             return -1;
         }
-
-
         while(eventQueue.size() > 0){
             EyerRunnable * event = eventQueue.front();
             eventQueue.pop();
@@ -114,7 +106,9 @@ namespace Eyer
             event->Run();
         }
 
-        while(isEventLooping){
+        eventLoopMut.unlock();
+
+        while(eventLooping == 1){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
         }
 

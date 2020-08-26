@@ -12,6 +12,29 @@ namespace Eyer {
 
     }
 
+
+    int AVDecoderThreadSoftware::FlushDecoder()
+    {
+        AVFrameQueue * frameQueue = nullptr;
+        if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO) {
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &frameQueue);
+        } else if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_AUDIO) {
+            frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &frameQueue);
+        }
+
+        if(frameQueue != nullptr){
+            if(frameQueue->Size() > 0){
+                Eyer::EyerAVFrame * frame = nullptr;
+                frameQueue->FrontPop(&frame);
+                if(frame != nullptr){
+                    delete frame;
+                }
+            }
+        }
+
+        return 0;
+    }
+
     void AVDecoderThreadSoftware::Run()
     {
         EyerLog("AVDecoder Software Thread Start\n");
@@ -30,6 +53,8 @@ namespace Eyer {
         int ret = 0;
         while (!stopFlag) {
             Eyer::EyerTime::EyerSleepMilliseconds(1);
+
+            EventLoop();
 
             if (frameQueue != nullptr) {
                 if (frameQueue->Size() > 10) {

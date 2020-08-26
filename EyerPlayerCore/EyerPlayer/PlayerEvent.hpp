@@ -413,6 +413,24 @@ namespace Eyer {
     };
 
 
+
+    class SEEK_Decoder_Runnable: public EyerRunnable
+    {
+    public:
+        SEEK_Decoder_Runnable(AVDecoderThread * _decoderThread){
+            decoderThread = _decoderThread;
+        }
+
+        virtual void Run(){
+            EyerLog("SEEK_Decoder_Runnable\n");
+            decoderThread->ClearAllPacket();
+            decoderThread->FlushDecoder();
+        }
+
+    private:
+        AVDecoderThread * decoderThread = nullptr;
+    };
+
     class SEEK_VideoDecoder_Runnable: public EyerRunnable
     {
     public:
