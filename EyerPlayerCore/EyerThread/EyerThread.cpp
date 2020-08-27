@@ -78,39 +78,51 @@ namespace Eyer
 
     int EyerThread::StartEventLoop()
     {
-        eventLoopMut.lock();
-        eventLooping = 1;
+        // 发出 开始指令
+        eventLoopStart = 0;
+        eventLoopEnd = 0;
+
+        stopEventLoopFlag = 0;
+
+        // 等待 开始
+        while(eventLoopStart == 0){
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        }
+
+        eventLoopStart = 0;
+
         return 0;
     }
 
     int EyerThread::StopEventLoop()
     {
-        eventLoopMut.lock();
+        // 发出 停止指令
+        stopEventLoopFlag = 1;
 
-        eventLoopMut.unlock();
+        // 等待 停止
+        while(eventLoopEnd == 0){
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        }
 
-        eventLooping = 0;
+        eventLoopEnd = 0;
 
         return 0;
     }
 
     int EyerThread::EventLoop()
     {
-        if(eventLooping == 0){
-            return -1;
-        }
-        while(eventQueue.size() > 0){
-            EyerRunnable * event = eventQueue.front();
-            eventQueue.pop();
+        while(!stopEventLoopFlag){
+            eventLoopEnd = 0;
+            eventLoopStart = 1;
 
-            event->Run();
+            while(eventQueue.size()){
+                EyerRunnable * event = eventQueue.front();
+                eventQueue.pop();
+                event->Run();
+            }
         }
 
-        eventLoopMut.unlock();
-
-        while(eventLooping == 1){
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
-        }
+        eventLoopEnd = 1;
 
         return 0;
     }

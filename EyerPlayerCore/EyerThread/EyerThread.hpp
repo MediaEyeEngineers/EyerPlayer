@@ -40,8 +40,9 @@ namespace Eyer
         std::atomic_int stopFlag {0};
         std::atomic_int isRun {0};
 
-        std::mutex eventLoopMut;
-        std::atomic_int eventLooping {0};
+        std::atomic_int stopEventLoopFlag {1};
+        std::atomic_int eventLoopStart {0};
+        std::atomic_int eventLoopEnd {0};
 
     private:
         std::thread * t = nullptr;

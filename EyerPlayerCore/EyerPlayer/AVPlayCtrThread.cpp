@@ -35,13 +35,13 @@ namespace Eyer {
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &videoFrameQueue);
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &audioFrameQueue);
 
-        long long startTime = Eyer::EyerTime::GetTime();
+        startTime = Eyer::EyerTime::GetTime();
 
         Eyer::EyerAVFrame * videoFrame = nullptr;
         Eyer::EyerAVFrame * audioFrame = nullptr;
 
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
-        int outindex = -1;
+
         long long videoFrameTime = 0;
 
         long long pauseingTime = 0;
@@ -71,11 +71,11 @@ namespace Eyer {
 
 
             double dTime = (nowTime - startTime) / 1000.0;
-            dTime += 60;
+            dTime += seekTime;
 
             double progress = dTime / mediaInfo.GetDuration();
             if(progress >= 1.0){
-                // break;
+                dTime = mediaInfo.GetDuration();
             }
 
             long long processNowTime = Eyer::EyerTime::GetTime();
@@ -98,6 +98,7 @@ namespace Eyer {
                 frameQueueManager->GetMediaCodecQueue(&mediaCodec);
             }
 
+            // EyerLog("DTime: %f\n", dTime);
             if(mediaCodec != nullptr){
                 if(outindex < 0){
                     outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
@@ -182,6 +183,15 @@ namespace Eyer {
         mut.lock();
         glCtx = _glCtx;
         mut.unlock();
+        return 0;
+    }
+
+    int AVPlayCtrThread::Seek(double time)
+    {
+        startTime = Eyer::EyerTime::GetTime();
+        seekTime = time;
+
+        outindex = -1;
         return 0;
     }
 }

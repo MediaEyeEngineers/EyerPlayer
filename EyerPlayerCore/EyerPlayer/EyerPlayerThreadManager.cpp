@@ -109,11 +109,18 @@ namespace Eyer {
             return -1;
         }
 
-        SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
-        readerThread->PushEvent(&seekReaderRunnable);
+        if(playerCtr != nullptr){
+            SEEK_PlayCtr_Runnable seekPlayCtrRunnable(playerCtr, time);
+            playerCtr->PushEvent(&seekPlayCtrRunnable);
+            playerCtr->StartEventLoop();
 
-        readerThread->StartEventLoop();
-        readerThread->StopEventLoop();
+            SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
+            readerThread->PushEvent(&seekReaderRunnable);
+            readerThread->StartEventLoop();
+            readerThread->StopEventLoop();
+
+            playerCtr->StopEventLoop();
+        }
 
         return 0;
     }

@@ -54,22 +54,25 @@ namespace Eyer {
     int AVReaderThread::Seek(double time)
     {
         if(audioThread != nullptr){
-            EyerLog("Audio Decoder Seek\n");
+            EyerLog("Audio Decoder Seek Start\n");
             SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
             audioThread->PushEvent(&seekDecoderRunnable);
             audioThread->StartEventLoop();
             audioThread->StopEventLoop();
+            EyerLog("Audio Decoder Seek End\n");
         }
         if(videoThread != nullptr){
-            EyerLog("Video Decoder Seek\n");
+            EyerLog("Video Decoder Seek Start\n");
             SEEK_Decoder_Runnable seekDecoderRunnable(videoThread);
             videoThread->PushEvent(&seekDecoderRunnable);
             videoThread->StartEventLoop();
             videoThread->StopEventLoop();
+            EyerLog("Video Decoder Seek End\n");
         }
 
-        EyerLog("Reader Seek\n");
+        EyerLog("Reader Seek Start\n");
         reader.Seek(time);
+        EyerLog("Reader Seek End\n");
 
         return 0;
     }
@@ -145,8 +148,6 @@ namespace Eyer {
         event->status = EventOpenStatus::OPEN_STATUS_SUCCESS;
         event->mediaInfo = mediaInfo;
         eventQueue->Push(event);
-
-        reader.Seek(60);
 
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);

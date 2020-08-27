@@ -8,11 +8,16 @@ namespace Eyer {
             : AVDecoderThread(_stream, _frameQueueManager)
     {
         surface = _surface;
+
+        bitstreamFilter = new Eyer::EyerAVBitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
     }
 
     AVDecoderThreadMediaCodec::~AVDecoderThreadMediaCodec()
     {
-
+        if(bitstreamFilter != nullptr){
+            delete bitstreamFilter;
+            bitstreamFilter = nullptr;
+        }
     }
 
     int AVDecoderThreadMediaCodec::FlushDecoder()
@@ -20,16 +25,22 @@ namespace Eyer {
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
         frameQueueManager->GetMediaCodecQueue(&mediaCodec);
         if(mediaCodec != nullptr){
-            // mediaCodec->flush();
+            mediaCodec->flush();
         }
+
+        if(bitstreamFilter != nullptr){
+            delete bitstreamFilter;
+            bitstreamFilter = nullptr;
+        }
+
+        bitstreamFilter = new Eyer::EyerAVBitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
+
         return 0;
     }
 
     void AVDecoderThreadMediaCodec::Run()
     {
         EyerLog("AVDecoder MediaCodec Thread Start\n");
-
-        Eyer::EyerAVBitstreamFilter bitstreamFilter(Eyer::EyerAVBitstreamFilterType::h264_mp4toannexb, stream);
 
         frameQueueManager->GetMediaCodecQueueInit(stream, surface);
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
@@ -40,6 +51,12 @@ namespace Eyer {
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             EventLoop();
+
+            // 先查询解码器中是否有空位
+            int index = mediaCodec->dequeueInputBuffer(1000 * 100);
+            if(index < 0){
+                continue;
+            }
 
             Eyer::EyerAVPacket * pkt = nullptr;
             pktQueue.FrontPop(&pkt);
@@ -52,7 +69,8 @@ namespace Eyer {
                     delete pkt;
                     pkt = nullptr;
                 }
-                // break;
+
+                mediaCodec->sendEndOfStream(index);
 
                 continue;
             }
@@ -63,25 +81,21 @@ namespace Eyer {
 
             cacheSize -= pkt->GetSize();
 
-            bitstreamFilter.SendPacket(pkt);
+            bitstreamFilter->SendPacket(pkt);
             while(!stopFlag){
                 Eyer::EyerAVPacket annexbPkt;
-                int ret = bitstreamFilter.ReceivePacket(&annexbPkt);
+                int ret = bitstreamFilter->ReceivePacket(&annexbPkt);
                 if(ret){
                     break;
                 }
 
                 stream.ScalerPacketPTS(annexbPkt);
 
-                while(!stopFlag) {
-                    int index = mediaCodec->dequeueInputBuffer(1000 * 100);
+                // EyerLog("Pkt pts: %f\n", annexbPkt.GetSecPTS());
 
-                    if (index >= 0) {
-                        mediaCodec->putInputData(index, annexbPkt.GetDataPtr(), annexbPkt.GetSize());
-                        mediaCodec->queueInputBuffer(index, 0, annexbPkt.GetSize(), (double)(annexbPkt.GetSecPTS() * 1000.0), 0);
-
-                        break;
-                    }
+                if (index >= 0) {
+                    mediaCodec->putInputData(index, annexbPkt.GetDataPtr(), annexbPkt.GetSize());
+                    mediaCodec->queueInputBuffer(index, 0, annexbPkt.GetSize(), (double)(annexbPkt.GetSecPTS() * 1000.0), 0);
                 }
             }
 

@@ -386,7 +386,8 @@ namespace Eyer {
     class DemoRunnable: public EyerRunnable
     {
     public:
-        virtual void Run(){
+        virtual void Run()
+        {
             EyerLog("DemoRunnable\n");
         }
     };
@@ -397,11 +398,14 @@ namespace Eyer {
     class SEEK_Reader_Runnable: public EyerRunnable
     {
     public:
-        SEEK_Reader_Runnable(AVReaderThread * _readerThread, double _seekTime){
+        SEEK_Reader_Runnable(AVReaderThread * _readerThread, double _seekTime)
+        {
             readerThread = _readerThread;
             seekTime = _seekTime;
         }
-        virtual void Run(){
+
+        virtual void Run()
+        {
             EyerLog("SEEK_Reader_Runnable, SeekTime: %f\n", seekTime);
 
             readerThread->Seek(seekTime);
@@ -417,37 +421,40 @@ namespace Eyer {
     class SEEK_Decoder_Runnable: public EyerRunnable
     {
     public:
-        SEEK_Decoder_Runnable(AVDecoderThread * _decoderThread){
+        SEEK_Decoder_Runnable(AVDecoderThread * _decoderThread)
+        {
             decoderThread = _decoderThread;
         }
 
-        virtual void Run(){
+        virtual void Run()
+        {
             EyerLog("SEEK_Decoder_Runnable\n");
-            decoderThread->ClearAllPacket();
             decoderThread->FlushDecoder();
+            decoderThread->ClearAllPacket();
         }
 
     private:
         AVDecoderThread * decoderThread = nullptr;
     };
 
-    class SEEK_VideoDecoder_Runnable: public EyerRunnable
-    {
-    public:
-        virtual void Run(){
-        }
-    };
-    class SEEK_AudioDecoder_Runnable: public EyerRunnable
-    {
-    public:
-        virtual void Run(){
-        }
-    };
     class SEEK_PlayCtr_Runnable: public EyerRunnable
     {
     public:
-        virtual void Run(){
+        SEEK_PlayCtr_Runnable(AVPlayCtrThread * _playCtr, double _time)
+        {
+            playCtr = _playCtr;
+            time = _time;
         }
+
+        virtual void Run()
+        {
+            EyerLog("SEEK_PlayCtr_Runnable\n");
+            playCtr->Seek(time);
+        }
+
+    private:
+        AVPlayCtrThread * playCtr = nullptr;
+        double time = 0.0;
     };
 }
 

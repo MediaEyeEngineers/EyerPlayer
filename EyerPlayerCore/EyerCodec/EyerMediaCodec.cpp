@@ -126,6 +126,23 @@ namespace Eyer {
         env->CallVoidMethod(eyerMediaCodec, jmethodId, index, offset, size, presentationTimeUs, flags);
     }
 
+    void EyerMediaCodec::sendEndOfStream(int index)
+    {
+        JNIEnv *env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+
+        jclass eyerMediaCodecClass = env->GetObjectClass(Eyer::EyerJNIEnvManager::eyerMediaCodec_ClassLoader);
+        if (eyerMediaCodecClass == nullptr) {
+            EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
+        }
+
+        jmethodID jmethodId = env->GetMethodID(eyerMediaCodecClass, "sendEndOfStream", "(I)V");
+        if(jmethodId == nullptr){
+            EyerLog("MediaCodec GetMethodID Fail\n");
+        }
+
+        env->CallVoidMethod(eyerMediaCodec, jmethodId, index);
+    }
+
 
 
 
