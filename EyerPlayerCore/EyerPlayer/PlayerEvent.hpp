@@ -207,6 +207,8 @@ namespace Eyer {
         }
 
         double playTime = 0.0f;
+
+        double progress = 0.0;
     };
 
 
@@ -374,6 +376,77 @@ namespace Eyer {
         virtual int GetType()
         {
             return EventType::UnbindGLCtxResponse;
+        }
+    };
+
+
+
+
+
+    class DemoRunnable: public EyerRunnable
+    {
+    public:
+        virtual void Run(){
+            EyerLog("DemoRunnable\n");
+        }
+    };
+
+
+
+
+    class SEEK_Reader_Runnable: public EyerRunnable
+    {
+    public:
+        SEEK_Reader_Runnable(AVReaderThread * _readerThread, double _seekTime){
+            readerThread = _readerThread;
+            seekTime = _seekTime;
+        }
+        virtual void Run(){
+            EyerLog("SEEK_Reader_Runnable, SeekTime: %f\n", seekTime);
+
+            readerThread->Seek(seekTime);
+        }
+
+    private:
+        AVReaderThread * readerThread = nullptr;
+        double seekTime = 0.0;
+    };
+
+
+
+    class SEEK_Decoder_Runnable: public EyerRunnable
+    {
+    public:
+        SEEK_Decoder_Runnable(AVDecoderThread * _decoderThread){
+            decoderThread = _decoderThread;
+        }
+
+        virtual void Run(){
+            EyerLog("SEEK_Decoder_Runnable\n");
+            decoderThread->ClearAllPacket();
+            decoderThread->FlushDecoder();
+        }
+
+    private:
+        AVDecoderThread * decoderThread = nullptr;
+    };
+
+    class SEEK_VideoDecoder_Runnable: public EyerRunnable
+    {
+    public:
+        virtual void Run(){
+        }
+    };
+    class SEEK_AudioDecoder_Runnable: public EyerRunnable
+    {
+    public:
+        virtual void Run(){
+        }
+    };
+    class SEEK_PlayCtr_Runnable: public EyerRunnable
+    {
+    public:
+        virtual void Run(){
         }
     };
 }

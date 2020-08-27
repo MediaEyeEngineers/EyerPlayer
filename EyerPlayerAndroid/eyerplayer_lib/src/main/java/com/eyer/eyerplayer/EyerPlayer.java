@@ -6,6 +6,8 @@ import com.eyer.eyerplayer.callback.EyerCallback;
 
 public class EyerPlayer {
 
+
+
     private long nativeId = 0;
 
     public EyerPlayer(){
@@ -43,5 +45,9 @@ public class EyerPlayer {
 
     public int pause() {
         return EyerPlayerJNI.player_pause(nativeId);
+    }
+
+    public int seek(double time){
+        return EyerPlayerJNI.player_seek(nativeId, time);
     }
 }

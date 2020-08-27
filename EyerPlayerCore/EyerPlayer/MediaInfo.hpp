@@ -42,9 +42,15 @@ namespace Eyer {
 
         int Print();
 
+        double GetDuration();
+        int SetDuration(double duration);
+
     public:
         StreamInfo audioStream;
         StreamInfo videoStream;
+
+    private:
+        double duration = 0.0;
     };
 }
 

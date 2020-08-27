@@ -8,10 +8,16 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.eyer.eyerplayer.EyerPlayer;
+import com.eyer.eyerplayer.EyerPlayerListener;
+import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 import java.io.File;
 
@@ -28,7 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_play = null;
     private Button btn_pause = null;
 
+    private TextView log_textview = null;
+
+    private SeekBar progress_seek_bar = null;
+
     private MySurfaceView video_view = null;
+
+    private boolean isSeeking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +50,23 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
 
         video_view = findViewById(R.id.video_view);
+        video_view.setListener(new MyEyerPlayerListener());
 
         btn_open = findViewById(R.id.btn_open);
         btn_stop = findViewById(R.id.btn_stop);
         btn_pause = findViewById(R.id.btn_pause);
         btn_play = findViewById(R.id.btn_play);
+        log_textview = findViewById(R.id.log_textview);
+
+        progress_seek_bar = findViewById(R.id.progress_seek_bar);
+        progress_seek_bar.setMax(100);
 
         btn_open.setOnClickListener(new MyClickListener());
         btn_play.setOnClickListener(new MyClickListener());
         btn_pause.setOnClickListener(new MyClickListener());
         btn_stop.setOnClickListener(new MyClickListener());
+
+        progress_seek_bar.setOnTouchListener(new MySeekBarOnTouchListener());
     }
 
     @Override
@@ -86,6 +105,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class MyEyerPlayerListener implements EyerPlayerListener
+    {
+        @Override
+        public int onOpen(int status, EyerMediaInfo mediaInfo) {
+            String log = "open video ";
+            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
+                log += "success.";
+            }
+            if(status == EyerPlayerListener.OPEN_STATUS_FAIL){
+                log += "fail.";
+            }
+            if(status == EyerPlayerListener.OPEN_STATUS_BUSY){
+                log += "busy, stop first.";
+            }
+            log_textview.setText(log);
+            return 0;
+        }
+
+        @Override
+        public int onProgress(double progress) {
+            if(!isSeeking){
+                progress_seek_bar.setProgress((int)(100 * progress));
+            }
+            return 0;
+        }
+    }
+
     private class MyClickListener implements View.OnClickListener {
 
         @Override
@@ -117,6 +163,26 @@ public class MainActivity extends AppCompatActivity {
             if(view == btn_stop){
                 video_view.stop();
             }
+        }
+    }
+
+    private class MySeekBarOnTouchListener implements View.OnTouchListener
+    {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                isSeeking = true;
+            }
+            if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                isSeeking = false;
+                SeekBar seekBar = (SeekBar)view;
+                int progress = seekBar.getProgress();
+                Log.e("SeekBar", "progress: " + progress);
+
+                // video_view.seek(progress / 100.0 * 1000.0);
+                video_view.seek(20.0);
+            }
+            return false;
         }
     }
 }

@@ -13,6 +13,11 @@ namespace Eyer
     EyerThread::~EyerThread()
     {
         Stop();
+
+        while(eventQueue.size() > 0){
+            EyerRunnable * event = eventQueue.front();
+            eventQueue.pop();
+        }
     }
 
     int EyerThread::Stop(int time)
@@ -61,5 +66,52 @@ namespace Eyer
     void EyerThread::SetStoping()
     {
         isRun = 0;
+    }
+
+
+    int EyerThread::PushEvent(EyerRunnable * event)
+    {
+        eventQueue.push(event);
+        return 0;
+    }
+
+
+    int EyerThread::StartEventLoop()
+    {
+        eventLoopMut.lock();
+        eventLooping = 1;
+        return 0;
+    }
+
+    int EyerThread::StopEventLoop()
+    {
+        eventLoopMut.lock();
+
+        eventLoopMut.unlock();
+
+        eventLooping = 0;
+
+        return 0;
+    }
+
+    int EyerThread::EventLoop()
+    {
+        if(eventLooping == 0){
+            return -1;
+        }
+        while(eventQueue.size() > 0){
+            EyerRunnable * event = eventQueue.front();
+            eventQueue.pop();
+
+            event->Run();
+        }
+
+        eventLoopMut.unlock();
+
+        while(eventLooping == 1){
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        }
+
+        return 0;
     }
 }

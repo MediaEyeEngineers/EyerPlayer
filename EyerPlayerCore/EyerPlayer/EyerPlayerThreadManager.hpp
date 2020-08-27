@@ -6,13 +6,14 @@
 namespace Eyer {
     class EyerPlayerThreadManager{
     public:
-        EyerPlayerThreadManager();
+        EyerPlayerThreadManager(Eyer::EyerEventQueue * eventQueue);
         ~EyerPlayerThreadManager();
 
-        int Open(Eyer::EyerString url, long long openEventId, Eyer::EyerEventQueue * eventQueue);
+        int Open(Eyer::EyerString url, long long openEventId);
         int Play();
         int Pause();
         int Stop();
+        int Seek(double time);
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int UnbindGLCtx();
@@ -20,6 +21,7 @@ namespace Eyer {
         int SetSurface(jobject _surface);
 
     private:
+        Eyer::EyerEventQueue * eventQueue = nullptr;
         AVFrameQueueManager * frameQueueManager = nullptr;
 
         AVReaderThread * readerThread = nullptr;

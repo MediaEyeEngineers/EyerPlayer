@@ -33,4 +33,16 @@ namespace Eyer {
         }
         return cacheSize;
     }
+
+    int AVDecoderThread::ClearAllPacket()
+    {
+        if(pktQueue.Size() > 0){
+            Eyer::EyerAVPacket * pkt = nullptr;
+            pktQueue.FrontPop(&pkt);
+            if(pkt != nullptr){
+                delete pkt;
+            }
+        }
+        return 0;
+    }
 }

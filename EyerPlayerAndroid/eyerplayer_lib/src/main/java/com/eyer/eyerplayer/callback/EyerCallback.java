@@ -9,6 +9,7 @@ import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 public class EyerCallback {
 
     private static final int MSG_ID_ONOPEN = 0x000001;
+    private static final int MSG_ID_PROCESS = 0x000002;
 
     private CallbackHandle handle = null;
 
@@ -20,16 +21,36 @@ public class EyerCallback {
         handle = new CallbackHandle(listener);
     }
 
-    //
-    public int onOpen(int videoW, int videoH)
+    public int onOpen(int status, int videoW, int videoH)
     {
+        if(handle == null){
+            return -1;
+        }
         Message msg = new Message();
         msg.what = MSG_ID_ONOPEN;
 
         EyerMediaInfo mediaInfo = new EyerMediaInfo();
         mediaInfo.setVideoStreamInfo(videoW, videoH);
 
-        msg.obj = mediaInfo;
+        OpenCallbackInfo openCallbackInfo = new OpenCallbackInfo();
+        openCallbackInfo.mediaInfo = mediaInfo;
+        openCallbackInfo.openStatus = status;
+
+        msg.obj = openCallbackInfo;
+
+        handle.sendMessage(msg);
+
+        return 0;
+    }
+
+    public int onProgress(double process) {
+        if(handle == null){
+            return -1;
+        }
+        Message msg = new Message();
+        msg.what = MSG_ID_PROCESS;
+
+        msg.obj = process;
 
         handle.sendMessage(msg);
 
@@ -48,9 +69,19 @@ public class EyerCallback {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == MSG_ID_ONOPEN){
-                EyerMediaInfo mediaInfo = (EyerMediaInfo)msg.obj;
-                this.listener.onOpen(mediaInfo);
+                OpenCallbackInfo openCallbackInfo = (OpenCallbackInfo)msg.obj;
+                this.listener.onOpen(openCallbackInfo.openStatus, openCallbackInfo.mediaInfo);
+            }
+            if(msg.what == MSG_ID_PROCESS){
+                double progress = (double)msg.obj;
+                this.listener.onProgress(progress);
             }
         }
+    }
+
+    private class OpenCallbackInfo
+    {
+        public int openStatus;
+        public EyerMediaInfo mediaInfo;
     }
 }

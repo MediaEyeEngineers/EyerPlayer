@@ -75,7 +75,7 @@ public class EyerMediaCodec {
 
     public int releaseOutputBuffer(int index, boolean render){
         ByteBuffer outputBuffer = mediaCodec.getOutputBuffers()[index];
-        mediaCodec.releaseOutputBuffer(index, true);
+        mediaCodec.releaseOutputBuffer(index, render);
 
         return 0;
     }
@@ -85,6 +85,11 @@ public class EyerMediaCodec {
 
 
 
+
+    public int flush(){
+        mediaCodec.flush();
+        return 0;
+    }
 
 
 
@@ -145,4 +150,5 @@ public class EyerMediaCodec {
             }
         }
     }
+
 }

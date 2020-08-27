@@ -5,16 +5,11 @@
 namespace Eyer
 {
     void bufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue, void *pContext) {
-
-        // EyerLog("bufferQueueCallback\n");
-
-
         EyerAVFrame * audioFrame = nullptr;
 
         ((EyerOpenSL *)pContext)->GetFrame(&audioFrame);
         if(audioFrame != nullptr){
             int bufferLen = audioFrame->GetAudioPackedData(nullptr);
-            // EyerLog("BufferLen: %d\n", bufferLen);
 
             unsigned char * buf = (unsigned char *)malloc(bufferLen);
             audioFrame->GetAudioPackedData(buf);
@@ -23,7 +18,6 @@ namespace Eyer
             free(buf);
             delete audioFrame;
         }
-
         else{
             int len = 128;
             unsigned char * buf = (unsigned char *)malloc(len);

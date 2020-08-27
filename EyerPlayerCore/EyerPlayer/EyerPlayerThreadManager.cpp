@@ -3,8 +3,9 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    EyerPlayerThreadManager::EyerPlayerThreadManager()
+    EyerPlayerThreadManager::EyerPlayerThreadManager(Eyer::EyerEventQueue * _eventQueue)
     {
+        eventQueue = _eventQueue;
         frameQueueManager = new AVFrameQueueManager();
     }
 
@@ -19,7 +20,7 @@ namespace Eyer {
         }
     }
 
-    int EyerPlayerThreadManager::Open(Eyer::EyerString url, long long openEventId, Eyer::EyerEventQueue * eventQueue)
+    int EyerPlayerThreadManager::Open(Eyer::EyerString url, long long openEventId)
     {
         if(readerThread != nullptr){
             EventOpenResponse * openResponseEvent = new EventOpenResponse();
@@ -47,8 +48,15 @@ namespace Eyer {
             return -1;
         }
 
+        if(readerThread->GetAVReaderStatus() != AVReaderStatus::READER_STATUS_OPEN_SUCCESS){
+            return -2;
+        }
+
+        MediaInfo mediaInfo;
+        readerThread->GetMediaInfo(mediaInfo);
+
         if(playerCtr == nullptr){
-            playerCtr = new AVPlayCtrThread(frameQueueManager, videoTime);
+            playerCtr = new AVPlayCtrThread(frameQueueManager, eventQueue, mediaInfo, videoTime);
 
             glCtxMut.lock();
             playerCtr->SetGLCtx(glCtx);
@@ -91,6 +99,21 @@ namespace Eyer {
         frameQueueManager->GetMediaCodecQueueUninit();
 
         videoTime = 0.0;
+
+        return 0;
+    }
+
+    int EyerPlayerThreadManager::Seek(double time)
+    {
+        if(readerThread == nullptr){
+            return -1;
+        }
+
+        SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
+        readerThread->PushEvent(&seekReaderRunnable);
+
+        readerThread->StartEventLoop();
+        readerThread->StopEventLoop();
 
         return 0;
     }

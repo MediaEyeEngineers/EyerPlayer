@@ -4,9 +4,13 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <queue>
 
 namespace Eyer
 {
+    class EyerThread;
+    class EyerRunnable;
+
     class EyerThread
     {
     public:
@@ -20,6 +24,15 @@ namespace Eyer
         int IsRunning();
         int Start();
 
+
+
+        int PushEvent(EyerRunnable * event);
+
+        int StartEventLoop();
+        int StopEventLoop();
+
+        int EventLoop();
+
     protected:
         void SetRunning();
         void SetStoping();
@@ -27,8 +40,18 @@ namespace Eyer
         std::atomic_int stopFlag {0};
         std::atomic_int isRun {0};
 
+        std::mutex eventLoopMut;
+        std::atomic_int eventLooping {0};
+
     private:
         std::thread * t = nullptr;
+        std::queue<EyerRunnable *> eventQueue;
+    };
+
+    class EyerRunnable
+    {
+    public:
+        virtual void Run() = 0;
     };
 }
 

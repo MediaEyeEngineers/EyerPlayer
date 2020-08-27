@@ -3,6 +3,7 @@
 
 #include <string>
 #include <jni.h>
+
 #include "EyerGLContext/EyerGLContext.hpp"
 #include "MediaInfo.hpp"
 
@@ -10,9 +11,9 @@ namespace Eyer {
 
     enum EventOpenStatus
     {
-        OPEN_STATUS_SUCCESS = 1,
-        OPEN_STATUS_FAIL = 2,
-        OPEN_STATUS_BUSY = -1
+        OPEN_STATUS_SUCCESS = 0,
+        OPEN_STATUS_FAIL = -1,
+        OPEN_STATUS_BUSY = -2
     };
 
     enum EventStopStatus
@@ -35,7 +36,8 @@ namespace Eyer {
         EyerPlayerCallback();
         ~EyerPlayerCallback();
 
-        int OnOpen(MediaInfo & mediaInfo);
+        int OnOpen       (EventOpenStatus status, MediaInfo & mediaInfo);
+        int OnProgress   (double process);
 
     public:
         jobject callback = nullptr;
@@ -59,6 +61,8 @@ namespace Eyer {
         int Pause();
 
         int Stop();
+
+        int Seek(double time);
 
     private:
         EyerPlayerPrivate * piml = nullptr;

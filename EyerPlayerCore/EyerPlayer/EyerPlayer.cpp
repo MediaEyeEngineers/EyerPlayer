@@ -84,6 +84,20 @@ namespace Eyer
         return 0;
     }
 
+    int EyerPlayer::Seek(double time)
+    {
+        long long requestId = piml->eventManager->GenId();
+
+        EventSeekRequest * seekRequest = new EventSeekRequest();
+        seekRequest->SetFrom(EventTag::PLAYER);
+        seekRequest->SetTo(EventTag::EVENT_MANAGER);
+        seekRequest->SetRequestId(requestId);
+        seekRequest->time = time;
+        piml->eventManager->PushEvent(seekRequest);
+
+        return 0;
+    }
+
     int EyerPlayer::BindGLContext(Eyer::EyerGLContextThread * ctx)
     {
         return piml->eventManager->SetGLCtx(ctx);

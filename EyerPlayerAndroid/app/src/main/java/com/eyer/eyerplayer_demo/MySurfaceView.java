@@ -53,6 +53,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return player.stop();
     }
 
+    public int seek(double time) {
+        return player.seek(time);
+    }
+
     private void init() {
         mSurfaceHolder = getHolder();
         mSurfaceHolder.setKeepScreenOn(true);
@@ -107,15 +111,34 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    private EyerPlayerListener listener = null;
+    public int setListener(EyerPlayerListener listener){
+        this.listener = listener;
+        return 0;
+    }
+
 
     private class MyEyerPlayerListener implements EyerPlayerListener
     {
         @Override
-        public int onOpen(EyerMediaInfo mediaInfo) {
-            videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
-            videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
-            requestLayout();
+        public int onOpen(int status, EyerMediaInfo mediaInfo) {
+            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
+                videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
+                videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
+                requestLayout();
+            }
 
+            if(listener != null){
+                listener.onOpen(status, mediaInfo);
+            }
+            return 0;
+        }
+
+        @Override
+        public int onProgress(double process) {
+            if(listener != null){
+                listener.onProgress(process);
+            }
             return 0;
         }
     }

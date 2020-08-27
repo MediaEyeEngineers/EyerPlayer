@@ -134,3 +134,10 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1stop
     int ret = player->Stop();
     return ret;
 }
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1seek
+(JNIEnv *, jclass, jlong playerJNI, jdouble time)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    return player->Seek(time);
+}
