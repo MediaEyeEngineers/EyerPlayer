@@ -78,51 +78,64 @@ namespace Eyer
 
     int EyerThread::StartEventLoop()
     {
-        // 发出 开始指令
-        eventLoopStart = 0;
-        eventLoopEnd = 0;
+        eventMut.lock();
 
-        stopEventLoopFlag = 0;
+        std::unique_lock<std::mutex> lck(eventLoopMut);
+
+        eventLoopIsEndFlag = 0;
+
+        eventLoopIsStartFlag = 0;
+
+        // 发出 开始指令
+        eventLoopFlag = 1;
 
         // 等待 开始
-        while(eventLoopStart == 0){
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        while(eventLoopIsStartFlag == 0){
+            eventLoopIsStart.wait(lck);
         }
-
-        eventLoopStart = 0;
 
         return 0;
     }
 
     int EyerThread::StopEventLoop()
     {
+        std::unique_lock<std::mutex> lck(eventLoopMut);
+
         // 发出 停止指令
-        stopEventLoopFlag = 1;
+        eventLoopFlag = 0;
 
         // 等待 停止
-        while(eventLoopEnd == 0){
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        while(eventLoopIsEndFlag == 0){
+            eventLoopIsEnd.wait(lck);
         }
 
-        eventLoopEnd = 0;
-
+        eventMut.unlock();
         return 0;
     }
 
     int EyerThread::EventLoop()
     {
-        while(!stopEventLoopFlag){
-            eventLoopEnd = 0;
-            eventLoopStart = 1;
-
-            while(eventQueue.size()){
-                EyerRunnable * event = eventQueue.front();
-                eventQueue.pop();
-                event->Run();
-            }
+        if(!eventLoopFlag){
+            return -1;
         }
 
-        eventLoopEnd = 1;
+        // eventLoopIsStartFlag = 1;
+        // eventLoopIsStart.notify_all();
+
+        while(eventQueue.size() > 0){
+            EyerRunnable * event = eventQueue.front();
+            eventQueue.pop();
+            event->Run();
+        }
+
+        while(eventLoopFlag){
+            eventLoopIsStartFlag = 1;
+            eventLoopIsStart.notify_all();
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+        }
+
+        eventLoopIsEndFlag = 1;
+        eventLoopIsEnd.notify_all();
 
         return 0;
     }

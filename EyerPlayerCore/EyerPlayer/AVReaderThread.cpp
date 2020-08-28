@@ -155,7 +155,6 @@ namespace Eyer {
             EventLoop();
 
             int cacheSize = videoThread->GetPacketSize() + audioThread->GetPacketSize();
-            // EyerLog("Cache Size: %d\n", cacheSize);
             if(cacheSize >= 1024 * 1024 * 2){
                 continue;
             }

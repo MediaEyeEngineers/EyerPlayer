@@ -54,6 +54,7 @@ namespace Eyer {
 
             // 先查询解码器中是否有空位
             int index = mediaCodec->dequeueInputBuffer(1000 * 100);
+
             if(index < 0){
                 continue;
             }
