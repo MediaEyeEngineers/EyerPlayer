@@ -15,9 +15,8 @@ namespace Eyer {
 
     int AVDecoderThread::SendPacket(Eyer::EyerAVPacket * pkt)
     {
-        cacheSize += pkt->GetSize();
         pktQueue.Push(pkt);
-
+        cacheSize += pkt->GetSize();
         return 0;
     }
 

@@ -44,9 +44,6 @@ namespace Eyer {
 
         long long videoFrameTime = 0;
 
-        long long pauseingTime = 0;
-
-
         long long lastProcessTime = Eyer::EyerTime::GetTime();
         while(!stopFlag){
 
@@ -54,20 +51,7 @@ namespace Eyer {
 
             EventLoop();
 
-            if(status == AVPlayCtrStatus::STATUS_PAUSEING){
-                long long pauseStart = Eyer::EyerTime::GetTime();
-                while(!stopFlag){
-                    Eyer::EyerTime::EyerSleepMilliseconds(100);
-                    if(status == AVPlayCtrStatus::STATUS_PLAYING){
-                        break;
-                    }
-                }
-                long long pauseEnd = Eyer::EyerTime::GetTime();
-
-                pauseingTime += (pauseEnd - pauseStart);
-            }
-
-            long long nowTime = Eyer::EyerTime::GetTime() - pauseingTime;
+            long long nowTime = Eyer::EyerTime::GetTime();
 
 
             double dTime = (nowTime - startTime) / 1000.0;
@@ -109,7 +93,14 @@ namespace Eyer {
 
                 if(outindex >= 0){
                     double timePts = videoFrameTime / 1000.0;
-                    if (timePts <= dTime) {
+                    // EyerLog("dTime: %f\n", dTime);
+                    // EyerLog("timePts: %f\n", timePts);
+
+                    if(dTime - timePts >= 0.1){
+                        mediaCodec->releaseOutputBuffer(outindex, false);
+                        outindex = -1;
+                    }
+                    else if (timePts <= dTime) {
                         mediaCodec->releaseOutputBuffer(outindex, true);
                         outindex = -1;
                     }
@@ -157,7 +148,8 @@ namespace Eyer {
                 if(audioFrame->timePts <= dTime){
                     // Play !!!
                     if(audioFrame != nullptr){
-                        opensl->PutFrame(audioFrame);
+                        // opensl->PutFrame(audioFrame);
+                        delete audioFrame;
                         audioFrame = nullptr;
                     }
                 }
@@ -190,7 +182,6 @@ namespace Eyer {
     {
         startTime = Eyer::EyerTime::GetTime();
         seekTime = time;
-
         outindex = -1;
         return 0;
     }

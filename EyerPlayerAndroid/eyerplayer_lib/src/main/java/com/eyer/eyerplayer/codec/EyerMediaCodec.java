@@ -95,7 +95,6 @@ public class EyerMediaCodec {
 
     public int flush(){
         mediaCodec.flush();
-        // mediaCodec.start();
         return 0;
     }
 

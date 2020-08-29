@@ -54,6 +54,32 @@ namespace Eyer {
     int AVReaderThread::Seek(double time)
     {
         if(audioThread != nullptr){
+            SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
+            audioThread->PushEvent(&seekDecoderRunnable);
+            audioThread->StartEventLoop();
+        }
+        if(videoThread != nullptr){
+            SEEK_Decoder_Runnable seekDecoderRunnable(videoThread);
+            videoThread->PushEvent(&seekDecoderRunnable);
+            videoThread->StartEventLoop();
+        }
+
+        EyerLog("Reader Seek Start\n");
+        reader.Seek(time);
+        EyerLog("Reader Seek End\n");
+
+        if(audioThread != nullptr){
+            audioThread->StopEventLoop();
+        }
+        if(videoThread != nullptr){
+            videoThread->StopEventLoop();
+        }
+        /*
+        EyerLog("Reader Seek Start\n");
+        reader.Seek(time);
+        EyerLog("Reader Seek End\n");
+
+        if(audioThread != nullptr){
             EyerLog("Audio Decoder Seek Start\n");
             SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
             audioThread->PushEvent(&seekDecoderRunnable);
@@ -69,10 +95,7 @@ namespace Eyer {
             videoThread->StopEventLoop();
             EyerLog("Video Decoder Seek End\n");
         }
-
-        EyerLog("Reader Seek Start\n");
-        reader.Seek(time);
-        EyerLog("Reader Seek End\n");
+         */
 
         return 0;
     }
@@ -154,8 +177,10 @@ namespace Eyer {
 
             EventLoop();
 
-            int cacheSize = videoThread->GetPacketSize() + audioThread->GetPacketSize();
-            if(cacheSize >= 1024 * 1024 * 2){
+            int videoCacheSize = videoThread->GetPacketSize();
+            int audioCacheSize = audioThread->GetPacketSize();
+            // EyerLog("Video CacheSize: %d, Audio CacheSize: %d\n", videoCacheSize, audioCacheSize);
+            if(videoCacheSize >= 1024 * 1024 * 2){
                 continue;
             }
 

@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isSeeking = false;
 
+
+    private EyerMediaInfo mediaInfo = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
     private class MyEyerPlayerListener implements EyerPlayerListener
     {
         @Override
-        public int onOpen(int status, EyerMediaInfo mediaInfo) {
+        public int onOpen(int status, EyerMediaInfo _mediaInfo) {
+            mediaInfo = _mediaInfo;
             String log = "open video ";
             if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
                 log += "success.";
@@ -179,8 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 int progress = seekBar.getProgress();
                 Log.e("SeekBar", "progress: " + progress);
 
+                double duration = mediaInfo.getDuration();
+
                 // video_view.seek(progress / 100.0 * 1000.0);
-                video_view.seek(20.0);
+                video_view.seek(progress / 100.0 * duration);
             }
             return false;
         }

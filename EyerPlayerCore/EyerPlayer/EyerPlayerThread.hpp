@@ -121,7 +121,7 @@ namespace Eyer {
     private:
         jobject surface = nullptr;
 
-        Eyer::EyerAVBitstreamFilter * bitstreamFilter;
+        int inputIndex = -1;
     };
 
 
