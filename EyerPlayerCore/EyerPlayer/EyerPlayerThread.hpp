@@ -144,6 +144,8 @@ namespace Eyer {
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
 
+        int Play();
+        int Pause();
         int Seek(double time);
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
@@ -162,6 +164,9 @@ namespace Eyer {
         double seekTime = 0;
         long long startTime = 0;
 
+        double pauseSeekTime = 0;
+
+        double dTime = 0.0;
 
 
         int outindex = -1;

@@ -471,6 +471,7 @@ namespace Eyer {
         virtual void Run()
         {
             EyerLog("PLAY_PlayCtr_Runnable\n");
+            playCtr->Play();
         }
 
     private:
@@ -489,6 +490,7 @@ namespace Eyer {
         virtual void Run()
         {
             EyerLog("PAUSE_PlayCtr_Runnable\n");
+            playCtr->Pause();
         }
 
     private:
