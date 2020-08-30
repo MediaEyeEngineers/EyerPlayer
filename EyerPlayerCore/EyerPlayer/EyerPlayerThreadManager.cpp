@@ -65,7 +65,10 @@ namespace Eyer {
             playerCtr->Start();
         }
 
-        playerCtr->SetStatus(AVPlayCtrStatus::STATUS_PLAYING);
+        PLAY_PlayCtr_Runnable playCtrRunnable(playerCtr);
+        playerCtr->PushEvent(&playCtrRunnable);
+        playerCtr->StartEventLoop();
+        playerCtr->StopEventLoop();
 
         return 0;
     }
@@ -76,7 +79,10 @@ namespace Eyer {
             return -1;
         }
 
-        playerCtr->SetStatus(AVPlayCtrStatus::STATUS_PAUSEING);
+        PAUSE_PlayCtr_Runnable pauseCtrRunnable(playerCtr);
+        playerCtr->PushEvent(&pauseCtrRunnable);
+        playerCtr->StartEventLoop();
+        playerCtr->StopEventLoop();
 
         return 0;
     }
@@ -109,11 +115,18 @@ namespace Eyer {
             return -1;
         }
 
-        SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
-        readerThread->PushEvent(&seekReaderRunnable);
+        if(playerCtr != nullptr){
+            SEEK_PlayCtr_Runnable seekPlayCtrRunnable(playerCtr, time);
+            playerCtr->PushEvent(&seekPlayCtrRunnable);
+            playerCtr->StartEventLoop();
 
-        readerThread->StartEventLoop();
-        readerThread->StopEventLoop();
+            SEEK_Reader_Runnable seekReaderRunnable(readerThread, time);
+            readerThread->PushEvent(&seekReaderRunnable);
+            readerThread->StartEventLoop();
+            readerThread->StopEventLoop();
+
+            playerCtr->StopEventLoop();
+        }
 
         return 0;
     }

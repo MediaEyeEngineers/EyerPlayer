@@ -88,7 +88,7 @@ namespace Eyer {
     protected:
         Eyer::EyerAVQueue<Eyer::EyerAVPacket> pktQueue;
 
-        int cacheSize = 0;
+        std::atomic_int cacheSize {0};
 
         AVFrameQueueManager * frameQueueManager = nullptr;
         Eyer::EyerAVStream stream;
@@ -120,6 +120,8 @@ namespace Eyer {
 
     private:
         jobject surface = nullptr;
+
+        int inputIndex = -1;
     };
 
 
@@ -142,7 +144,7 @@ namespace Eyer {
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
 
-        int SetStatus(AVPlayCtrStatus status);
+        int Seek(double time);
     private:
         AVFrameQueueManager * frameQueueManager = nullptr;
         EyerEventQueue * eventQueue = nullptr;
@@ -156,6 +158,17 @@ namespace Eyer {
         EyerOpenSL * opensl = nullptr;
 
         MediaInfo mediaInfo;
+
+        double seekTime = 0;
+        long long startTime = 0;
+
+
+
+        int outindex = -1;
+        long long videoFrameTime = 0;
+
+        Eyer::EyerAVFrame * videoFrame = nullptr;
+        Eyer::EyerAVFrame * audioFrame = nullptr;
     };
 }
 

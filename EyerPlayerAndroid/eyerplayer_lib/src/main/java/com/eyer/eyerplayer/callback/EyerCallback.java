@@ -21,7 +21,7 @@ public class EyerCallback {
         handle = new CallbackHandle(listener);
     }
 
-    public int onOpen(int status, int videoW, int videoH)
+    public int onOpen(int status, double duration, int videoW, int videoH)
     {
         if(handle == null){
             return -1;
@@ -31,6 +31,7 @@ public class EyerCallback {
 
         EyerMediaInfo mediaInfo = new EyerMediaInfo();
         mediaInfo.setVideoStreamInfo(videoW, videoH);
+        mediaInfo.setDuration(duration);
 
         OpenCallbackInfo openCallbackInfo = new OpenCallbackInfo();
         openCallbackInfo.mediaInfo = mediaInfo;

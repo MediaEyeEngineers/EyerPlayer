@@ -23,9 +23,10 @@ namespace Eyer {
         }
 
         if(frameQueue != nullptr){
-            if(frameQueue->Size() > 0){
+            while(frameQueue->Size() > 0){
                 Eyer::EyerAVFrame * frame = nullptr;
                 frameQueue->FrontPop(&frame);
+
                 if(frame != nullptr){
                     delete frame;
                 }
@@ -73,7 +74,7 @@ namespace Eyer {
                     delete pkt;
                     pkt = nullptr;
                 }
-                break;
+                continue;
             }
 
             cacheSize -= pkt->GetSize();
@@ -91,6 +92,9 @@ namespace Eyer {
                     break;
                 }
 
+                double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
+                frame->timePts = t;
+
                 if (frameQueue != nullptr) {
                     frameQueue->Push(frame);
                 } else {
@@ -99,10 +103,6 @@ namespace Eyer {
                         frame = nullptr;
                     }
                 }
-
-
-                double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
-                frame->timePts = t;
             }
 
             if (pkt != nullptr) {
@@ -122,6 +122,9 @@ namespace Eyer {
                 break;
             }
 
+            double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
+            frame->timePts = t;
+
             if (frameQueue != nullptr) {
                 frameQueue->Push(frame);
             } else {
@@ -130,8 +133,6 @@ namespace Eyer {
                     frame = nullptr;
                 }
             }
-            double t = frame->GetPTS() * 1.0 * timebase.num / timebase.den;
-            frame->timePts = t;
         }
 
         EyerLog("AVDecoder Software Thread Stop\n");

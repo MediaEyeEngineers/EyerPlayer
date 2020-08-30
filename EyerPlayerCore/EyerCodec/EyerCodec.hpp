@@ -19,6 +19,7 @@ namespace Eyer
         int         dequeueInputBuffer(long long timeoutUs);
         int         putInputData(int index, unsigned char * data, int size);
         void        queueInputBuffer(int index, int offset, int size, long long presentationTimeUs, int flags);
+        void        sendEndOfStream(int index);
 
         int         dequeueOutputBuffer(long long timeoutUs);
         long long   getOutTime();

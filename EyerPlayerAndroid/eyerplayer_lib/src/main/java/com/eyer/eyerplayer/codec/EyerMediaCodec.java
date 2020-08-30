@@ -1,5 +1,6 @@
 package com.eyer.eyerplayer.codec;
 
+import android.annotation.SuppressLint;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -9,6 +10,8 @@ import android.view.Surface;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import static android.media.MediaCodec.BUFFER_FLAG_END_OF_STREAM;
 
 public class EyerMediaCodec {
 
@@ -59,6 +62,10 @@ public class EyerMediaCodec {
 
     public void queueInputBuffer(int index, int offset, int size, long presentationTimeUs, int flags) {
         mediaCodec.queueInputBuffer(index, offset, size, presentationTimeUs, flags);
+    }
+
+    public void sendEndOfStream(int index){
+        mediaCodec.queueInputBuffer(index,0,0,0, BUFFER_FLAG_END_OF_STREAM);
     }
 
 

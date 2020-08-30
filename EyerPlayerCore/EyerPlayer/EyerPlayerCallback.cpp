@@ -25,15 +25,16 @@ namespace Eyer
             EyerLog("MediaCodec Thread: Find EyerMediaCodec Class Fail\n");
         }
 
-        jmethodID eyerCallbackMethod_onOpen = env->GetMethodID(eyerCallbackClass, "onOpen", "(III)I");
+        jmethodID eyerCallbackMethod_onOpen = env->GetMethodID(eyerCallbackClass, "onOpen", "(IDII)I");
         if(eyerCallbackMethod_onOpen == nullptr){
             EyerLog("MediaCodec Thread: onOpen GetMethodID Fail\n");
         }
 
         int width = mediaInfo.videoStream.GetWidth();
         int height = mediaInfo.videoStream.GetHeight();
+        double duration = mediaInfo.GetDuration();
 
-        int ret = env->CallIntMethod(callback, eyerCallbackMethod_onOpen, (int)status, width, height);
+        int ret = env->CallIntMethod(callback, eyerCallbackMethod_onOpen, (int)status, duration, width, height);
 
         return ret;
     }

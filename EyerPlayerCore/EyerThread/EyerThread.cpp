@@ -78,39 +78,64 @@ namespace Eyer
 
     int EyerThread::StartEventLoop()
     {
-        eventLoopMut.lock();
-        eventLooping = 1;
+        eventMut.lock();
+
+        std::unique_lock<std::mutex> lck(eventLoopMut);
+
+        eventLoopIsEndFlag = 0;
+
+        eventLoopIsStartFlag = 0;
+
+        // 发出 开始指令
+        eventLoopFlag = 1;
+
+        // 等待 开始
+        while(eventLoopIsStartFlag == 0){
+            eventLoopIsStart.wait(lck);
+        }
+
         return 0;
     }
 
     int EyerThread::StopEventLoop()
     {
-        eventLoopMut.lock();
+        std::unique_lock<std::mutex> lck(eventLoopMut);
 
-        eventLoopMut.unlock();
+        // 发出 停止指令
+        eventLoopFlag = 0;
 
-        eventLooping = 0;
+        // 等待 停止
+        while(eventLoopIsEndFlag == 0){
+            eventLoopIsEnd.wait(lck);
+        }
 
+        eventMut.unlock();
         return 0;
     }
 
     int EyerThread::EventLoop()
     {
-        if(eventLooping == 0){
+        if(!eventLoopFlag){
             return -1;
         }
+
+        // eventLoopIsStartFlag = 1;
+        // eventLoopIsStart.notify_all();
+
         while(eventQueue.size() > 0){
             EyerRunnable * event = eventQueue.front();
             eventQueue.pop();
-
             event->Run();
         }
 
-        eventLoopMut.unlock();
-
-        while(eventLooping == 1){
+        while(eventLoopFlag){
+            eventLoopIsStartFlag = 1;
+            eventLoopIsStart.notify_all();
             Eyer::EyerTime::EyerSleepMilliseconds(1);
         }
+
+        eventLoopIsEndFlag = 1;
+        eventLoopIsEnd.notify_all();
 
         return 0;
     }
