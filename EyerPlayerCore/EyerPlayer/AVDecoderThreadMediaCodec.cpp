@@ -91,18 +91,6 @@ namespace Eyer {
                 delete pkt;
                 pkt = nullptr;
             }
-
-            /*
-            while(1){
-                int outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
-                if(outindex >= 0){
-                    mediaCodec->releaseOutputBuffer(outindex, true);
-                }
-                else{
-                    break;
-                }
-            }
-             */
         }
 
 

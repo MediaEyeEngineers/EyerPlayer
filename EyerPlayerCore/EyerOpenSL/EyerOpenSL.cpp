@@ -127,6 +127,8 @@ namespace Eyer
     {
         (*iplayer)->SetPlayState(iplayer, SL_PLAYSTATE_STOPPED);
 
+        ClearAllCache();
+
         if(audioFrameQueue != nullptr){
             delete audioFrameQueue;
             audioFrameQueue = nullptr;
@@ -146,6 +148,27 @@ namespace Eyer
 
     int EyerOpenSL::GetFrame(EyerAVFrame * * frame)
     {
+        // EyerLog("Audio Queue Size: %d\n", audioFrameQueue->Size());
+        while(audioFrameQueue->Size() >= 2){
+            EyerAVFrame * f = nullptr;
+            audioFrameQueue->FrontPop(&f);
+            if(f != nullptr){
+                delete f;
+            }
+        }
         return audioFrameQueue->FrontPop(frame);
+    }
+
+    int EyerOpenSL::ClearAllCache()
+    {
+        while(audioFrameQueue->Size() > 0){
+            EyerAVFrame * f = nullptr;
+            audioFrameQueue->FrontPop(&f);
+            if(f != nullptr){
+                delete f;
+            }
+        }
+
+        return 0;
     }
 }

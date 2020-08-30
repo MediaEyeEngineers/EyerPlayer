@@ -25,6 +25,8 @@ namespace Eyer{
 
         int Print();
 
+        int ClearAllCache();
+
         int PutFrame(EyerAVFrame * frame);
         int GetFrame(EyerAVFrame * * frame);
     private:

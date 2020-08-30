@@ -456,6 +456,44 @@ namespace Eyer {
         AVPlayCtrThread * playCtr = nullptr;
         double time = 0.0;
     };
+
+
+
+
+    class PLAY_PlayCtr_Runnable: public EyerRunnable
+    {
+    public:
+        PLAY_PlayCtr_Runnable(AVPlayCtrThread * _playCtr)
+        {
+            playCtr = _playCtr;
+        }
+
+        virtual void Run()
+        {
+            EyerLog("PLAY_PlayCtr_Runnable\n");
+        }
+
+    private:
+        AVPlayCtrThread * playCtr = nullptr;
+    };
+
+
+    class PAUSE_PlayCtr_Runnable: public EyerRunnable
+    {
+    public:
+        PAUSE_PlayCtr_Runnable(AVPlayCtrThread * _playCtr)
+        {
+            playCtr = _playCtr;
+        }
+
+        virtual void Run()
+        {
+            EyerLog("PAUSE_PlayCtr_Runnable\n");
+        }
+
+    private:
+        AVPlayCtrThread * playCtr = nullptr;
+    };
 }
 
 #endif // EYERPLAYERLIB_PLAYER_EVENT_H

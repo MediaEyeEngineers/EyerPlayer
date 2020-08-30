@@ -74,28 +74,6 @@ namespace Eyer {
         if(videoThread != nullptr){
             videoThread->StopEventLoop();
         }
-        /*
-        EyerLog("Reader Seek Start\n");
-        reader.Seek(time);
-        EyerLog("Reader Seek End\n");
-
-        if(audioThread != nullptr){
-            EyerLog("Audio Decoder Seek Start\n");
-            SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
-            audioThread->PushEvent(&seekDecoderRunnable);
-            audioThread->StartEventLoop();
-            audioThread->StopEventLoop();
-            EyerLog("Audio Decoder Seek End\n");
-        }
-        if(videoThread != nullptr){
-            EyerLog("Video Decoder Seek Start\n");
-            SEEK_Decoder_Runnable seekDecoderRunnable(videoThread);
-            videoThread->PushEvent(&seekDecoderRunnable);
-            videoThread->StartEventLoop();
-            videoThread->StopEventLoop();
-            EyerLog("Video Decoder Seek End\n");
-        }
-         */
 
         return 0;
     }
@@ -182,6 +160,9 @@ namespace Eyer {
             // EyerLog("Video CacheSize: %d, Audio CacheSize: %d\n", videoCacheSize, audioCacheSize);
             if(videoCacheSize >= 1024 * 1024 * 2){
                 continue;
+            }
+            if(audioCacheSize >= 1024 * 1024 * 2){
+                /// continue;
             }
 
             Eyer::EyerAVPacket * packet = new Eyer::EyerAVPacket();
