@@ -48,8 +48,14 @@ namespace Eyer {
 
             long long nowTime = Eyer::EyerTime::GetTime();
 
-            double dTime = (nowTime - startTime) / 1000.0;
+            dTime = (nowTime - startTime) / 1000.0;
             dTime += seekTime;
+
+            if(status == AVPlayCtrStatus::STATUS_PAUSEING){
+                continue;
+            }
+
+
 
             double progress = dTime / mediaInfo.GetDuration();
             if(progress >= 1.0){
@@ -135,13 +141,14 @@ namespace Eyer {
             }
             if(audioFrame != nullptr){
                 // 判断音频是否应该播放
-                if(audioFrame->timePts <= dTime){
-                    // Play !!!
-                    if(audioFrame != nullptr){
-                        opensl->PutFrame(audioFrame);
-                        // delete audioFrame;
-                        audioFrame = nullptr;
-                    }
+                if(dTime - audioFrame->timePts >= 0.1){
+                    delete audioFrame;
+                    audioFrame = nullptr;
+                }
+                else if(audioFrame->timePts <= dTime){
+                    opensl->PutFrame(audioFrame);
+                    // delete audioFrame;
+                    audioFrame = nullptr;
                 }
             }
         }
@@ -173,6 +180,27 @@ namespace Eyer {
 
         opensl->ClearAllCache();
 
+        return 0;
+    }
+
+    int AVPlayCtrThread::Play()
+    {
+        if(status == AVPlayCtrStatus::STATUS_PAUSEING){
+            startTime = Eyer::EyerTime::GetTime();
+            seekTime = pauseSeekTime;
+
+            status = AVPlayCtrStatus::STATUS_PLAYING;
+        }
+        return 0;
+    }
+
+    int AVPlayCtrThread::Pause()
+    {
+        if(status == AVPlayCtrStatus::STATUS_PLAYING){
+            pauseSeekTime = dTime;
+
+            status = AVPlayCtrStatus::STATUS_PAUSEING;
+        }
         return 0;
     }
 }
