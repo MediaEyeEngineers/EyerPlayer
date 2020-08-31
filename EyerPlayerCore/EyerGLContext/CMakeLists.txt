@@ -3,6 +3,7 @@ include_directories (./)
 
 add_library(
         EyerGLContext
+        EyerGLContext.cpp
         EyerGLContextThread.cpp
         )
 

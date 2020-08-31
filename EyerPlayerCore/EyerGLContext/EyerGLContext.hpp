@@ -9,9 +9,35 @@
 
 namespace Eyer
 {
+    class EyerGLContextThread;
+
+    class EyerGLContext
+    {
+    public:
+        EyerGLContext();
+        ~EyerGLContext();
+
+        int Init(ANativeWindow * nativeWindow);
+        int Uninit();
+
+        int MakeCurrent();
+        int SwapBuffers();
+
+        int StartGLThread();
+        int StopGLThread();
+
+    private:
+        EGLContext mEglContext;
+        EGLConfig eglConfig;
+        EGLSurface window;
+        EGLDisplay mEglDisplay;
+
+        EyerGLContextThread * glThread = nullptr;
+    };
+
     class EyerGLContextThread : public EyerThread {
     public:
-        EyerGLContextThread(ANativeWindow * nativeWindow);
+        EyerGLContextThread(EyerGLContext * glCtx);
         ~EyerGLContextThread();
         virtual void Run();
 
@@ -23,7 +49,7 @@ namespace Eyer
         int GetH();
 
     private:
-        ANativeWindow * nativeWindow = nullptr;
+        EyerGLContext * glCtx = nullptr;
 
         int w = 0;
         int h = 0;

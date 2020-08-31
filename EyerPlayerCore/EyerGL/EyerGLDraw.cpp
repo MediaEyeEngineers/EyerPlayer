@@ -4,7 +4,7 @@
 
 namespace Eyer
 {
-    EyerGLDraw::EyerGLDraw(EyerString _vertexShaderSrc, EyerString _fragmentShaderSrc, EyerGLContext * _ctx)
+    EyerGLDraw::EyerGLDraw(EyerString _vertexShaderSrc, EyerString _fragmentShaderSrc, EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
 

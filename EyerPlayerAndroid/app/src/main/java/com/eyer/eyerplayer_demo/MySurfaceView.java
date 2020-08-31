@@ -1,9 +1,14 @@
 package com.eyer.eyerplayer_demo;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,13 +19,17 @@ import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 import java.io.File;
 
-public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
-    private SurfaceHolder mSurfaceHolder = null;
+public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
+
     private EyerPlayer player = null;
 
     int videoWidth = 0;
     int videoHeight = 0;
+
+    private EyerPlayerListener listener = null;
 
     public MySurfaceView(Context context) {
         super(context);
@@ -32,10 +41,20 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         init();
     }
 
-    public MySurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
+    private void init() {
+        setEGLContextClientVersion(3);
+        setRenderer(this);
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        player = new EyerPlayer();
+        player.setListener(new MyEyerPlayerListener());
     }
+
+    public int setListener(EyerPlayerListener listener){
+        this.listener = listener;
+        return 0;
+    }
+
 
     public int open(String url){
         return player.open(url);
@@ -57,31 +76,44 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return player.seek(time);
     }
 
-    private void init() {
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.setKeepScreenOn(true);
-        mSurfaceHolder.addCallback(this);
+
+    private SurfaceTexture surfaceTexture = null;
+    private Surface surface = null;
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        Log.e("Eyer OpenGL", "onSurfaceCreated");
+
+        int[] textureids = new int[1];
+        GLES20.glGenTextures(1, textureids, 0);
+        int textureId_mediacodec = textureids[0];
+
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+
+        Log.e("Eyer OpenGL", "textureId_mediacodec: " + textureId_mediacodec);
+
+        surfaceTexture = new SurfaceTexture(textureId_mediacodec);
+        surface = new Surface(surfaceTexture);
+        surfaceTexture.setOnFrameAvailableListener(this);
+
+        player.setSurface(surface);
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        player = new EyerPlayer();
-        player.setListener(new MyEyerPlayerListener());
-        player.setSurface(holder.getSurface());
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
+        Log.e("Eyer OpenGL", "onSurfaceChanged");
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.e("@@@@", "SurfaceChange， Width: " + width + " Height: " + height);
+    public void onDrawFrame(GL10 gl) {
+        Log.e("Eyer OpenGL", "onDrawFrame");
     }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        if(player != null){
-            player.destory();
-            player = null;
-        }
-    }
+
+
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -111,10 +143,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-    private EyerPlayerListener listener = null;
-    public int setListener(EyerPlayerListener listener){
-        this.listener = listener;
-        return 0;
+    @Override
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+
     }
 
 
@@ -122,6 +153,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     {
         @Override
         public int onOpen(int status, EyerMediaInfo mediaInfo) {
+            Log.e("MyEyerPlayerListener", "onOpen");
             if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
                 videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
                 videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
