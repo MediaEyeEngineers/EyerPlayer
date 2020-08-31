@@ -3,7 +3,7 @@
 #include "GLHeader.h"
 
 namespace Eyer{
-    EyerGLShader::EyerGLShader(EyerGLShaderType _type, EyerString _src, EyerGLContext * _ctx)
+    EyerGLShader::EyerGLShader(EyerGLShaderType _type, EyerString _src, EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
 

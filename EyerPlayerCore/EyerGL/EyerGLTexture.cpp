@@ -4,7 +4,7 @@
 
 namespace Eyer
 {
-    EyerGLTexture::EyerGLTexture(EyerGLContext * _ctx)
+    EyerGLTexture::EyerGLTexture(EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
 

@@ -1,9 +1,11 @@
 package com.eyer.eyerplayer_demo;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -68,6 +70,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         player = new EyerPlayer();
         player.setListener(new MyEyerPlayerListener());
         player.setSurface(holder.getSurface());
+
+        /*
+        SurfaceTexture surfaceTexture = new SurfaceTexture(1);
+        Surface surface = new Surface(surfaceTexture);
+
+        surfaceTexture.setOnFrameAvailableListener();
+        surfaceTexture.updateTexImage();
+        */
     }
 
     @Override

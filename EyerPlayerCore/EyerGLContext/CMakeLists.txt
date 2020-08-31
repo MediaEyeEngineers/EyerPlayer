@@ -4,6 +4,7 @@ include_directories (./)
 add_library(
         EyerGLContext
         EyerGLContextThread.cpp
+        EyerGLContext.cpp
         )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
