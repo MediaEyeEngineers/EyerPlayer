@@ -109,7 +109,50 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     @Override
     public void onDrawFrame(GL10 gl) {
         Log.e("Eyer OpenGL", "onDrawFrame");
+        surfaceTexture.updateTexImage();
+        
     }
+
+
+
+
+
+
+
+    @Override
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        long time = surfaceTexture.getTimestamp();
+        requestRender();
+        Log.e("MyEyerPlayerListener", "onFrameAvailable======" + time);
+    }
+
+
+    private class MyEyerPlayerListener implements EyerPlayerListener
+    {
+        @Override
+        public int onOpen(int status, EyerMediaInfo mediaInfo) {
+            // Log.e("MyEyerPlayerListener", "onOpen");
+            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
+                videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
+                videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
+                requestLayout();
+            }
+
+            if(listener != null){
+                listener.onOpen(status, mediaInfo);
+            }
+            return 0;
+        }
+
+        @Override
+        public int onProgress(double process) {
+            if(listener != null){
+                listener.onProgress(process);
+            }
+            return 0;
+        }
+    }
+
 
 
 
@@ -119,7 +162,6 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
         int viewHeight = MeasureSpec.getSize(heightMeasureSpec);
-        // Log.e("@@@@", "onMeasure(" + MeasureSpec.getSize(widthMeasureSpec) + ", " + MeasureSpec.getSize(heightMeasureSpec) + ")");
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
@@ -140,38 +182,6 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
             }
 
             setMeasuredDimension(mWidth, mHeight);
-        }
-    }
-
-    @Override
-    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-
-    }
-
-
-    private class MyEyerPlayerListener implements EyerPlayerListener
-    {
-        @Override
-        public int onOpen(int status, EyerMediaInfo mediaInfo) {
-            Log.e("MyEyerPlayerListener", "onOpen");
-            if(status == EyerPlayerListener.OPEN_STATUS_SUCCESS){
-                videoWidth = mediaInfo.getVideoStreamInfo().getWidth();
-                videoHeight = mediaInfo.getVideoStreamInfo().getHeight();
-                requestLayout();
-            }
-
-            if(listener != null){
-                listener.onOpen(status, mediaInfo);
-            }
-            return 0;
-        }
-
-        @Override
-        public int onProgress(double process) {
-            if(listener != null){
-                listener.onProgress(process);
-            }
-            return 0;
         }
     }
 }
