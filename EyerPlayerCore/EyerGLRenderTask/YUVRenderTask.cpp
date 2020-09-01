@@ -2,7 +2,7 @@
 
 #include "EyerGLShader/Shader.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     YUVRenderTask::YUVRenderTask()
     {
 

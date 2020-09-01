@@ -8,7 +8,8 @@ fi
 git clone https://gitee.com/redknot/FFmpeg-QuQi-Analyzer
 
 cd ${basepath}/FFmpeg-QuQi-Analyzer
-./configure --enable-static --enable-shared --prefix=./ffmpeg_install --enable-decoder=h264 --enable-dxva2 --enable-hwaccel=h264_dxva2
+#./configure --enable-static --enable-shared --prefix=./ffmpeg_install --enable-decoder=h264 --enable-dxva2 --enable-hwaccel=h264_dxva2
+./configure --enable-static --enable-shared --prefix=./ffmpeg_install --enable-decoder=h264
 
 make clean
 make -j4
