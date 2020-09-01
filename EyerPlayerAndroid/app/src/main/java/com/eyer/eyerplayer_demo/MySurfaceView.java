@@ -2,6 +2,7 @@ package com.eyer.eyerplayer_demo;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -82,6 +83,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
     private SurfaceTexture surfaceTexture = null;
     private Surface surface = null;
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Log.e("Eyer OpenGL", "onSurfaceCreated");
