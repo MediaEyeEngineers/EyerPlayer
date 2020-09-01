@@ -81,59 +81,27 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1seek
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_alloc
- * Signature: ()J
+ * Method:    player_gl_init
+ * Signature: ()I
  */
-JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1alloc
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1init
   (JNIEnv *, jclass);
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_dealloc
- * Signature: (J)I
+ * Method:    player_gl_draw
+ * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1dealloc
-  (JNIEnv *, jclass, jlong);
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1draw
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_init
- * Signature: (JLandroid/view/Surface;)I
+ * Method:    player_gl_viewport
+ * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1init
-  (JNIEnv *, jclass, jlong, jobject);
-
-/*
- * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_uninit
- * Signature: (J)I
- */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1uninit
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_makecurrent
- * Signature: (J)I
- */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1makecurrent
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_start_gl_thread
- * Signature: (J)I
- */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1start_1gl_1thread
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_eyer_eyerplayer_EyerPlayerJNI
- * Method:    gl_context_stop_gl_thread
- * Signature: (J)I
- */
-JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_gl_1context_1stop_1gl_1thread
-  (JNIEnv *, jclass, jlong);
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1viewport
+  (JNIEnv *, jclass, jint, jint);
 
 #ifdef __cplusplus
 }

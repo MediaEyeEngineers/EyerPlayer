@@ -1,6 +1,5 @@
 package com.eyer.eyerplayer;
 
-
 public class EyerPlayerJNI {
     static {
         System.loadLibrary("EyerPlayerJNI");
@@ -19,16 +18,7 @@ public class EyerPlayerJNI {
     public static native int        player_seek                 (long player, double time);
 
 
-
-    public static native long       gl_context_alloc            ();
-    public static native int        gl_context_dealloc          (long gl_context);
-
-    public static native int        gl_context_init             (long gl_context, android.view.Surface surface);
-    public static native int        gl_context_uninit           (long gl_context);
-
-    public static native int        gl_context_makecurrent      (long gl_context);
-
-    public static native int        gl_context_start_gl_thread  (long gl_context);
-    public static native int        gl_context_stop_gl_thread   (long gl_context);
-
+    public static native int        player_gl_init              ();
+    public static native int        player_gl_draw              (int texId);
+    public static native int        player_gl_viewport          (int w, int h);
 }

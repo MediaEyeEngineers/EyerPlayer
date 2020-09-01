@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.eyer.eyerplayer.EyerPlayer;
+import com.eyer.eyerplayer.EyerPlayerJNI;
 import com.eyer.eyerplayer.EyerPlayerListener;
 import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
@@ -30,6 +31,8 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     int videoHeight = 0;
 
     private EyerPlayerListener listener = null;
+
+    private int textureId_mediacodec = -1;
 
     public MySurfaceView(Context context) {
         super(context);
@@ -83,9 +86,11 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Log.e("Eyer OpenGL", "onSurfaceCreated");
 
+        EyerPlayerJNI.player_gl_init();
+
         int[] textureids = new int[1];
         GLES20.glGenTextures(1, textureids, 0);
-        int textureId_mediacodec = textureids[0];
+        textureId_mediacodec = textureids[0];
 
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
@@ -104,13 +109,14 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         Log.e("Eyer OpenGL", "onSurfaceChanged");
+        GLES20.glViewport(0, 0, width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        Log.e("Eyer OpenGL", "onDrawFrame");
+        // Log.e("Eyer OpenGL", "onDrawFrame");
         surfaceTexture.updateTexImage();
-        
+        EyerPlayerJNI.player_gl_draw(textureId_mediacodec);
     }
 
 
@@ -123,7 +129,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         long time = surfaceTexture.getTimestamp();
         requestRender();
-        Log.e("MyEyerPlayerListener", "onFrameAvailable======" + time);
+        // Log.e("MyEyerPlayerListener", "onFrameAvailable======" + time);
     }
 
 

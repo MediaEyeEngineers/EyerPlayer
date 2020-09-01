@@ -9,35 +9,13 @@
 
 namespace Eyer
 {
-    class EyerGLContextThread;
-
-    class EyerGLContext
-    {
-    public:
-        EyerGLContext();
-        ~EyerGLContext();
-
-        int Init(ANativeWindow * nativeWindow);
-        int Uninit();
-
-        int MakeCurrent();
-        int SwapBuffers();
-
-        int StartGLThread();
-        int StopGLThread();
-
-    private:
-        EGLContext mEglContext;
-        EGLConfig eglConfig;
-        EGLSurface window;
-        EGLDisplay mEglDisplay;
-
-        EyerGLContextThread * glThread = nullptr;
-    };
-
     class EyerGLContextThread : public EyerThread {
     public:
-        EyerGLContextThread(EyerGLContext * glCtx);
+#ifdef EYER_PLATFORM_ANDROID
+        EyerGLContextThread(ANativeWindow * nativeWindow);
+#else
+        EyerGLContextThread();
+#endif
         ~EyerGLContextThread();
         virtual void Run();
 
@@ -49,7 +27,11 @@ namespace Eyer
         int GetH();
 
     private:
-        EyerGLContext * glCtx = nullptr;
+#ifdef EYER_PLATFORM_ANDROID
+        ANativeWindow * nativeWindow = nullptr;
+#else
+        GLFWwindow * window = nullptr;
+#endif
 
         int w = 0;
         int h = 0;
