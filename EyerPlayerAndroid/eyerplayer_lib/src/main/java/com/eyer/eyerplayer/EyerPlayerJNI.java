@@ -1,6 +1,5 @@
 package com.eyer.eyerplayer;
 
-
 public class EyerPlayerJNI {
     static {
         System.loadLibrary("EyerPlayerJNI");
@@ -17,4 +16,9 @@ public class EyerPlayerJNI {
     public static native int        player_pause                (long player);
     public static native int        player_stop                 (long player);
     public static native int        player_seek                 (long player, double time);
+
+
+    public static native int        player_gl_init              ();
+    public static native int        player_gl_draw              (int texId);
+    public static native int        player_gl_viewport          (int w, int h);
 }

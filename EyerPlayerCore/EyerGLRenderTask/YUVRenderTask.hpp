@@ -4,7 +4,7 @@
 #include "EyerGL/EyerGL.hpp"
 #include "EyerAV/EyerAV.hpp"
 
-namespace EyerPlayer {
+namespace Eyer {
     class YUVRenderTask : public Eyer::EyerGLRenderTask
     {
     public:

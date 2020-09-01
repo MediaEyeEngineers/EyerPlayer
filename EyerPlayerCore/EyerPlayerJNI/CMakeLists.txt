@@ -8,6 +8,7 @@ add_library(
         SHARED
         JniUtil.cpp
         EyerPlayerJNI.cpp
+        EyerGLContextJNI.cpp
 )
 
 target_link_libraries (EyerPlayerJNI

@@ -26,14 +26,14 @@ namespace Eyer
     class EyerGLVAO;
     class EyerGLTexture;
 
-    class _EyerGLContext
+    class _EyerGLContextFunc
     {
     };
 
 #ifdef QT_EYER_PLAYER
-#define EyerGLContext QOpenGLFunctions_3_3_Core
+#define EyerGLContextFunc QOpenGLFunctions_3_3_Core
 #else
-#define EyerGLContext _EyerGLContext
+#define EyerGLContextFunc _EyerGLContextFunc
 #endif
 
     class EyerGLCMD
@@ -58,9 +58,9 @@ namespace Eyer
         EyerString src;
         unsigned int shaderId = 0;
 
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLShader(EyerGLShaderType type, EyerString src, EyerGLContext * _ctx = nullptr);
+        EyerGLShader(EyerGLShaderType type, EyerString src, EyerGLContextFunc * _ctx = nullptr);
         ~EyerGLShader();
 
         int Compile();
@@ -76,9 +76,9 @@ namespace Eyer
 
         unsigned int programId = 0;
 
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLProgram(EyerString vertexShaderSrc, EyerString fragmentShaderSrc, EyerGLContext * _ctx = nullptr);
+        EyerGLProgram(EyerString vertexShaderSrc, EyerString fragmentShaderSrc, EyerGLContextFunc * _ctx = nullptr);
         ~EyerGLProgram();
         int LinkProgram();
         int UseProgram();
@@ -97,9 +97,9 @@ namespace Eyer
 
         int DrawTime = 0;
 
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLVAO(EyerGLContext * ctx = nullptr);
+        EyerGLVAO(EyerGLContextFunc * ctx = nullptr);
         ~EyerGLVAO();
 
         int SetEBO(unsigned int * EBOdata, int bufferSize);
@@ -124,9 +124,9 @@ namespace Eyer
         EyerGLProgram * program = nullptr;
         EyerGLVAO * vao = nullptr;
 
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLDraw(EyerString vertexShaderSrc, EyerString fragmentShaderSrc, EyerGLContext * ctx = nullptr);
+        EyerGLDraw(EyerString vertexShaderSrc, EyerString fragmentShaderSrc, EyerGLContextFunc * ctx = nullptr);
         ~EyerGLDraw();
 
         int Init();
@@ -144,9 +144,9 @@ namespace Eyer
     {
     private:
         unsigned int textureId = 0;
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLTexture(EyerGLContext * ctx = nullptr);
+        EyerGLTexture(EyerGLContextFunc * ctx = nullptr);
         ~EyerGLTexture();
 
         unsigned int GL_GetTextureId();
@@ -168,9 +168,9 @@ namespace Eyer
         int height = 0;
 
         EyerGLTexture * texture = nullptr;
-        EyerGLContext * ctx = nullptr;
+        EyerGLContextFunc * ctx = nullptr;
     public:
-        EyerGLFrameBuffer(int w, int h, EyerGLTexture * texture = nullptr, EyerGLContext * ctx = nullptr);
+        EyerGLFrameBuffer(int w, int h, EyerGLTexture * texture = nullptr, EyerGLContextFunc * ctx = nullptr);
         ~EyerGLFrameBuffer();
 
         int AddDraw(EyerGLDraw * draw);

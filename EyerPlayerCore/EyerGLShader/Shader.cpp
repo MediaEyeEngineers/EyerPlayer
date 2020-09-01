@@ -329,4 +329,38 @@ namespace Eyer
             color = vec4(f,f*f,f*f*f,1.0);
         }
     );
+
+
+
+
+
+
+
+    char * EYER_GL_SHADER::ExternalOES_TEXTURE_VERTEX_SHADER = (char *)SHADER(
+         layout (location = 0) in vec3 pos;
+         layout (location = 1) in vec3 coor;
+
+         out vec3 outCoor;
+
+         void main(){
+             outCoor = coor;
+             gl_Position = vec4(pos * 1.0, 1.0);
+         }
+    );
+
+    char * EYER_GL_SHADER::ExternalOES_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
+          \#extension GL_OES_EGL_image_external_essl3 : require\n
+
+          precision highp float;
+          out vec4 color;
+          in vec3 outCoor;
+
+          uniform samplerExternalOES imageTex;
+
+          void main()
+          {
+              vec2 TexCoords = vec2(outCoor.x, 1.0 - outCoor.y);
+              color = texture(imageTex, TexCoords);
+          }
+    );
 }

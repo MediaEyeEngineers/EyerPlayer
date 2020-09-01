@@ -6,7 +6,7 @@
 
 namespace Eyer
 {
-    EyerGLProgram::EyerGLProgram(EyerString _vertexShaderSrc, EyerString _fragmentShaderSrc, EyerGLContext * _ctx)
+    EyerGLProgram::EyerGLProgram(EyerString _vertexShaderSrc, EyerString _fragmentShaderSrc, EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
         vertexShaderSrc = _vertexShaderSrc;
