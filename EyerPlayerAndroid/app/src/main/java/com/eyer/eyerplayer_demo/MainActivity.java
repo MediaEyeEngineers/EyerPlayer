@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             if(view == btn_open){
                 String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/rangzidanfei.mp4";
-                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
+                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
+                // videoPath = "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd";
                 video_view.open(videoPath);
             }
             if(view == btn_play){

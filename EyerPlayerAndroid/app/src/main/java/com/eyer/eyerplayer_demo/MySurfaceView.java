@@ -49,6 +49,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
         setEGLContextClientVersion(3);
         setRenderer(this);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setKeepScreenOn(true);
 
         player = new EyerPlayer();
         player.setListener(new MyEyerPlayerListener());
