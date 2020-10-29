@@ -24,8 +24,8 @@ done
 
 echo "HOST_TAG:"$HOST_TAG
 
+export ANDROID_NDK_HOME=$NDK
 export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
-
 
 # Only choose one of these, depending on your device...
 # export TARGET=aarch64-linux-android
@@ -48,13 +48,14 @@ export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
 export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
 
 
+
 export COMMON_FF_CFG_FLAGS=
 . ${basepath}/tools/configs/module.sh
 
-echo $COMMON_FF_CFG_FLAGS
-
+# echo $COMMON_FF_CFG_FLAGS
 
 :<<!
+
 cd ${basepath}/Eyer3rdpart/ffmpeg_3.2.14/
 ./configure \
 --enable-static \
@@ -83,7 +84,8 @@ make clean
 make -j4
 make install
 cd ../../
-!
+
+
 
 
 cd ${basepath}/Eyer3rdpart/ffmpeg-4.3/
@@ -101,6 +103,44 @@ make clean
 make -j4
 make install
 
+!
+
+
+
+
+
+
+export CC=$TARGET$API-clang
+export PATH=$TOOLCHAIN"/bin":$PATH
+cd ${basepath}/Eyer3rdpart/openssl-1.1.1g/
+./Configure \
+android-arm -D__ANDROID_API__=$API no-asm no-ssl2 no-ssl3 no-comp no-hw no-engine --prefix=${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install
+
+make clean
+make -j4
+make install
+
+
+
+
+
+
+
+export CC=$TOOLCHAIN/bin/$TARGET$API-clang
+cd ${basepath}/Eyer3rdpart/curl-7.72.0/
+./configure \
+--enable-static \
+--disable-shared \
+--prefix=${basepath}/Eyer3rdpart/curl-7.72.0/curl_install \
+--host=arm-linux-androideabi \
+--with-ssl=${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install
+
+make clean
+make -j4
+make install
+
+
+
 cd ${basepath}
 
 if [ -d ./Lib ];then
@@ -110,6 +150,12 @@ fi
 mkdir Lib
 
 cp -r Eyer3rdpart/ffmpeg-4.3/ffmpeg_install Lib/ffmpeg_install
+cp -r Eyer3rdpart/openssl-1.1.1g/openssl_install Lib/openssl_install
+cp -r Eyer3rdpart/curl-7.72.0/curl_install Lib/curl_install
 
 cd ${basepath}/Lib/ffmpeg_install/lib
 ls -lh
+
+
+
+

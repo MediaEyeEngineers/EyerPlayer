@@ -3,6 +3,7 @@
 
 #include "EyerThread/EyerThread.hpp"
 #include "EyerCore/EyerCore.hpp"
+#include "EyerMP4/EyerMP4.hpp"
 
 namespace Eyer{
     class EyerDASHReaderThread : public EyerThread {
@@ -15,6 +16,8 @@ namespace Eyer{
     private:
         EyerString & mpdUrl;
         EyerBuffer * dataBuffer = nullptr;
+
+        EyerBuffer MergeVideoAudio(MP4Box & videoBox, MP4Box & audioBox);
     };
 }
 

@@ -28,7 +28,7 @@ namespace Eyer
 
     int EyerDASHReader::read_packet(void * opaque, uint8_t * buf, int buf_size)
     {
-        printf("Len: %d\n", dataBuffer.GetLen());
+        // EyerLog("Len: %d\n", dataBuffer.GetLen());
 
         while(1){
             EyerTime::EyerSleepMilliseconds(1);

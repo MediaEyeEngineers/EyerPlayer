@@ -21,8 +21,8 @@ namespace Eyer
 
     EyerSegmentTemplate & EyerSegmentTemplate::operator = (const EyerSegmentTemplate & segmentTemplate)
     {
-        initialization = segmentTemplate.initialization;
-        media = segmentTemplate.media;
+        initialization  = segmentTemplate.initialization;
+        media           = segmentTemplate.media;
         return *this;
     }
 
@@ -33,7 +33,7 @@ namespace Eyer
         return 0;
     }
 
-    int EyerSegmentTemplate::SetInitialization(char * str)
+    int EyerSegmentTemplate::SetInitialization(const char * str)
     {
         initialization = str;
         return 0;

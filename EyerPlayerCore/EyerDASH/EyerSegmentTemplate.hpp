@@ -16,7 +16,7 @@ namespace Eyer{
         int LoadFromXML(void * node);
 
         EyerString & GetInitialization();
-        int SetInitialization(char * str);
+        int SetInitialization(const char * str);
 
         EyerString & GetMedia();
     private:
