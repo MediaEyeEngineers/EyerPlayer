@@ -20,8 +20,6 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
-        Shader.hpp
-        ShaderH.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerOpenSL)
