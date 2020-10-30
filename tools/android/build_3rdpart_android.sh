@@ -120,7 +120,11 @@ make clean
 make -j4
 make install
 
-
+cd ${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install/lib
+rm libcrypto.so
+rm libcrypto.so.1.1
+rm libssl.so
+rm libssl.so.1.1
 
 
 
@@ -163,7 +167,7 @@ mkdir include
 cd include
 mkdir libxml2
 cd ${basepath}/Lib/
-cp -r ${basepath}/Eyer3rdpart/platform_external_libxml2/include ${basepath}/Lib/libxml2_install/include/libxml2
+cp -r ${basepath}/Eyer3rdpart/platform_external_libxml2/include/libxml ${basepath}/Lib/libxml2_install/include/libxml2
 cd ${basepath}/Lib/libxml2_install
 mkdir lib
 cp ${basepath}/Eyer3rdpart/platform_external_libxml2/obj/local/armeabi-v7a/libxml2.a ${basepath}/Lib/libxml2_install/lib/libxml2.a

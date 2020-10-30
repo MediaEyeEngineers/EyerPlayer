@@ -108,6 +108,7 @@ namespace Eyer {
 
         // 获取视频流编号
         videoStreamIndex = reader.GetVideoStreamIndex();
+        EyerLog("Video Index: %d\n", videoStreamIndex);
         if(videoStreamIndex >= 0){
             Eyer::EyerAVStream videoStream;
             reader.GetStream(videoStream, videoStreamIndex);
@@ -125,6 +126,7 @@ namespace Eyer {
         }
         // 获取音频流编号
         audioStreamIndex = reader.GetAudioStreamIndex();
+        EyerLog("Audio Index: %d\n", audioStreamIndex);
         if(audioStreamIndex >= 0){
             Eyer::EyerAVStream audioStream;
             reader.GetStream(audioStream, audioStreamIndex);
@@ -156,7 +158,8 @@ namespace Eyer {
             EventLoop();
 
             int videoCacheSize = videoThread->GetPacketSize();
-            int audioCacheSize = audioThread->GetPacketSize();
+            // int audioCacheSize = audioThread->GetPacketSize();
+            int audioCacheSize = 0;
             // EyerLog("Video CacheSize: %d, Audio CacheSize: %d\n", videoCacheSize, audioCacheSize);
             if(videoCacheSize >= 1024 * 1024 * 2){
                 continue;
@@ -182,6 +185,8 @@ namespace Eyer {
 
                 continue;
             }
+
+            // EyerLog("Packet: %d\n", packet->GetStreamId());
 
             if(packet->GetStreamId() == videoStreamIndex){
                 videoThread->SendPacket(packet);
