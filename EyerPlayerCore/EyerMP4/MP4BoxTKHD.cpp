@@ -56,11 +56,11 @@ namespace Eyer {
         MP4Stream stream(buffer);
 
         if(version == 1){
-            stream.WriteBigEndian(creation_time);
-            stream.WriteBigEndian(modification_time);
-            stream.WriteBigEndian(track_ID);
+            stream.WriteBigEndian((uint64_t)creation_time);
+            stream.WriteBigEndian((uint64_t)modification_time);
+            stream.WriteBigEndian((uint32_t)track_ID);
             stream.WriteZero(sizeof(uint32_t));
-            stream.WriteBigEndian(duration);
+            stream.WriteBigEndian((uint64_t)duration);
         }
         else{
             stream.WriteBigEndian((uint32_t)creation_time);
@@ -70,16 +70,17 @@ namespace Eyer {
             stream.WriteBigEndian((uint32_t)duration);
         }
         stream.WriteZero(sizeof(uint32_t) * 2);
-        stream.WriteBigEndian(layer);
-        stream.WriteBigEndian(alternate_group);
+        stream.WriteBigEndian((uint16_t)layer);
+        stream.WriteBigEndian((uint16_t)alternate_group);
         stream.WriteBigEndianFixedPoint(volume, 8, 8);
+        stream.WriteZero(sizeof(uint16_t));
 
         for(int i=0;i<9;i++) {
             stream.WriteBigEndianFixedPoint(matrix[i], 16, 16);
         }
 
-        stream.WriteBigEndian(width);
-        stream.WriteBigEndian(height);
+        stream.WriteBigEndian((uint32_t)width);
+        stream.WriteBigEndian((uint32_t)height);
 
         return stream.GetBuffer();
     }
@@ -111,6 +112,8 @@ namespace Eyer {
         layer           = stream.ReadBigEndian_uint16(offset);
         alternate_group = stream.ReadBigEndian_uint16(offset);
         volume          = stream.ReadBigEndianFixedPoint(8, 8, offset);
+
+        stream.Skip(sizeof(uint16_t) * 1);
 
         for(int i=0;i<9;i++) {
             matrix[i] = stream.ReadBigEndianFixedPoint(16, 16, offset);

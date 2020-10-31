@@ -2,8 +2,6 @@ include_directories (../)
 include_directories (./)
 include_directories (../EyerAV)
 
-include_directories (${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/include)
-
 add_library(
     EyerAV
     EyerAVPacket.cpp

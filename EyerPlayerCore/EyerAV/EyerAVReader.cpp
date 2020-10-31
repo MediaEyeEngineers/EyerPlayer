@@ -52,7 +52,8 @@ namespace Eyer
 
         piml->formatCtx = avformat_alloc_context();
 
-        // piml->formatCtx->pb = pIOCtx;
+        piml->formatCtx->pb = pIOCtx;
+
     }
 
     EyerAVReader::~EyerAVReader()
