@@ -37,7 +37,7 @@ namespace Eyer
         mpd.PrintInfo();
 
 
-        int representationIndex = 1;
+        int representationIndex = 0;
 
         // get video init buffer
         MP4Box videoBox;
@@ -53,7 +53,6 @@ namespace Eyer
             EyerLog("m4v url: %s\n", m4vUrl.str);
 
             Eyer::EyerSimplestHttp http;
-
             Eyer::EyerBuffer m4vBuffer;
             ret = http.Get(m4vBuffer, m4vUrl);
             if(ret){
@@ -94,10 +93,12 @@ namespace Eyer
 
 
         int index = 1;
+
+        std::unique_lock <std::mutex> lck(mtx);
         while(!stopFlag){
-            EyerTime::EyerSleepMilliseconds(1);
-            if(dataBuffer->GetLen() >= 1024 * 1024 * 10){
-                continue;
+            while (dataBuffer->GetLen() >= 1024 * 1024 * 1){
+                EyerLog("Size: %d\n", dataBuffer->GetLen());
+                cv.wait(lck);
             }
 
             {
@@ -252,5 +253,12 @@ namespace Eyer
         buffer.Append(moov.Serialize());
 
         return buffer;
+    }
+
+
+    int EyerDASHReaderThread::DataBufferChange()
+    {
+        cv.notify_all();
+        return 0;
     }
 }

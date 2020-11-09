@@ -36,8 +36,11 @@ namespace Eyer {
         ~AVReaderThread();
 
         virtual void Run();
+        int MainRun();
 
         int Seek(double time);
+
+        int SwitchRepresentation(int representation);
 
         int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int SetSurface(jobject _surface);
@@ -61,7 +64,9 @@ namespace Eyer {
         Eyer::EyerGLContextThread * glCtx = nullptr;
         jobject surface = nullptr;
 
-        Eyer::EyerAVReader reader;
+        Eyer::EyerAVReader * reader = nullptr;
+        EyerDASHReader * dashReader = nullptr;
+        int representation = 1;
     };
 
 

@@ -13,9 +13,6 @@ namespace Eyer
 
     MP4BoxSTSD::~MP4BoxSTSD()
     {
-        for(int i=0;i<sampleList.size();i++){
-            delete sampleList[i];
-        }
         sampleList.clear();
     }
 
@@ -31,10 +28,6 @@ namespace Eyer
     EyerBuffer MP4BoxSTSD::SerializeParam()
     {
         EyerBuffer buffer = MP4FullBox::SerializeParam();
-        /*
-        MP4Stream stream(buffer);
-        return stream.GetBuffer();
-        */
         buffer.Append(stsdBuffer);
         return buffer;
     }
@@ -59,9 +52,8 @@ namespace Eyer
             stream.CutOff(buf, size);
 
             if(type == BoxType::AVC1){
-                MP4BoxSampleEntry * avc1 = new MP4BoxAVC1();
-                avc1->Parse(buf);
-
+                MP4BoxSampleEntry avc1;
+                avc1.Parse(buf);
                 sampleList.push_back(avc1);
             }
 
@@ -82,7 +74,7 @@ namespace Eyer
         levelStr = levelStr + "\t";
 
         for(int i=0;i<sampleList.size();i++){
-            sampleList[i]->PrintInfo(level + 1);
+            sampleList[i].PrintInfo(level + 1);
         }
 
         return 0;

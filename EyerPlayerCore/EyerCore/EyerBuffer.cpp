@@ -130,6 +130,12 @@ namespace Eyer{
         return GetBuffer();
     }
 
+    int EyerBuffer::SetLen(int _len)
+    {
+        bufLen = _len;
+        return 0;
+    }
+
     int EyerBuffer::Clear()
     {
         if(buf != nullptr){
@@ -138,5 +144,48 @@ namespace Eyer{
         }
         bufLen = 0;
         return 0;
+    }
+
+    int EyerBuffer::WriteDisk(EyerString & path)
+    {
+        FILE * f = fopen(path.str, "wb");
+        if(f == nullptr){
+            return -1;
+        }
+
+        fwrite(buf, bufLen, 1, f);
+
+        fclose(f);
+
+        return 0;
+    }
+
+    int EyerBuffer::ReadFromDisk(EyerString & path)
+    {
+        FILE * f = fopen(path.str, "rb");
+        if(f == nullptr){
+            return -1;
+        }
+        if(buf != nullptr){
+            free(buf);
+            buf = nullptr;
+        }
+        bufLen = 0;
+
+        fseek(f, 0L, SEEK_END);
+        bufLen = ftell(f);
+
+        fseek(f, 0L, SEEK_SET);
+
+        buf = (unsigned char *)malloc(bufLen);
+        fread(buf, bufLen, 1, f);
+
+        fclose(f);
+        return 0;
+    }
+
+    unsigned char * EyerBuffer::GetPtr()
+    {
+        return buf;
     }
 }

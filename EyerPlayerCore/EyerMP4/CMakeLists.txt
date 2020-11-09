@@ -50,6 +50,10 @@ add_library(
         MP4BoxSTSC.hpp
         MP4BoxSTCO.cpp
         MP4BoxSTCO.hpp
+        MP4BoxMFHD.hpp
+        MP4BoxMFHD.cpp 
+        MP4BoxTFHD.hpp 
+        MP4BoxTFHD.cpp
         MP4BoxMDHD.cpp
         MP4BoxMDHD.hpp
 )
@@ -85,6 +89,7 @@ set(head_files
         MP4BoxSTTS.hpp
         MP4BoxSTSC.hpp
         MP4BoxSTCO.hpp
+        MP4BoxMFHD.hpp
         MP4BoxMDHD.hpp
 )
 

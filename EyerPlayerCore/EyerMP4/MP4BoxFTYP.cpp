@@ -161,7 +161,6 @@ namespace Eyer
 
         type = BoxType::FTYP;
         size = Serialize().GetLen();
-        largesize = 0;
 
         return 0;
     }

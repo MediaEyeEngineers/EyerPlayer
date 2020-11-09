@@ -16,6 +16,7 @@ public class EyerPlayerJNI {
     public static native int        player_pause                (long player);
     public static native int        player_stop                 (long player);
     public static native int        player_seek                 (long player, double time);
+    public static native int        switch_representation       (long player, int representation);
 
 
     public static native int        player_gl_init              ();

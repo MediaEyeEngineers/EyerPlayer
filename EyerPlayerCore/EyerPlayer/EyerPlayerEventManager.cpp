@@ -36,7 +36,7 @@ namespace Eyer
         EyerLog("Event Manager Start\n");
 
         while(!stopFlag){
-            Eyer::EyerTime::EyerSleep(1000);
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             Eyer::EyerEvent * event = nullptr;
             eventQueue->FrontTargetAndPop(event, EventTag::EVENT_MANAGER);
@@ -79,6 +79,15 @@ namespace Eyer
 
                 playerManager->Seek(seekRequest->time);
             }
+
+            if(event->GetType() == EventType::SwitchRepresentationRequest){
+                EventSwitchRepresentationRequest * switchRepresentationRequest = (EventSwitchRepresentationRequest *)event;
+                EyerLog("SwitchRepresentation\n");
+
+                playerManager->SwitchRepresentation(1);
+            }
+
+
 
 
 

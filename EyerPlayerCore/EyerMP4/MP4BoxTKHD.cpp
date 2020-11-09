@@ -79,8 +79,8 @@ namespace Eyer {
             stream.WriteBigEndianFixedPoint(matrix[i], 16, 16);
         }
 
-        stream.WriteBigEndian((uint32_t)width);
-        stream.WriteBigEndian((uint32_t)height);
+        stream.WriteBigEndianFixedPoint(width * 1.0, 16, 16);
+        stream.WriteBigEndianFixedPoint(height * 1.0, 16, 16);
 
         return stream.GetBuffer();
     }
@@ -119,8 +119,8 @@ namespace Eyer {
             matrix[i] = stream.ReadBigEndianFixedPoint(16, 16, offset);
         }
 
-        width = stream.ReadBigEndian_uint32(offset);
-        height = stream.ReadBigEndian_uint32(offset);
+        width       = stream.ReadBigEndianFixedPoint(16, 16, offset);
+        height      = stream.ReadBigEndianFixedPoint(16, 16, offset);
 
         return offset;
     }

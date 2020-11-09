@@ -2,6 +2,8 @@
 #define EYE_LIB_EYERBUFFER_HPP
 
 #include <stdint.h>
+#include <mutex>
+#include "EyerString.hpp"
 
 namespace Eyer{
     class EyerBuffer {
@@ -21,8 +23,15 @@ namespace Eyer{
         int GetBuffer(unsigned char * _buf = nullptr);
 
         int GetLen();
+        int SetLen(int _len);
 
         int Clear();
+
+        int WriteDisk(EyerString & path);
+        int ReadFromDisk(EyerString & path);
+
+
+        unsigned char * GetPtr();
 
     private:
         unsigned char * buf = nullptr;

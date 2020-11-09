@@ -167,14 +167,11 @@ namespace Eyer
         if(version == 1){
             size = 8 + 8 + 8 + 4 + 8 + 4;
             size += 4 + 2 + 2 + 8 + 9 * 4 + 6 * 4 + 4;
-            largesize = 0;
         }
         else{
             size = 8 + 4 + 4 + 4 + 4 + 4;
             size += 4 + 2 + 2 + 8 + 9 * 4 + 6 * 4 + 4;
-            largesize = 0;
         }
-
 
         return 0;
     }

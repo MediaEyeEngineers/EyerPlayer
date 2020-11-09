@@ -89,11 +89,13 @@ namespace Eyer
         }
         levelStr = levelStr + "\t";
 
+        /*
         for(int i=0;i<chunkList.size();i++){
             printf("%sfirst_chunk: %d\n", levelStr.str, chunkList[i]->first_chunk);
             printf("%ssamples_per_chunk: %d\n", levelStr.str, chunkList[i]->samples_per_chunk);
             printf("%ssample_description_index: %d\n", levelStr.str, chunkList[i]->sample_description_index);
         }
+        */
 
         return 0;
     }

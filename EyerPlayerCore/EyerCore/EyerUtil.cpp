@@ -1,4 +1,5 @@
 #include "EyerUtil.hpp"
+#include "EyerMD5.hpp"
 
 namespace Eyer
 {
@@ -99,5 +100,13 @@ namespace Eyer
 
         c.a = 1;
         return (c.b == 1);
+    }
+
+    EyerString EyerUtil::Md5(const EyerString & messgae)
+    {
+        EyerMD5 md5(messgae.str);
+        std::string res = md5.toStr();
+
+        return EyerString(res.c_str());
     }
 }

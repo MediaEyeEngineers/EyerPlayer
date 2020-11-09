@@ -13,5 +13,6 @@
 #include "EyerBuffer.hpp"
 #include "EyerURLUtil.hpp"
 #include "EyerUtil.hpp"
+#include "EyerBufferMut.hpp"
 
 #endif

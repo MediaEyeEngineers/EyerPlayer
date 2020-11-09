@@ -4,6 +4,7 @@
 #include "EyerCore/EyerCore.hpp"
 #include "EyerMPD.hpp"
 #include "EyerDASHReaderThread.hpp"
+#include "EyerDASHStream.hpp"
 
 namespace Eyer{
     class EyerDASHReader {
@@ -11,20 +12,22 @@ namespace Eyer{
         EyerDASHReader(const EyerString & _mpdUrl);
         ~EyerDASHReader();
 
-        int SetCacheDir(const EyerString & _cacheUrl);
+        int SwitchStream(int streamId);
+        int CreateStream(int streamId);
 
-        int read_packet(void * opaque, uint8_t *buf, int buf_size);
-        int seek_packet(void * opaque, int64_t offset, int whence);
+        int read_packet(uint8_t *buf, int buf_size);
+        int seek_packet(int64_t offset, int whence);
 
     private:
         EyerString mpdUrl;
-        EyerString cacheUrl;
 
-        int index = 0;
+        std::vector<EyerDASHStream *> streamList;
 
-        EyerDASHReaderThread * readerThread = nullptr;
+        int currentIndex = 1;
+        EyerBuffer cacheBuf;
 
-        EyerBuffer dataBuffer;
+        EyerDASHStream * FindCurrentStream();
+        EyerDASHStream * currentStream = nullptr;
     };
 }
 

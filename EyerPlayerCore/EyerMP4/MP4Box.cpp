@@ -14,6 +14,8 @@
 #include "MP4BoxSTSC.hpp"
 #include "MP4BoxSTCO.hpp"
 #include "MP4BoxMDHD.hpp"
+#include "MP4BoxMFHD.hpp"
+#include "MP4BoxTFHD.hpp"
 #include "MP4Stream.hpp"
 
 namespace Eyer
@@ -28,6 +30,11 @@ namespace Eyer
         type = _type;
     }
 
+    MP4Box::MP4Box(const MP4Box & box)
+    {
+        *this = box;
+    }
+
     MP4Box::~MP4Box()
     {
         for(int i=0;i<subBoxList.size();i++){
@@ -40,7 +47,6 @@ namespace Eyer
     {
         type = box.type;
         size = box.size;
-        largesize = box.largesize;
         for(int i=0;i<box.subBoxList.size();i++){
             MP4Box * b = CopyBox(box.subBoxList[i]);
             subBoxList.push_back(b);
@@ -54,9 +60,6 @@ namespace Eyer
             return false;
         }
         if(type != box.type) {
-            return false;
-        }
-        if(largesize != box.largesize) {
             return false;
         }
 
@@ -83,13 +86,18 @@ namespace Eyer
         head[3] = *((uint8_t *)(&len) + 0);
 
         head[4] = type.GetA();
+        //printf("~~~~~~~~~~~type.GetA():%c\n", type.GetA());
         head[5] = type.GetB();
         head[6] = type.GetC();
         head[7] = type.GetD();
 
         buffer.Append(head, 8);
         buffer.Append(contentBuffer);
-
+        unsigned char * data = (unsigned char *)malloc(buffer.GetLen());
+        buffer.GetBuffer(data);
+        /*for(int i=0; i<buffer.GetLen(); i++){
+            printf("buffer: %d", data[i]);
+        }*/
         return buffer;
     }
 
@@ -119,7 +127,7 @@ namespace Eyer
         type = BoxType::GetType(stream.Read_uint32(offset));
 
         if(size == 1){
-            largesize = stream.ReadBigEndian_int64(offset);
+            size = stream.ReadBigEndian_int64(offset);
         }
 
         // type.PrintInfo();
@@ -172,9 +180,6 @@ namespace Eyer
 
     uint64_t MP4Box::GetSize()
     {
-        if(size == 1){
-            return largesize;
-        }
         return size;
     }
 
@@ -188,7 +193,6 @@ namespace Eyer
         MP4Box * subBox = nullptr;
         for(int i=0;i<subBoxList.size();i++){
             if(subBoxList[i]->type == type){
-                // subBox = CopyBox(subBoxList[i]);
                 subBox = subBoxList[i];
             }
         }
@@ -276,6 +280,12 @@ namespace Eyer
             else if(type == BoxType::MDHD){
                 box = new MP4BoxMDHD();
             }
+            else if(type == BoxType::MFHD){
+                box = new MP4BoxMFHD();
+            }
+            else if(type == BoxType::TFHD){
+                box = new MP4BoxTFHD();
+            }
         }
 
         return box;
@@ -321,6 +331,12 @@ namespace Eyer
         }
         else if(box->type == BoxType::MDHD){
             *(MP4BoxMDHD *)dest = *(MP4BoxMDHD *)box;
+        }
+        else if(box->type == BoxType::MFHD){
+            *(MP4BoxMFHD *)dest = *(MP4BoxMFHD *)box;
+        }
+        else if(box->type == BoxType::TFHD){
+            *(MP4BoxTFHD *)dest = *(MP4BoxTFHD *)box;
         }
         else{
             *dest = *box;

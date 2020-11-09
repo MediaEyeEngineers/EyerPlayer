@@ -19,7 +19,8 @@ namespace Eyer
         virtual int PrintInfo(int level = 0);
 
         int SetDefaultData();
-    private:
+
+    public:
         uint64_t creation_time = 0;
         uint64_t modification_time = 0;
         uint32_t timescale = 0;

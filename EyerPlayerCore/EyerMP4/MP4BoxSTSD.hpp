@@ -22,7 +22,7 @@ namespace Eyer
         int SetDefaultData();
 
     private:
-        std::vector<MP4BoxSampleEntry *> sampleList;
+        std::vector<MP4BoxSampleEntry> sampleList;
         EyerBuffer stsdBuffer;
     };
 }

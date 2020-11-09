@@ -20,7 +20,7 @@ namespace Eyer
 
         int SetDefaultData();
 
-    private:
+    public:
         uint32_t track_ID = 0;
         uint32_t default_sample_description_index = 0;
         uint32_t default_sample_duration = 0;

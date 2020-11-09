@@ -8,7 +8,7 @@ namespace Eyer
     class MP4FullBox : public MP4Box {
     public:
         MP4FullBox();
-        ~MP4FullBox();
+        virtual ~MP4FullBox();
 
         virtual EyerBuffer SerializeParam();
         virtual int ParseParam(EyerBuffer & buffer, int offset);

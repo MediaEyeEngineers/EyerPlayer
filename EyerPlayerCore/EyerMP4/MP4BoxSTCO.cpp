@@ -71,9 +71,11 @@ namespace Eyer
         }
         levelStr = levelStr + "\t";
 
+        /*
         for(int i=0;i<chunk_offset_list.size();i++){
             printf("%schunk_offset: %d\n", levelStr.str, chunk_offset_list[i]);
         }
+        */
 
         return 0;
     }

@@ -1,9 +1,7 @@
 #include "EyerTime.hpp"
 
-#include <sys/time.h>
 #include <time.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <chrono>
 #include <thread>
 
@@ -19,6 +17,9 @@ namespace Eyer
     EyerString EyerTime::TimeFormat()
     {
         char now[64];
+#ifdef _MSC_VER
+
+#else
         time_t tt;
         struct tm *ttime;
 
@@ -26,18 +27,9 @@ namespace Eyer
 
         ttime = localtime(&tt);
         strftime(now,64,"%Y-%m-%d %H:%M:%S",ttime);
+#endif // _MSC_VER
 
         return EyerString(now);
-    }
-
-    int EyerTime::EyerSleep(int time)
-    {
-#ifdef _MSC_VER
-        Sleep(time);
-#else
-        usleep(time);
-#endif // _MSC_VER
-        return 0;
     }
 
     int EyerTime::EyerSleepMilliseconds(int time)

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include "EyerDASH/EyerDASH.hpp"
 
 namespace Eyer
 {
@@ -192,7 +193,7 @@ namespace Eyer
     public:
         EyerAVReaderPrivate * piml = nullptr;
     public:
-        EyerAVReader(EyerString _path);
+        EyerAVReader(EyerString _path, EyerDASHReader * dashReader = nullptr);
         ~EyerAVReader();
 
         int Open();

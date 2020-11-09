@@ -15,7 +15,7 @@ extern "C"{
 int read_packet(void *opaque, uint8_t *buf, int buf_size)
 {
     Eyer::EyerDASHReader * dashReader = (Eyer::EyerDASHReader * )opaque;
-    return dashReader->read_packet(opaque, buf, buf_size);
+    return dashReader->read_packet(buf, buf_size);
 }
 
 int64_t seek_func(void *opaque, int64_t offset, int whence)
@@ -26,7 +26,7 @@ int64_t seek_func(void *opaque, int64_t offset, int whence)
 
 namespace Eyer
 {
-    EyerAVReader::EyerAVReader(EyerString _path)
+    EyerAVReader::EyerAVReader(EyerString _path, EyerDASHReader * dashReader)
     {
         piml = new EyerAVReaderPrivate();
         piml->path = _path;
@@ -34,26 +34,24 @@ namespace Eyer
         av_register_all();
         avformat_network_init();
 
-
-        int nBufferSize = 1024 * 1024 * 2;
-        unsigned char * pBuffer = new unsigned char[nBufferSize];
-
-        // EyerDASHReader * dashReader = new EyerDASHReader(EyerString("https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd"));
-        EyerDASHReader * dashReader = new EyerDASHReader(EyerString("http://redknot.cn/DASH/xiaomai_dash.mpd"));
-
-        AVIOContext* pIOCtx = avio_alloc_context(pBuffer, nBufferSize,
-                                                 0,
-                                                 dashReader,
-                                                 read_packet,
-                                                 0,
-                                                 0);
-
-
-
         piml->formatCtx = avformat_alloc_context();
 
-        piml->formatCtx->pb = pIOCtx;
 
+        if(dashReader != nullptr){
+            int nBufferSize = 1024 * 1024 * 2;
+            unsigned char * pBuffer = new unsigned char[nBufferSize];
+
+            // EyerDASHReader * dashReader = new EyerDASHReader(EyerString("https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd"));
+            // EyerDASHReader * dashReader = new EyerDASHReader(EyerString("http://redknot.cn/DASH/xiaomai_dash.mpd"));
+
+            AVIOContext* pIOCtx = avio_alloc_context(pBuffer, nBufferSize,
+                                                     0,
+                                                     dashReader,
+                                                     read_packet,
+                                                     0,
+                                                     0);
+            piml->formatCtx->pb = pIOCtx;
+        }
     }
 
     EyerAVReader::~EyerAVReader()

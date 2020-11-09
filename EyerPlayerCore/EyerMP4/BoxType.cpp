@@ -32,7 +32,10 @@ namespace Eyer
     BoxType BoxType::STTS       (26, 's', 't', 't', 's', false);
     BoxType BoxType::STSC       (27, 's', 't', 's', 'c', false);
     BoxType BoxType::STCO       (28, 's', 't', 'c', 'o', false);
-
+    BoxType BoxType::MOOF       (30, 'm', 'o', 'o', 'f', true);
+    BoxType BoxType::MFHD       (32, 'm', 'f', 'h', 'd', false);
+    BoxType BoxType::TRAF       (34, 't', 'r', 'a', 'f', true);
+    BoxType BoxType::TFHD       (36, 't', 'f', 'h', 'd', false);
 
     BoxType::BoxType()
     {
@@ -173,13 +176,24 @@ namespace Eyer
         else if(net_type == STTS.GetABCD()) {
             return STTS;
         }
+        else if(net_type == MOOF.GetABCD()) {
+            return MOOF;
+        }
         else if(net_type == STSC.GetABCD()) {
             return STSC;
         }
         else if(net_type == STCO.GetABCD()) {
             return STCO;
         }
-
+        else if(net_type == TRAF.GetABCD()) {
+            return TRAF;
+        }
+        else if(net_type == TFHD.GetABCD()) {
+            return TFHD;
+        }
+        else if(net_type == MFHD.GetABCD()) {
+            return MFHD;
+        }
         return UNKNOW;
     }
 

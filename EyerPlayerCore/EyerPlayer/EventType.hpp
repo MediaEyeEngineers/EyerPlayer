@@ -38,6 +38,10 @@ namespace Eyer {
         static const int LAGStopRequest                     = 110;
         static const int LAGStopResponse                    = 210;
 
+        static const int SwitchRepresentationRequest        = 111;
+        static const int SwitchRepresentationResponse       = 211;
+
+
 
 
 

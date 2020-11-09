@@ -2,6 +2,7 @@
 #define EYERLIB_EYERUTIL_HPP
 
 #include <stdint.h>
+#include "EyerCore.hpp"
 
 namespace Eyer
 {
@@ -16,6 +17,8 @@ namespace Eyer
         static uint16_t EndianHtons         (uint16_t val);
 
         static bool CheckCPU();
+
+        static EyerString Md5(const EyerString & messgae);
     };
 }
 

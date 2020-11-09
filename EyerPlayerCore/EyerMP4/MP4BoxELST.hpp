@@ -29,7 +29,7 @@ namespace Eyer
         int SetDefaultData();
 
     private:
-        std::vector<MP4BoxELSTEntry *> entryList;
+        std::vector<MP4BoxELSTEntry> entryList;
     };
 }
 

@@ -13,9 +13,14 @@ namespace Eyer{
 
         virtual void Run();
 
+        int DataBufferChange();
+
     private:
         EyerString & mpdUrl;
         EyerBuffer * dataBuffer = nullptr;
+
+        std::mutex mtx;
+        std::condition_variable cv;
 
         EyerBuffer MergeVideoAudio(MP4Box & videoBox, MP4Box & audioBox);
     };

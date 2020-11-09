@@ -64,8 +64,12 @@ namespace Eyer
         static BoxType AVC1;
         static BoxType AVCC;
         static BoxType STTS;
+        static BoxType MOOF;
         static BoxType STSC;
         static BoxType STCO;
+        static BoxType MFHD;
+        static BoxType TRAF;
+        static BoxType TFHD;
     };
 }
 

@@ -20,7 +20,7 @@ namespace Eyer
 
         int SetDefaultData();
 
-    private:
+    public:
         uint64_t creation_time = 0;
         uint64_t modification_time = 0;
         uint32_t track_ID = 0;

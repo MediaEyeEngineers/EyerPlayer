@@ -98,6 +98,19 @@ namespace Eyer
         return 0;
     }
 
+    int EyerPlayer::SwitchRepresentation(int representationId)
+    {
+        long long requestId = piml->eventManager->GenId();
+
+        EventSwitchRepresentationRequest * switchRepresentationRequest = new EventSwitchRepresentationRequest();
+        switchRepresentationRequest->SetFrom(EventTag::PLAYER);
+        switchRepresentationRequest->SetTo(EventTag::EVENT_MANAGER);
+        switchRepresentationRequest->SetRequestId(requestId);
+        piml->eventManager->PushEvent(switchRepresentationRequest);
+
+        return 0;
+    }
+
     int EyerPlayer::BindGLContext(Eyer::EyerGLContextThread * ctx)
     {
         return piml->eventManager->SetGLCtx(ctx);

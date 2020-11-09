@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_stop = null;
     private Button btn_play = null;
     private Button btn_pause = null;
+    private Button btn_switch = null;
 
     private TextView log_textview = null;
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btn_stop = findViewById(R.id.btn_stop);
         btn_pause = findViewById(R.id.btn_pause);
         btn_play = findViewById(R.id.btn_play);
+        btn_switch = findViewById(R.id.btn_switch);
         log_textview = findViewById(R.id.log_textview);
 
         progress_seek_bar = findViewById(R.id.progress_seek_bar);
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         btn_play.setOnClickListener(new MyClickListener());
         btn_pause.setOnClickListener(new MyClickListener());
         btn_stop.setOnClickListener(new MyClickListener());
+        btn_switch.setOnClickListener(new MyClickListener());
 
         progress_seek_bar.setOnTouchListener(new MySeekBarOnTouchListener());
     }
@@ -169,6 +172,9 @@ public class MainActivity extends AppCompatActivity {
             }
             if(view == btn_stop){
                 video_view.stop();
+            }
+            if(view == btn_switch){
+                video_view.switchRepresentation(1);
             }
         }
     }

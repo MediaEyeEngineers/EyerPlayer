@@ -60,6 +60,9 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
         return 0;
     }
 
+    public int switchRepresentation(int representationId){
+        return player.switchRepresentation(representationId);
+    }
 
     public int open(String url){
         return player.open(url);
