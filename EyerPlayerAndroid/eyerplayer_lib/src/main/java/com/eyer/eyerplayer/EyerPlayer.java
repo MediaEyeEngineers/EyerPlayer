@@ -50,4 +50,8 @@ public class EyerPlayer {
     public int seek(double time){
         return EyerPlayerJNI.player_seek(nativeId, time);
     }
+
+    public int switchRepresentation(int representationId) {
+        return EyerPlayerJNI.switch_representation(nativeId, representationId);
+    }
 }

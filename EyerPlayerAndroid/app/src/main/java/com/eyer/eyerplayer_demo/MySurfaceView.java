@@ -49,6 +49,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
         setEGLContextClientVersion(3);
         setRenderer(this);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setKeepScreenOn(true);
 
         player = new EyerPlayer();
         player.setListener(new MyEyerPlayerListener());
@@ -59,6 +60,9 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
         return 0;
     }
 
+    public int switchRepresentation(int representationId){
+        return player.switchRepresentation(representationId);
+    }
 
     public int open(String url){
         return player.open(url);

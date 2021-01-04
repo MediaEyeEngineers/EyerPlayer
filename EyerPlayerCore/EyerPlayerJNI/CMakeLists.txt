@@ -2,6 +2,9 @@ include_directories (../)
 include_directories (./)
 
 link_directories(${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/lib)
+link_directories(${CMAKE_SOURCE_DIR}/../Lib/libxml2_install/lib)
+link_directories(${CMAKE_SOURCE_DIR}/../Lib/curl_install/lib)
+link_directories(${CMAKE_SOURCE_DIR}/../Lib/openssl_install/lib)
 
 add_library(
         EyerPlayerJNI
@@ -24,6 +27,9 @@ target_link_libraries (EyerPlayerJNI
         EyerOpenSL
         EyerJNI
         EyerCodec
+        EyerDASH
+        EyerMP4
+        EyerNet
         EyerAV
         EyerCore
 
@@ -32,6 +38,13 @@ target_link_libraries (EyerPlayerJNI
         swresample
         swscale
         avutil
+
+        xml2
+
+        curl
+
+        ssl
+        crypto
 
         log
         z

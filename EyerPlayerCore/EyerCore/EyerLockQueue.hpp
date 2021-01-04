@@ -1,7 +1,3 @@
-//
-// Created by redknot on 2020/3/29.
-//
-
 #ifndef EYE_LIB_EYER_CORE_LOCK_QUEUE_HPP
 #define EYE_LIB_EYER_CORE_LOCK_QUEUE_HPP
 

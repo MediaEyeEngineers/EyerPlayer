@@ -81,6 +81,14 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1seek
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    switch_representation
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_switch_1representation
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    player_gl_init
  * Signature: ()I
  */

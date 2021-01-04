@@ -64,6 +64,8 @@ namespace Eyer {
 
         int Seek(double time);
 
+        int SwitchRepresentation(int representationId);
+
     private:
         EyerPlayerPrivate * piml = nullptr;
     };

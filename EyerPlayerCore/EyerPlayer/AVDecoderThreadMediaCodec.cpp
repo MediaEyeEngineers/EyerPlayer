@@ -59,6 +59,8 @@ namespace Eyer {
                 continue;
             }
 
+
+
             cacheSize -= pkt->GetSize();
 
             if(pkt->IsLast()){
@@ -80,9 +82,11 @@ namespace Eyer {
                 }
                 stream.ScalerPacketPTS(annexbPkt);
 
+                long long t = (long long)(annexbPkt.GetSecPTS() * 1000.0);
+
                 if (inputIndex >= 0) {
                     mediaCodec->putInputData(inputIndex, annexbPkt.GetDataPtr(), annexbPkt.GetSize());
-                    mediaCodec->queueInputBuffer(inputIndex, 0, annexbPkt.GetSize(), (long long)(annexbPkt.GetSecPTS() * 1000.0), 0);
+                    mediaCodec->queueInputBuffer(inputIndex, 0, annexbPkt.GetSize(), t, 0);
                     inputIndex = -1;
                 }
             }

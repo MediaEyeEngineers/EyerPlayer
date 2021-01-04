@@ -131,6 +131,20 @@ namespace Eyer {
         return 0;
     }
 
+    int EyerPlayerThreadManager::SwitchRepresentation(int representation)
+    {
+        if(readerThread == nullptr){
+            return -1;
+        }
+
+        SWITCH_Representation_Runnable representationRunnable(readerThread, representation);
+        readerThread->PushEvent(&representationRunnable);
+        readerThread->StartEventLoop();
+        readerThread->StopEventLoop();
+
+        return 0;
+    }
+
     int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
     {
         glCtxMut.lock();

@@ -229,6 +229,7 @@ namespace Eyer {
     }
 
 
+
     int EyerAVFrame::GetAudioPackedData(unsigned char * data)
     {
         /// EyerLog("Channel: %d\n", piml->frame->channels);
@@ -271,8 +272,6 @@ namespace Eyer {
 
         return 0;
     }
-
-
 
 
     int EyerAVFrame::GetChannels()

@@ -41,7 +41,6 @@ namespace Eyer {
 
         long long lastProcessTime = Eyer::EyerTime::GetTime();
         while(!stopFlag){
-
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             EventLoop();
@@ -59,8 +58,10 @@ namespace Eyer {
 
             double progress = dTime / mediaInfo.GetDuration();
             if(progress >= 1.0){
-                dTime = mediaInfo.GetDuration();
+                // dTime = mediaInfo.GetDuration();
             }
+
+            progress = 0.5;
 
             long long processNowTime = Eyer::EyerTime::GetTime();
             if(processNowTime - lastProcessTime >= 1000){
