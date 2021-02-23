@@ -11,8 +11,6 @@ namespace Eyer {
         eventQueue = _eventQueue;
 
         frameQueueManager = _frameQueueManager;
-
-        dashReader = new EyerDASHReader(EyerString("http://redknot.cn/DASH/xiaomai_dash.mpd"));
     }
 
     AVReaderThread::~AVReaderThread()
@@ -30,10 +28,6 @@ namespace Eyer {
         if(reader != nullptr){
             delete reader;
             reader = nullptr;
-        }
-        if(dashReader != nullptr){
-            delete dashReader;
-            dashReader = nullptr;
         }
     }
 
@@ -98,8 +92,6 @@ namespace Eyer {
 
     int AVReaderThread::MainRun()
     {
-        dashReader->CreateStream(representation);
-
         EyerLog("AVReader Thread Start\n");
 
         EventOpenResponse * event = nullptr;
@@ -112,7 +104,7 @@ namespace Eyer {
             delete reader;
             reader = nullptr;
         }
-        reader = new EyerAVReader(url, dashReader);
+        reader = new EyerAVReader(url);
         int ret = reader->Open();
 
         if(ret){
@@ -255,7 +247,6 @@ namespace Eyer {
     int AVReaderThread::SwitchRepresentation(int _representation)
     {
         representation = _representation;
-        dashReader->SwitchStream(_representation);
         return 0;
     }
 }

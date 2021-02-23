@@ -115,7 +115,7 @@ namespace Eyer
             }
             else if(event->GetType() == EventType::PROGRESSRequest){
                 EventProgressRequest * progressRequest = (EventProgressRequest *)event;
-                // EyerLog("PROGRESSRequest\n");
+                // EyerLog("PROGRESSRequest: %f\n", progressRequest->progress);
                 if(callback != nullptr){
                     callback->OnProgress(progressRequest->progress);
                 }
