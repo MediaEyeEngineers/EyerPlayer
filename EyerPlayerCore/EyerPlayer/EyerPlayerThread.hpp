@@ -65,7 +65,6 @@ namespace Eyer {
         jobject surface = nullptr;
 
         Eyer::EyerAVReader * reader = nullptr;
-        EyerDASHReader * dashReader = nullptr;
         int representation = 1;
     };
 

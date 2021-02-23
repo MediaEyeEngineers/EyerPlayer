@@ -1,6 +1,5 @@
 cd ../../
 
-
 basepath=$(cd `dirname $0`; pwd)
 echo ${basepath}
 
@@ -104,12 +103,7 @@ make -j4
 make install
 
 
-
-
-
-
-
-
+:<<!
 export CC=$TARGET$API-clang
 export PATH=$TOOLCHAIN"/bin":$PATH
 cd ${basepath}/Eyer3rdpart/openssl-1.1.1g/
@@ -150,7 +144,7 @@ make install
 
 cd ${basepath}/Eyer3rdpart/platform_external_libxml2/
 $NDK/ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk
-
+!
 
 cd ${basepath}
 
@@ -160,6 +154,7 @@ fi
 
 mkdir Lib
 
+:<<!
 cd ${basepath}/Lib/
 mkdir libxml2_install
 cd libxml2_install
@@ -171,11 +166,13 @@ cp -r ${basepath}/Eyer3rdpart/platform_external_libxml2/include/libxml ${basepat
 cd ${basepath}/Lib/libxml2_install
 mkdir lib
 cp ${basepath}/Eyer3rdpart/platform_external_libxml2/obj/local/armeabi-v7a/libxml2.a ${basepath}/Lib/libxml2_install/lib/libxml2.a
+!
+
 
 cd ${basepath}
 cp -r Eyer3rdpart/ffmpeg-4.3/ffmpeg_install Lib/ffmpeg_install
-cp -r Eyer3rdpart/openssl-1.1.1g/openssl_install Lib/openssl_install
-cp -r Eyer3rdpart/curl-7.72.0/curl_install Lib/curl_install
+# cp -r Eyer3rdpart/openssl-1.1.1g/openssl_install Lib/openssl_install
+# cp -r Eyer3rdpart/curl-7.72.0/curl_install Lib/curl_install
 
 
 
