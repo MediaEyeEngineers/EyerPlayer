@@ -61,7 +61,7 @@ namespace Eyer {
                 // dTime = mediaInfo.GetDuration();
             }
 
-            progress = 0.5;
+            // progress = 0.5;
 
             long long processNowTime = Eyer::EyerTime::GetTime();
             if(processNowTime - lastProcessTime >= 1000){
