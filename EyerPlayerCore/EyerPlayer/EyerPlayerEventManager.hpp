@@ -25,6 +25,8 @@ namespace Eyer
         int SetSurface(jobject _surface);
         int SetCallback(EyerPlayerCallback * callback);
 
+        EyerPlayerThreadManager * GetEyerPlayerThreadManager();
+
     private:
         EyerEventQueue * eventQueue = nullptr;
         EyerPlayerThreadManager * playerManager = nullptr;

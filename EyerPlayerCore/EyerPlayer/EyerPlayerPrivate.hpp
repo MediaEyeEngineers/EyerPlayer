@@ -2,6 +2,7 @@
 #define	EYER_PLAYER_PRIVATE_H
 
 #include "EyerPlayerEventManager.hpp"
+#include "EyerGLRenderTask/YUVRenderTask.hpp"
 #include <string>
 #include <jni.h>
 
@@ -14,6 +15,8 @@ namespace Eyer
         std::string url;
         jobject surface = nullptr;
         EyerPlayerConfig playerConfig;
+
+        YUVRenderTask * yuvRenderTask = nullptr;
     };
 }
 

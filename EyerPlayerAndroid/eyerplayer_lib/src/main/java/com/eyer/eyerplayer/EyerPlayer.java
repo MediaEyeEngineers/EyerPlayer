@@ -54,4 +54,16 @@ public class EyerPlayer {
     public int switchRepresentation(int representationId) {
         return EyerPlayerJNI.switch_representation(nativeId, representationId);
     }
+
+    public int renderInit() {
+        return EyerPlayerJNI.player_render_init(nativeId);
+    }
+
+    public int renderUninit() {
+        return EyerPlayerJNI.player_render_uninit(nativeId);
+    }
+
+    public int renderDraw(int texId) {
+        return EyerPlayerJNI.player_render_draw(nativeId, texId);
+    }
 }

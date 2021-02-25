@@ -22,6 +22,8 @@ namespace Eyer {
 
         int SetSurface(jobject _surface);
 
+        AVFrameQueueManager * GetAVFrameQueueManager();
+
     private:
         Eyer::EyerEventQueue * eventQueue = nullptr;
         AVFrameQueueManager * frameQueueManager = nullptr;

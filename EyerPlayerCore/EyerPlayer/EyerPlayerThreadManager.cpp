@@ -20,6 +20,11 @@ namespace Eyer {
         }
     }
 
+    AVFrameQueueManager * EyerPlayerThreadManager::GetAVFrameQueueManager()
+    {
+        return frameQueueManager;
+    }
+
     int EyerPlayerThreadManager::Open(Eyer::EyerString url, const EyerPlayerConfig & _playerConfig, long long openEventId)
     {
         if(readerThread != nullptr){

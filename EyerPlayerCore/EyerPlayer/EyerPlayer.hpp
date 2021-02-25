@@ -72,6 +72,9 @@ namespace Eyer {
 
         int SwitchRepresentation(int representationId);
 
+        int RenderInit();
+        int RenderDraw(int texId);
+
     private:
         EyerPlayerPrivate * piml = nullptr;
     };

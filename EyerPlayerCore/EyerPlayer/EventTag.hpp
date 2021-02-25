@@ -18,6 +18,8 @@ namespace Eyer {
         static const Eyer::EyerString FRAME_QUEUE_PLAYER_AUDIO;
         static const Eyer::EyerString FRAME_QUEUE_DECODER_VIDEO;
         static const Eyer::EyerString FRAME_QUEUE_DECODER_AUDIO;
+
+        static const Eyer::EyerString FRAME_QUEUE_RENDER_VIDEO;
     };
 }
 

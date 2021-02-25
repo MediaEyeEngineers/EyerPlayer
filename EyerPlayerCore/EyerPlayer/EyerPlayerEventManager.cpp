@@ -25,6 +25,11 @@ namespace Eyer
         }
     }
 
+    EyerPlayerThreadManager * EyerPlayerEventManager::GetEyerPlayerThreadManager()
+    {
+        return playerManager;
+    }
+
     int EyerPlayerEventManager::SetCallback(EyerPlayerCallback * _callback)
     {
         callback = _callback;

@@ -6,20 +6,13 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
 
 import com.eyer.eyerplayer.EyerPlayer;
-import com.eyer.eyerplayer.EyerPlayerJNI;
 import com.eyer.eyerplayer.EyerPlayerListener;
 import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
-
-import java.io.File;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -94,7 +87,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Log.e("Eyer OpenGL", "onSurfaceCreated");
 
-        EyerPlayerJNI.player_gl_init();
+        player.renderInit();
 
         int[] textureids = new int[1];
         GLES20.glGenTextures(1, textureids, 0);
@@ -122,13 +115,12 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        Log.e("Eyer OpenGL", "onDrawFrame");
+        // Log.e("Eyer OpenGL", "onDrawFrame");
         surfaceTexture.updateTexImage();
-        EyerPlayerJNI.player_gl_draw(textureId_mediacodec);
+        // EyerPlayerJNI.player_gl_draw(textureId_mediacodec);
+
+        player.renderDraw(textureId_mediacodec);
     }
-
-
-
 
 
 

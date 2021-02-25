@@ -33,8 +33,11 @@ namespace Eyer {
         AVFrameQueue * videoFrameQueue = nullptr;
         AVFrameQueue * audioFrameQueue = nullptr;
 
+        AVFrameQueue * videoRenderFrameQueue = nullptr;
+
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &videoFrameQueue);
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &audioFrameQueue);
+        frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_RENDER_VIDEO, &videoRenderFrameQueue);
 
         startTime = Eyer::EyerTime::GetTime();
 
@@ -102,6 +105,7 @@ namespace Eyer {
                     }
                 }
             }
+
             else if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
                 if(videoFrame == nullptr){
                     if(videoFrameQueue != nullptr){
@@ -111,17 +115,8 @@ namespace Eyer {
                 if(videoFrame != nullptr){
                     // 判断视频是否应该播放
                     if(videoFrame->timePts <= dTime){
-                        mut.lock();
-                        delete videoFrame;
+                        videoRenderFrameQueue->Push(videoFrame);
                         videoFrame = nullptr;
-                        if(glCtx != nullptr){
-                            // YUVRenderTask * yuvRenderTask = new YUVRenderTask();
-                            // yuvRenderTask->SetFrame(videoFrame);
-                            // glCtx->AddRenderTask(yuvRenderTask);
-                            videoFrame = nullptr;
-                        }
-                        mut.unlock();
-
                         if(videoFrame != nullptr){
                             delete videoFrame;
                             videoFrame = nullptr;

@@ -132,4 +132,43 @@ namespace Eyer
     {
         return piml->eventManager->SetCallback(callback);
     }
+
+    int EyerPlayer::RenderInit()
+    {
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        return 0;
+    }
+
+    int EyerPlayer::RenderDraw(int texId)
+    {
+        // 软件渲染
+        AVFrameQueueManager * frameQueueManager = piml->eventManager->GetEyerPlayerThreadManager()->GetAVFrameQueueManager();
+
+        AVFrameQueue * videoRenderFrameQueue = nullptr;
+        frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_RENDER_VIDEO, &videoRenderFrameQueue);
+
+        if(videoRenderFrameQueue != nullptr){
+            EyerAVFrame * frame = nullptr;
+            videoRenderFrameQueue->FrontPop(&frame);
+            if(frame != nullptr){
+                // EyerLog("wwwwwwwww Render\n");
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                piml->yuvRenderTask = new YUVRenderTask();
+                piml->yuvRenderTask->SetFrame(frame);
+                piml->yuvRenderTask->Init();
+                piml->yuvRenderTask->SetWH(100, 100);
+                piml->yuvRenderTask->Render();
+                piml->yuvRenderTask->SetFrame(nullptr);
+                delete piml->yuvRenderTask;
+                if(frame != nullptr){
+                    delete frame;
+                    frame = nullptr;
+                }
+            }
+        }
+
+        return 0;
+    }
 }
