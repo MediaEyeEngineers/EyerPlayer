@@ -6,13 +6,14 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager, EyerEventQueue * _eventQueue, MediaInfo & _mediaInfo, double _videoTime)
+    AVPlayCtrThread::AVPlayCtrThread(const Eyer::EyerPlayerConfig & _playerConfig, AVFrameQueueManager * _frameQueueManager, EyerEventQueue * _eventQueue, MediaInfo & _mediaInfo, double _videoTime)
     {
-        mediaInfo = _mediaInfo;
-        frameQueueManager = _frameQueueManager;
-        eventQueue = _eventQueue;
+        playerConfig        = _playerConfig;
+        mediaInfo           = _mediaInfo;
+        frameQueueManager   = _frameQueueManager;
+        eventQueue          = _eventQueue;
 
-        opensl = new EyerOpenSL();
+        opensl              = new EyerOpenSL();
     }
 
     AVPlayCtrThread::~AVPlayCtrThread()
@@ -61,8 +62,6 @@ namespace Eyer {
                 // dTime = mediaInfo.GetDuration();
             }
 
-            // progress = 0.5;
-
             long long processNowTime = Eyer::EyerTime::GetTime();
             if(processNowTime - lastProcessTime >= 1000){
                 long long requestId = 1;
@@ -77,63 +76,59 @@ namespace Eyer {
 
 
 
+            if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
+                if(mediaCodec == nullptr){
+                    frameQueueManager->GetMediaCodecQueue(&mediaCodec);
+                }
 
+                if(mediaCodec != nullptr){
+                    if(outindex < 0){
+                        outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
+                        if(outindex >= 0){
+                            videoFrameTime = mediaCodec->getOutTime();
+                        }
+                    }
 
-            if(mediaCodec == nullptr){  
-                frameQueueManager->GetMediaCodecQueue(&mediaCodec);
-            }
-
-            if(mediaCodec != nullptr){
-                if(outindex < 0){
-                    outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
                     if(outindex >= 0){
-                        videoFrameTime = mediaCodec->getOutTime();
-                    }
-                }
-
-                if(outindex >= 0){
-                    double timePts = videoFrameTime / 1000.0;
-                    if(dTime - timePts >= 0.1){
-                        mediaCodec->releaseOutputBuffer(outindex, false);
-                        outindex = -1;
-                    }
-                    else if (timePts <= dTime) {
-                        mediaCodec->releaseOutputBuffer(outindex, true);
-                        outindex = -1;
+                        double timePts = videoFrameTime / 1000.0;
+                        if(dTime - timePts >= 0.1){
+                            mediaCodec->releaseOutputBuffer(outindex, false);
+                            outindex = -1;
+                        }
+                        else if (timePts <= dTime) {
+                            mediaCodec->releaseOutputBuffer(outindex, true);
+                            outindex = -1;
+                        }
                     }
                 }
             }
-
-
-            /*
-            if(videoFrame == nullptr){
-                if(videoFrameQueue != nullptr){
-                    videoFrameQueue->FrontPop(&videoFrame);
-                }
-            }
-            if(videoFrame != nullptr){
-                // 判断视频是否应该播放
-                if(videoFrame->timePts <= dTime){
-                    mut.lock();
-                    if(glCtx != nullptr){
-                        YUVRenderTask * yuvRenderTask = new YUVRenderTask();
-                        yuvRenderTask->SetFrame(videoFrame);
-                        glCtx->AddRenderTask(yuvRenderTask);
-                        videoFrame = nullptr;
+            else if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
+                if(videoFrame == nullptr){
+                    if(videoFrameQueue != nullptr){
+                        videoFrameQueue->FrontPop(&videoFrame);
                     }
-                    mut.unlock();
-
-                    if(videoFrame != nullptr){
+                }
+                if(videoFrame != nullptr){
+                    // 判断视频是否应该播放
+                    if(videoFrame->timePts <= dTime){
+                        mut.lock();
                         delete videoFrame;
                         videoFrame = nullptr;
+                        if(glCtx != nullptr){
+                            // YUVRenderTask * yuvRenderTask = new YUVRenderTask();
+                            // yuvRenderTask->SetFrame(videoFrame);
+                            // glCtx->AddRenderTask(yuvRenderTask);
+                            videoFrame = nullptr;
+                        }
+                        mut.unlock();
+
+                        if(videoFrame != nullptr){
+                            delete videoFrame;
+                            videoFrame = nullptr;
+                        }
                     }
                 }
             }
-            */
-
-
-
-
 
             if(audioFrame == nullptr){
                 if(audioFrameQueue != nullptr){

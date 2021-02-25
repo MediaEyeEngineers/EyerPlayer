@@ -23,13 +23,13 @@ namespace Eyer {
         STOP_STATUS_NOT_OPEN
     };
 
-    class EyerPlayerPrivate;
-
-    class EyerPlayerAndroidSurface
+    enum EyerVideoDecoder
     {
-    public:
-
+        SOFTWORE = 0,
+        MEDIACODEC = 1
     };
+
+    class EyerPlayerPrivate;
 
     class EyerPlayerCallback{
     public:
@@ -41,6 +41,12 @@ namespace Eyer {
 
     public:
         jobject callback = nullptr;
+    };
+
+    class EyerPlayerConfig
+    {
+    public:
+        EyerVideoDecoder videoDecoder = EyerVideoDecoder::SOFTWORE;
     };
 
     class EyerPlayer
@@ -55,7 +61,7 @@ namespace Eyer {
         int SetSurface(jobject surface);
         int SetCallback(EyerPlayerCallback * callback);
 
-        int Open(std::string url);
+        int Open(std::string url, const EyerPlayerConfig & playerConfig);
 
         int Play();
         int Pause();

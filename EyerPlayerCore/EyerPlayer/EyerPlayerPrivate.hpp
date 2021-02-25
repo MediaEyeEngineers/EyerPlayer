@@ -13,6 +13,7 @@ namespace Eyer
         EyerPlayerEventManager * eventManager = nullptr;
         std::string url;
         jobject surface = nullptr;
+        EyerPlayerConfig playerConfig;
     };
 }
 

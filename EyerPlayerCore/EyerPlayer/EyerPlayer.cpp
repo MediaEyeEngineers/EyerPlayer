@@ -26,9 +26,10 @@ namespace Eyer
         }
     }
 
-    int EyerPlayer::Open(std::string url)
+    int EyerPlayer::Open(std::string url, const EyerPlayerConfig & playerConfig)
     {
         piml->url = url;
+        piml->playerConfig = playerConfig;
 
         long long requestId = piml->eventManager->GenId();
 
@@ -36,6 +37,7 @@ namespace Eyer
         event->SetFrom(EventTag::PLAYER);
         event->SetTo(EventTag::EVENT_MANAGER);
         event->url = url.c_str();
+        event->playerConfig = piml->playerConfig;
         event->SetRequestId(requestId);
 
         piml->eventManager->PushEvent(event);

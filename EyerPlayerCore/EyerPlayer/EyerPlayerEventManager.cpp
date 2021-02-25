@@ -49,7 +49,7 @@ namespace Eyer
                 EyerLog("OPENRequest\n");
                 EyerLog("Url: %s\n", openRequest->url.str);
 
-                playerManager->Open(openRequest->url, openRequest->GetRequestId());
+                playerManager->Open(openRequest->url, openRequest->playerConfig, openRequest->GetRequestId());
             }
 
             if(event->GetType() == EventType::PLAYRequest){

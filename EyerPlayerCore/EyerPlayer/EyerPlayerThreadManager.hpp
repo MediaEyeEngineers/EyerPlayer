@@ -2,6 +2,7 @@
 #define EYERPLAYERLIB_THREAD_MANAGER_H
 
 #include "EyerPlayerThread.hpp"
+#include "EyerPlayer.hpp"
 
 namespace Eyer {
     class EyerPlayerThreadManager{
@@ -9,7 +10,7 @@ namespace Eyer {
         EyerPlayerThreadManager(Eyer::EyerEventQueue * eventQueue);
         ~EyerPlayerThreadManager();
 
-        int Open(Eyer::EyerString url, long long openEventId);
+        int Open(Eyer::EyerString url, const EyerPlayerConfig & playerConfig, long long openEventId);
         int Play();
         int Pause();
         int Stop();
@@ -31,6 +32,8 @@ namespace Eyer {
         std::mutex glCtxMut;
         Eyer::EyerGLContextThread * glCtx = nullptr;
         jobject surface = nullptr;
+
+        EyerPlayerConfig playerConfig;
 
         double videoTime = 0.0;
     };

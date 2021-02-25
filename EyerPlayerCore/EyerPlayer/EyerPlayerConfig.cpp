@@ -1,5 +1,6 @@
 #include "EyerPlayer.hpp"
 
-namespace Eyer {
+namespace Eyer
+{
 
 }
