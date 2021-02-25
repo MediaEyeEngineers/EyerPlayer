@@ -4,13 +4,15 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
+    AVReaderThread::AVReaderThread(Eyer::EyerString _url, const EyerPlayerConfig & _playerConfig, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         url = _url;
         openEventId = _openEventId;
         eventQueue = _eventQueue;
 
         frameQueueManager = _frameQueueManager;
+
+        playerConfig = _playerConfig;
     }
 
     AVReaderThread::~AVReaderThread()
@@ -137,11 +139,14 @@ namespace Eyer {
 
             if(videoThread == nullptr){
                 // 创建视频解码线程
-                videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
-                // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+                if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
+                    videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+                }
+                else if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
+                    videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
+                }
                 videoThread->Start();
             }
-
         }
         // 获取音频流编号
         audioStreamIndex = reader->GetAudioStreamIndex();
@@ -236,7 +241,7 @@ namespace Eyer {
             delete audioThread;
             audioThread = nullptr;
         }
-         */
+        */
 
         EyerLog("AVReader Thread Stop\n");
 

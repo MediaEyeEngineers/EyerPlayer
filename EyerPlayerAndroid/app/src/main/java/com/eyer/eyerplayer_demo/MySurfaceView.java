@@ -35,6 +35,8 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
     private int textureId_mediacodec = -1;
 
+    private boolean android_mediacodec = true;
+
     public MySurfaceView(Context context) {
         super(context);
         init();
@@ -164,10 +166,6 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
             return 0;
         }
     }
-
-
-
-
 
 
     @Override

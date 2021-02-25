@@ -108,7 +108,9 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
 {
     char * url = jstringtochar(env, urlJNI);
     Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
-    int ret = player->Open(url);
+    Eyer::EyerPlayerConfig config;
+    config.videoDecoder = Eyer::EyerVideoDecoder::SOFTWORE;
+    int ret = player->Open(url, config);
     free(url);
     return ret;
 }
