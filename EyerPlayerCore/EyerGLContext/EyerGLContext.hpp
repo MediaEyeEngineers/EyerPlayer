@@ -9,9 +9,26 @@
 
 namespace Eyer
 {
+    class EyerGLContext
+    {
+    public:
+        EyerGLContext();
+        ~EyerGLContext();
+
+        int Init(ANativeWindow * nativeWindow);
+        int Uninit();
+
+    private:
+
+    };
+
     class EyerGLContextThread : public EyerThread {
     public:
+#ifdef EYER_PLATFORM_ANDROID
         EyerGLContextThread(ANativeWindow * nativeWindow);
+#else
+        EyerGLContextThread();
+#endif
         ~EyerGLContextThread();
         virtual void Run();
 
@@ -23,7 +40,11 @@ namespace Eyer
         int GetH();
 
     private:
+#ifdef EYER_PLATFORM_ANDROID
         ANativeWindow * nativeWindow = nullptr;
+#else
+        GLFWwindow * window = nullptr;
+#endif
 
         int w = 0;
         int h = 0;

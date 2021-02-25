@@ -11,7 +11,11 @@ SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install/)
 MESSAGE(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 
 include_directories (googletest/googletest/include)
+include_directories (${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_install/include)
 include_directories (${CMAKE_SOURCE_DIR}/../Lib/ffmpeg_include/include)
+include_directories (${CMAKE_SOURCE_DIR}/../Lib/libxml2_install/include)
+include_directories (${CMAKE_SOURCE_DIR}/../Lib/libxml2_install/include/libxml2)
+include_directories (${CMAKE_SOURCE_DIR}/../Lib/curl_install/include/)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

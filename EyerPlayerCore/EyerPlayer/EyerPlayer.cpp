@@ -26,9 +26,10 @@ namespace Eyer
         }
     }
 
-    int EyerPlayer::Open(std::string url)
+    int EyerPlayer::Open(std::string url, const EyerPlayerConfig & playerConfig)
     {
         piml->url = url;
+        piml->playerConfig = playerConfig;
 
         long long requestId = piml->eventManager->GenId();
 
@@ -36,6 +37,7 @@ namespace Eyer
         event->SetFrom(EventTag::PLAYER);
         event->SetTo(EventTag::EVENT_MANAGER);
         event->url = url.c_str();
+        event->playerConfig = piml->playerConfig;
         event->SetRequestId(requestId);
 
         piml->eventManager->PushEvent(event);
@@ -94,6 +96,19 @@ namespace Eyer
         seekRequest->SetRequestId(requestId);
         seekRequest->time = time;
         piml->eventManager->PushEvent(seekRequest);
+
+        return 0;
+    }
+
+    int EyerPlayer::SwitchRepresentation(int representationId)
+    {
+        long long requestId = piml->eventManager->GenId();
+
+        EventSwitchRepresentationRequest * switchRepresentationRequest = new EventSwitchRepresentationRequest();
+        switchRepresentationRequest->SetFrom(EventTag::PLAYER);
+        switchRepresentationRequest->SetTo(EventTag::EVENT_MANAGER);
+        switchRepresentationRequest->SetRequestId(requestId);
+        piml->eventManager->PushEvent(switchRepresentationRequest);
 
         return 0;
     }

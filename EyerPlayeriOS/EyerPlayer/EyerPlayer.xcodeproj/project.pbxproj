@@ -1,0 +1,596 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		40A38DC324FC287100DE1263 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC224FC287100DE1263 /* AppDelegate.m */; };
+		40A38DC624FC287100DE1263 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC524FC287100DE1263 /* SceneDelegate.m */; };
+		40A38DC924FC287100DE1263 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC824FC287100DE1263 /* ViewController.m */; };
+		40A38DCC24FC287100DE1263 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40A38DCA24FC287100DE1263 /* Main.storyboard */; };
+		40A38DCE24FC287300DE1263 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40A38DCD24FC287300DE1263 /* Assets.xcassets */; };
+		40A38DD124FC287300DE1263 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40A38DCF24FC287300DE1263 /* LaunchScreen.storyboard */; };
+		40A38DD424FC287300DE1263 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DD324FC287300DE1263 /* main.m */; };
+		40A38DDE24FC287300DE1263 /* EyerPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DDD24FC287300DE1263 /* EyerPlayerTests.m */; };
+		40A38DE924FC287300DE1263 /* EyerPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DE824FC287300DE1263 /* EyerPlayerUITests.m */; };
+		40A38DF824FC312100DE1263 /* MyOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DF724FC312100DE1263 /* MyOpenGLView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		40A38DDA24FC287300DE1263 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40A38DB624FC287100DE1263 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 40A38DBD24FC287100DE1263;
+			remoteInfo = EyerPlayer;
+		};
+		40A38DE524FC287300DE1263 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40A38DB624FC287100DE1263 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 40A38DBD24FC287100DE1263;
+			remoteInfo = EyerPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		40A38DBE24FC287100DE1263 /* EyerPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyerPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		40A38DC124FC287100DE1263 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		40A38DC224FC287100DE1263 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		40A38DC424FC287100DE1263 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		40A38DC524FC287100DE1263 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		40A38DC724FC287100DE1263 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		40A38DC824FC287100DE1263 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		40A38DCB24FC287100DE1263 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		40A38DCD24FC287300DE1263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		40A38DD024FC287300DE1263 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		40A38DD224FC287300DE1263 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40A38DD324FC287300DE1263 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		40A38DD924FC287300DE1263 /* EyerPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyerPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		40A38DDD24FC287300DE1263 /* EyerPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EyerPlayerTests.m; sourceTree = "<group>"; };
+		40A38DDF24FC287300DE1263 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40A38DE424FC287300DE1263 /* EyerPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyerPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		40A38DE824FC287300DE1263 /* EyerPlayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EyerPlayerUITests.m; sourceTree = "<group>"; };
+		40A38DEA24FC287300DE1263 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40A38DF624FC312100DE1263 /* MyOpenGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyOpenGLView.h; sourceTree = "<group>"; };
+		40A38DF724FC312100DE1263 /* MyOpenGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyOpenGLView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		40A38DBB24FC287100DE1263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DD624FC287300DE1263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DE124FC287300DE1263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		40A38DB524FC287100DE1263 = {
+			isa = PBXGroup;
+			children = (
+				40A38DC024FC287100DE1263 /* EyerPlayer */,
+				40A38DDC24FC287300DE1263 /* EyerPlayerTests */,
+				40A38DE724FC287300DE1263 /* EyerPlayerUITests */,
+				40A38DBF24FC287100DE1263 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		40A38DBF24FC287100DE1263 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				40A38DBE24FC287100DE1263 /* EyerPlayer.app */,
+				40A38DD924FC287300DE1263 /* EyerPlayerTests.xctest */,
+				40A38DE424FC287300DE1263 /* EyerPlayerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		40A38DC024FC287100DE1263 /* EyerPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				40A38DF624FC312100DE1263 /* MyOpenGLView.h */,
+				40A38DF724FC312100DE1263 /* MyOpenGLView.m */,
+				40A38DC124FC287100DE1263 /* AppDelegate.h */,
+				40A38DC224FC287100DE1263 /* AppDelegate.m */,
+				40A38DC424FC287100DE1263 /* SceneDelegate.h */,
+				40A38DC524FC287100DE1263 /* SceneDelegate.m */,
+				40A38DC724FC287100DE1263 /* ViewController.h */,
+				40A38DC824FC287100DE1263 /* ViewController.m */,
+				40A38DCA24FC287100DE1263 /* Main.storyboard */,
+				40A38DCD24FC287300DE1263 /* Assets.xcassets */,
+				40A38DCF24FC287300DE1263 /* LaunchScreen.storyboard */,
+				40A38DD224FC287300DE1263 /* Info.plist */,
+				40A38DD324FC287300DE1263 /* main.m */,
+			);
+			path = EyerPlayer;
+			sourceTree = "<group>";
+		};
+		40A38DDC24FC287300DE1263 /* EyerPlayerTests */ = {
+			isa = PBXGroup;
+			children = (
+				40A38DDD24FC287300DE1263 /* EyerPlayerTests.m */,
+				40A38DDF24FC287300DE1263 /* Info.plist */,
+			);
+			path = EyerPlayerTests;
+			sourceTree = "<group>";
+		};
+		40A38DE724FC287300DE1263 /* EyerPlayerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				40A38DE824FC287300DE1263 /* EyerPlayerUITests.m */,
+				40A38DEA24FC287300DE1263 /* Info.plist */,
+			);
+			path = EyerPlayerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		40A38DBD24FC287100DE1263 /* EyerPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40A38DED24FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayer" */;
+			buildPhases = (
+				40A38DBA24FC287100DE1263 /* Sources */,
+				40A38DBB24FC287100DE1263 /* Frameworks */,
+				40A38DBC24FC287100DE1263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EyerPlayer;
+			productName = EyerPlayer;
+			productReference = 40A38DBE24FC287100DE1263 /* EyerPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		40A38DD824FC287300DE1263 /* EyerPlayerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40A38DF024FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayerTests" */;
+			buildPhases = (
+				40A38DD524FC287300DE1263 /* Sources */,
+				40A38DD624FC287300DE1263 /* Frameworks */,
+				40A38DD724FC287300DE1263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				40A38DDB24FC287300DE1263 /* PBXTargetDependency */,
+			);
+			name = EyerPlayerTests;
+			productName = EyerPlayerTests;
+			productReference = 40A38DD924FC287300DE1263 /* EyerPlayerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		40A38DE324FC287300DE1263 /* EyerPlayerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40A38DF324FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayerUITests" */;
+			buildPhases = (
+				40A38DE024FC287300DE1263 /* Sources */,
+				40A38DE124FC287300DE1263 /* Frameworks */,
+				40A38DE224FC287300DE1263 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				40A38DE624FC287300DE1263 /* PBXTargetDependency */,
+			);
+			name = EyerPlayerUITests;
+			productName = EyerPlayerUITests;
+			productReference = 40A38DE424FC287300DE1263 /* EyerPlayerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		40A38DB624FC287100DE1263 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1160;
+				ORGANIZATIONNAME = "Yuqiao Miao";
+				TargetAttributes = {
+					40A38DBD24FC287100DE1263 = {
+						CreatedOnToolsVersion = 11.6;
+					};
+					40A38DD824FC287300DE1263 = {
+						CreatedOnToolsVersion = 11.6;
+						TestTargetID = 40A38DBD24FC287100DE1263;
+					};
+					40A38DE324FC287300DE1263 = {
+						CreatedOnToolsVersion = 11.6;
+						TestTargetID = 40A38DBD24FC287100DE1263;
+					};
+				};
+			};
+			buildConfigurationList = 40A38DB924FC287100DE1263 /* Build configuration list for PBXProject "EyerPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 40A38DB524FC287100DE1263;
+			productRefGroup = 40A38DBF24FC287100DE1263 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				40A38DBD24FC287100DE1263 /* EyerPlayer */,
+				40A38DD824FC287300DE1263 /* EyerPlayerTests */,
+				40A38DE324FC287300DE1263 /* EyerPlayerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		40A38DBC24FC287100DE1263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40A38DD124FC287300DE1263 /* LaunchScreen.storyboard in Resources */,
+				40A38DCE24FC287300DE1263 /* Assets.xcassets in Resources */,
+				40A38DCC24FC287100DE1263 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DD724FC287300DE1263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DE224FC287300DE1263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		40A38DBA24FC287100DE1263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40A38DC924FC287100DE1263 /* ViewController.m in Sources */,
+				40A38DC324FC287100DE1263 /* AppDelegate.m in Sources */,
+				40A38DF824FC312100DE1263 /* MyOpenGLView.m in Sources */,
+				40A38DD424FC287300DE1263 /* main.m in Sources */,
+				40A38DC624FC287100DE1263 /* SceneDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DD524FC287300DE1263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40A38DDE24FC287300DE1263 /* EyerPlayerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A38DE024FC287300DE1263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40A38DE924FC287300DE1263 /* EyerPlayerUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		40A38DDB24FC287300DE1263 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 40A38DBD24FC287100DE1263 /* EyerPlayer */;
+			targetProxy = 40A38DDA24FC287300DE1263 /* PBXContainerItemProxy */;
+		};
+		40A38DE624FC287300DE1263 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 40A38DBD24FC287100DE1263 /* EyerPlayer */;
+			targetProxy = 40A38DE524FC287300DE1263 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		40A38DCA24FC287100DE1263 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				40A38DCB24FC287100DE1263 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		40A38DCF24FC287300DE1263 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				40A38DD024FC287300DE1263 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		40A38DEB24FC287300DE1263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		40A38DEC24FC287300DE1263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		40A38DEE24FC287300DE1263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		40A38DEF24FC287300DE1263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		40A38DF124FC287300DE1263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EyerPlayer.app/EyerPlayer";
+			};
+			name = Debug;
+		};
+		40A38DF224FC287300DE1263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EyerPlayer.app/EyerPlayer";
+			};
+			name = Release;
+		};
+		40A38DF424FC287300DE1263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EyerPlayer;
+			};
+			name = Debug;
+		};
+		40A38DF524FC287300DE1263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LGBB8K4Y97;
+				INFOPLIST_FILE = EyerPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EyerPlayer;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		40A38DB924FC287100DE1263 /* Build configuration list for PBXProject "EyerPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40A38DEB24FC287300DE1263 /* Debug */,
+				40A38DEC24FC287300DE1263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		40A38DED24FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40A38DEE24FC287300DE1263 /* Debug */,
+				40A38DEF24FC287300DE1263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		40A38DF024FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40A38DF124FC287300DE1263 /* Debug */,
+				40A38DF224FC287300DE1263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		40A38DF324FC287300DE1263 /* Build configuration list for PBXNativeTarget "EyerPlayerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40A38DF424FC287300DE1263 /* Debug */,
+				40A38DF524FC287300DE1263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 40A38DB624FC287100DE1263 /* Project object */;
+}

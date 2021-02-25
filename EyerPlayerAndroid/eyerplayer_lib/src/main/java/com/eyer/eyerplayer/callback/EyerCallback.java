@@ -2,6 +2,7 @@ package com.eyer.eyerplayer.callback;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.eyer.eyerplayer.EyerPlayerListener;
 import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
@@ -70,6 +71,7 @@ public class EyerCallback {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == MSG_ID_ONOPEN){
+                Log.e("Callback", "onOpen");
                 OpenCallbackInfo openCallbackInfo = (OpenCallbackInfo)msg.obj;
                 this.listener.onOpen(openCallbackInfo.openStatus, openCallbackInfo.mediaInfo);
             }

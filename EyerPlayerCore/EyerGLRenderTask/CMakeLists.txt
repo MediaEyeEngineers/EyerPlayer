@@ -5,6 +5,7 @@ include_directories (../EyerAV)
 add_library(
         EyerGLRenderTask
         YUVRenderTask.cpp
+        TextureRenderTask.cpp
         )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -21,6 +22,7 @@ ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(head_files
         YUVRenderTask.hpp
+        TextureRenderTask.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerGLRenderTask)

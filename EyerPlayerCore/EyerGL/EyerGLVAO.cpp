@@ -4,7 +4,7 @@
 
 namespace Eyer
 {
-    EyerGLVAO::EyerGLVAO(EyerGLContext * _ctx)
+    EyerGLVAO::EyerGLVAO(EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
 

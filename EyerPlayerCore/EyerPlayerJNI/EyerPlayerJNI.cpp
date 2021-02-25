@@ -108,7 +108,9 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1open
 {
     char * url = jstringtochar(env, urlJNI);
     Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
-    int ret = player->Open(url);
+    Eyer::EyerPlayerConfig config;
+    config.videoDecoder = Eyer::EyerVideoDecoder::SOFTWORE;
+    int ret = player->Open(url, config);
     free(url);
     return ret;
 }
@@ -140,4 +142,11 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1seek
 {
     Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
     return player->Seek(time);
+}
+
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_switch_1representation
+(JNIEnv *, jclass, jlong playerJNI, jint representationId)
+{
+    Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
+    return player->SwitchRepresentation(representationId);
 }

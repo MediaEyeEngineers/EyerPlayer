@@ -130,6 +130,7 @@ namespace Eyer
 
         EyerAVPixelFormat GetPixFormat() const;
 
+
         static int ToFFmpegPixelFormat(const EyerAVPixelFormat format);
         static EyerAVPixelFormat ToEyerPixelFormat(const int format);
 

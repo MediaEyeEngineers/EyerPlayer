@@ -28,6 +28,7 @@ namespace Eyer {
         }
 
         Eyer::EyerString url;
+        EyerPlayerConfig playerConfig;
     };
 
     class EventOpenResponse : public Eyer::EyerEvent
@@ -278,6 +279,26 @@ namespace Eyer {
     };
 
 
+    class EventSwitchRepresentationRequest : public Eyer::EyerEvent
+    {
+    public:
+        EventSwitchRepresentationRequest()
+        {
+
+        }
+
+        ~EventSwitchRepresentationRequest()
+        {
+
+        }
+
+        virtual int GetType()
+        {
+            return EventType::SwitchRepresentationRequest;
+        }
+    };
+
+
 
 
 
@@ -393,6 +414,24 @@ namespace Eyer {
     };
 
 
+    class SWITCH_Representation_Runnable: public EyerRunnable
+    {
+    public:
+        SWITCH_Representation_Runnable(AVReaderThread * _readerThread, int _representation)
+        {
+            readerThread = _readerThread;
+            representation = _representation;
+        }
+        virtual void Run()
+        {
+            EyerLog("SWITCH_Representation_Runnable\n");
+            readerThread->SwitchRepresentation(representation);
+        }
+
+    private:
+        AVReaderThread * readerThread = nullptr;
+        int representation = 0;
+    };
 
 
     class SEEK_Reader_Runnable: public EyerRunnable
@@ -407,7 +446,6 @@ namespace Eyer {
         virtual void Run()
         {
             EyerLog("SEEK_Reader_Runnable, SeekTime: %f\n", seekTime);
-
             readerThread->Seek(seekTime);
         }
 

@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include <stdarg.h>
+#include "string_ext.h"
 
 namespace Eyer {
     EyerString::EyerString()
@@ -12,7 +13,7 @@ namespace Eyer {
 
     }
 
-    EyerString::EyerString(const EyerString & str)
+    EyerString::EyerString(const EyerString & str) : EyerString()
     {
         *this = str;
     }
@@ -24,11 +25,11 @@ namespace Eyer {
 
     EyerString::EyerString(const char _str[])
     {
-        ClearStr();
-
         if(_str == nullptr){
             return;
         }
+
+        ClearStr();
 
         int _strLen = strlen(_str) + 1;
         str = (char *)malloc(_strLen);
@@ -37,11 +38,15 @@ namespace Eyer {
 
     EyerString & EyerString::operator = (const EyerString & s)
     {
-        ClearStr();
+        if(this == &s){
+            return *this;
+        }
 
         if(s.str == nullptr){
             return *this;
         }
+
+        ClearStr();
 
         int _strLen = strlen(s.str) + 1;
         str = (char *)malloc(_strLen);
@@ -50,7 +55,7 @@ namespace Eyer {
         return *this;
     }
 
-    bool EyerString::operator == (const EyerString & s)
+    bool EyerString::operator == (const EyerString & s) const
     {
         if(IsEmpty() && s.IsEmpty()){
             return true;
@@ -71,20 +76,20 @@ namespace Eyer {
         return false;
     }
 
-    bool EyerString::operator > (const EyerString & s)
+    bool EyerString::operator > (const EyerString & s) const
     {
         if(strcmp(str, s.str) > 0){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    bool EyerString::operator < (const EyerString & s)
+    bool EyerString::operator < (const EyerString & s) const
     {
         if(strcmp(str, s.str) < 0){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     EyerString EyerString::operator + (const EyerString & s){
@@ -142,6 +147,46 @@ namespace Eyer {
         return 0;
     }
 
+    int EyerString::Replace(const EyerString & substr, const EyerString & replacement)
+    {
+        char outStr[1024 * 128];
+        memset(outStr, 0, 2048);
+
+        strrpl(str, outStr, 2048, substr.str, replacement.str);
+
+        *this = outStr;
+
+        return 0;
+    }
+
+
+    int EyerString::Split(EyerString * resArr, const EyerString & splitStr)
+    {
+        if(resArr == nullptr){
+            EyerString temp = *this;
+
+            splitVec.clear();
+
+            char * p = strtok(temp.str, splitStr.str);
+            splitVec.push_back(p);
+
+            while(p != NULL){
+                p = strtok(NULL, splitStr.str);
+                if(p == NULL){
+                    break;
+                }
+                splitVec.push_back(p);
+            }
+        }
+        else {
+            for(int i=0;i<splitVec.size();i++){
+                resArr[i] = splitVec[i];
+            }
+        }
+
+        return splitVec.size();
+    }
+
     EyerString EyerString::Number(int num, EyerString format)
     {
         char str[1024];
@@ -151,7 +196,7 @@ namespace Eyer {
         return str;
     }
 
-    EyerString Number(long num)
+    EyerString EyerString::Number(long num)
     {
         char str[1024];
 
@@ -160,7 +205,7 @@ namespace Eyer {
         return str;
     }
 
-    EyerString Number(long long num)
+    EyerString EyerString::Number(long long num)
     {
         char str[1024];
 

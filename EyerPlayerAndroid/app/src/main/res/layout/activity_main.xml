@@ -30,7 +30,7 @@
             android:layout_height="40dip">
         </LinearLayout>
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -53,6 +53,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_stop"
                 android:text="Stop"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_switch"
+                android:text="Switch"/>
         </LinearLayout>
         <TextView
             android:id="@+id/log_textview"

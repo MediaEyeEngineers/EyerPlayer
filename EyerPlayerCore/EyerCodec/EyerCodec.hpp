@@ -30,26 +30,6 @@ namespace Eyer
     private:
         jobject eyerMediaCodec = nullptr;
     };
-
-    class EyerMediaCodec2
-    {
-    public:
-        EyerMediaCodec2();
-        ~EyerMediaCodec2();
-
-        int Init(EyerAVStream & stream, jobject surface);
-        int Uninit();
-
-        int SendPacket(Eyer::EyerAVPacket * pkt);
-        int RecvFrameRender();
-
-        int DequeueOutputBuffer();
-        long GetOutTime();
-        int RenderFrame(int outindex);
-
-    private:
-        jobject eyerMediaCodec = nullptr;
-    };
 }
 
 #endif

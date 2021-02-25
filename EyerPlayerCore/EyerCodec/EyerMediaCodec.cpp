@@ -35,7 +35,6 @@ namespace Eyer {
 
         eyerMediaCodec = env->NewGlobalRef(_eyerMediaCodec);
 
-
         // 调用 Init 函数
         jmethodID eyerMediaCodecMethod_Init = env->GetMethodID(eyerMediaCodecClass, "init",
                                                                "(IILandroid/view/Surface;)I");
@@ -67,6 +66,8 @@ namespace Eyer {
 
         int ret = env->CallIntMethod(eyerMediaCodec, eyerMediaCodecMethod_Uninit);
 
+        env->DeleteLocalRef(eyerMediaCodec);
+
         return ret;
     }
 
@@ -83,6 +84,8 @@ namespace Eyer {
         if(jmethodId == nullptr){
             EyerLog("MediaCodec GetMethodID Fail\n");
         }
+
+        env->DeleteLocalRef(eyerMediaCodecClass);
 
         return env->CallIntMethod(eyerMediaCodec, jmethodId, timeoutUs);
     }
@@ -106,6 +109,8 @@ namespace Eyer {
         int ret =  env->CallIntMethod(eyerMediaCodec, jmethodId, index, jData);
         env->DeleteLocalRef(jData);
 
+        env->DeleteLocalRef(eyerMediaCodecClass);
+
         return ret;
     }
 
@@ -124,6 +129,8 @@ namespace Eyer {
         }
 
         env->CallVoidMethod(eyerMediaCodec, jmethodId, index, offset, size, presentationTimeUs, flags);
+
+        env->DeleteLocalRef(eyerMediaCodecClass);
     }
 
     void EyerMediaCodec::sendEndOfStream(int index)
@@ -141,6 +148,8 @@ namespace Eyer {
         }
 
         env->CallVoidMethod(eyerMediaCodec, jmethodId, index);
+
+        env->DeleteLocalRef(eyerMediaCodecClass);
     }
 
 
@@ -165,6 +174,8 @@ namespace Eyer {
             EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
+        env->DeleteLocalRef(eyerMediaCodecClass);
+
         return env->CallIntMethod(eyerMediaCodec, jmethodId, timeoutUs);
     }
 
@@ -182,6 +193,8 @@ namespace Eyer {
             EyerLog("MediaCodec GetMethodID Fail\n");
         }
 
+        env->DeleteLocalRef(eyerMediaCodecClass);
+
         return env->CallLongMethod(eyerMediaCodec, jmethodId);
     }
 
@@ -198,6 +211,8 @@ namespace Eyer {
         if(jmethodId == nullptr){
             EyerLog("MediaCodec GetMethodID Fail\n");
         }
+
+        env->DeleteLocalRef(eyerMediaCodecClass);
 
         return env->CallIntMethod(eyerMediaCodec, jmethodId, index, render);
     }
@@ -223,6 +238,8 @@ namespace Eyer {
         if(jmethodId == nullptr){
             EyerLog("MediaCodec GetMethodID Fail\n");
         }
+
+        env->DeleteLocalRef(eyerMediaCodecClass);
 
         return env->CallIntMethod(eyerMediaCodec, jmethodId);
     }

@@ -79,6 +79,38 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1stop
 JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1seek
   (JNIEnv *, jclass, jlong, jdouble);
 
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    switch_representation
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_switch_1representation
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_init
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1init
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_draw
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1draw
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_viewport
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1viewport
+  (JNIEnv *, jclass, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

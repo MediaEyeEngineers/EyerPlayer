@@ -4,14 +4,15 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
-        : reader(_url)
+    AVReaderThread::AVReaderThread(Eyer::EyerString _url, const EyerPlayerConfig & _playerConfig, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         url = _url;
         openEventId = _openEventId;
         eventQueue = _eventQueue;
 
         frameQueueManager = _frameQueueManager;
+
+        playerConfig = _playerConfig;
     }
 
     AVReaderThread::~AVReaderThread()
@@ -25,6 +26,10 @@ namespace Eyer {
             audioThread->Stop();
             delete audioThread;
             audioThread = nullptr;
+        }
+        if(reader != nullptr){
+            delete reader;
+            reader = nullptr;
         }
     }
 
@@ -65,7 +70,9 @@ namespace Eyer {
         }
 
         EyerLog("Reader Seek Start\n");
-        reader.Seek(time);
+        if(reader != nullptr){
+            reader->Seek(time);
+        }
         EyerLog("Reader Seek End\n");
 
         if(audioThread != nullptr){
@@ -80,6 +87,13 @@ namespace Eyer {
 
     void AVReaderThread::Run()
     {
+        while(!stopFlag){
+            MainRun();
+        }
+    }
+
+    int AVReaderThread::MainRun()
+    {
         EyerLog("AVReader Thread Start\n");
 
         EventOpenResponse * event = nullptr;
@@ -88,8 +102,12 @@ namespace Eyer {
 
         double duration = 0.0;
 
-
-        int ret = reader.Open();
+        if(reader != nullptr){
+            delete reader;
+            reader = nullptr;
+        }
+        reader = new EyerAVReader(url);
+        int ret = reader->Open();
 
         if(ret){
             EyerLog("AVReader Thread Open Error: %d\n", ret);
@@ -107,39 +125,49 @@ namespace Eyer {
         }
 
         // 获取视频流编号
-        videoStreamIndex = reader.GetVideoStreamIndex();
+        videoStreamIndex = reader->GetVideoStreamIndex();
+        EyerLog("Video Index: %d\n", videoStreamIndex);
         if(videoStreamIndex >= 0){
             Eyer::EyerAVStream videoStream;
-            reader.GetStream(videoStream, videoStreamIndex);
+            reader->GetStream(videoStream, videoStreamIndex);
 
             Eyer::EyerAVRational timebase;
-            reader.GetStreamTimeBase(timebase, videoStreamIndex);
+            reader->GetStreamTimeBase(timebase, videoStreamIndex);
 
             // 返回视频流信息到 MediaInfo
             mediaInfo.videoStream.SetWH(videoStream.GetWidth(), videoStream.GetHeight());
 
-            // 创建视频解码线程
-            videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
-            // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
-            videoThread->Start();
+            if(videoThread == nullptr){
+                // 创建视频解码线程
+                if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
+                    videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+                }
+                else if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
+                    videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
+                }
+                videoThread->Start();
+            }
         }
         // 获取音频流编号
-        audioStreamIndex = reader.GetAudioStreamIndex();
+        audioStreamIndex = reader->GetAudioStreamIndex();
+        EyerLog("Audio Index: %d\n", audioStreamIndex);
         if(audioStreamIndex >= 0){
             Eyer::EyerAVStream audioStream;
-            reader.GetStream(audioStream, audioStreamIndex);
+            reader->GetStream(audioStream, audioStreamIndex);
 
             Eyer::EyerAVRational timebase;
-            reader.GetStreamTimeBase(timebase, audioStreamIndex);
+            reader->GetStreamTimeBase(timebase, audioStreamIndex);
 
-            // 创建音频解码线程
-            audioThread = new AVDecoderThreadSoftware(audioStream, frameQueueManager);
-            audioThread->Start();
+            if(audioThread == nullptr){
+                // 创建音频解码线程
+                audioThread = new AVDecoderThreadSoftware(audioStream, frameQueueManager);
+                audioThread->Start();
+            }
         }
 
         status = AVReaderStatus::READER_STATUS_OPEN_SUCCESS;
 
-        duration = reader.GetDuration();
+        duration = reader->GetDuration();
         mediaInfo.SetDuration(duration);
 
         event = new EventOpenResponse();
@@ -156,17 +184,18 @@ namespace Eyer {
             EventLoop();
 
             int videoCacheSize = videoThread->GetPacketSize();
-            int audioCacheSize = audioThread->GetPacketSize();
+            // int audioCacheSize = audioThread->GetPacketSize();
+            int audioCacheSize = 0;
             // EyerLog("Video CacheSize: %d, Audio CacheSize: %d\n", videoCacheSize, audioCacheSize);
-            if(videoCacheSize >= 1024 * 1024 * 2){
+            if(videoCacheSize >= 1024 * 1024 * 1){
                 continue;
             }
-            if(audioCacheSize >= 1024 * 1024 * 2){
+            if(audioCacheSize >= 1024 * 1024 * 1){
                 /// continue;
             }
 
             Eyer::EyerAVPacket * packet = new Eyer::EyerAVPacket();
-            ret = reader.Read(packet);
+            ret = reader->Read(packet);
 
             if(ret){
                 // 读取错误 或者 视频结束
@@ -175,13 +204,18 @@ namespace Eyer {
                     packet = nullptr;
                 }
 
+                /*
                 // 发送一个空的 packet 出去
                 packet = new Eyer::EyerAVPacket();
                 packet->SetLast();
                 videoThread->SendPacket(packet);
 
                 continue;
+                */
+                goto END;
             }
+
+            // EyerLog("Packet: %d\n", packet->GetStreamId());
 
             if(packet->GetStreamId() == videoStreamIndex){
                 videoThread->SendPacket(packet);
@@ -196,6 +230,7 @@ namespace Eyer {
 
     END:
         //销毁两个线程
+        /*
         if(videoThread != nullptr){
             videoThread->Stop();
             delete videoThread;
@@ -206,8 +241,17 @@ namespace Eyer {
             delete audioThread;
             audioThread = nullptr;
         }
+        */
 
         EyerLog("AVReader Thread Stop\n");
+
+        return 0;
     }
 
+
+    int AVReaderThread::SwitchRepresentation(int _representation)
+    {
+        representation = _representation;
+        return 0;
+    }
 }

@@ -36,7 +36,7 @@ namespace Eyer
         EyerLog("Event Manager Start\n");
 
         while(!stopFlag){
-            Eyer::EyerTime::EyerSleep(1000);
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
 
             Eyer::EyerEvent * event = nullptr;
             eventQueue->FrontTargetAndPop(event, EventTag::EVENT_MANAGER);
@@ -49,7 +49,7 @@ namespace Eyer
                 EyerLog("OPENRequest\n");
                 EyerLog("Url: %s\n", openRequest->url.str);
 
-                playerManager->Open(openRequest->url, openRequest->GetRequestId());
+                playerManager->Open(openRequest->url, openRequest->playerConfig, openRequest->GetRequestId());
             }
 
             if(event->GetType() == EventType::PLAYRequest){
@@ -80,6 +80,15 @@ namespace Eyer
                 playerManager->Seek(seekRequest->time);
             }
 
+            if(event->GetType() == EventType::SwitchRepresentationRequest){
+                EventSwitchRepresentationRequest * switchRepresentationRequest = (EventSwitchRepresentationRequest *)event;
+                EyerLog("SwitchRepresentation\n");
+
+                playerManager->SwitchRepresentation(1);
+            }
+
+
+
 
 
             else if(event->GetType() == EventType::OPENResponse){
@@ -106,7 +115,7 @@ namespace Eyer
             }
             else if(event->GetType() == EventType::PROGRESSRequest){
                 EventProgressRequest * progressRequest = (EventProgressRequest *)event;
-                // EyerLog("PROGRESSRequest\n");
+                // EyerLog("PROGRESSRequest: %f\n", progressRequest->progress);
                 if(callback != nullptr){
                     callback->OnProgress(progressRequest->progress);
                 }

@@ -20,7 +20,7 @@ namespace Eyer {
         }
     }
 
-    int EyerPlayerThreadManager::Open(Eyer::EyerString url, long long openEventId)
+    int EyerPlayerThreadManager::Open(Eyer::EyerString url, const EyerPlayerConfig & _playerConfig, long long openEventId)
     {
         if(readerThread != nullptr){
             EventOpenResponse * openResponseEvent = new EventOpenResponse();
@@ -33,9 +33,11 @@ namespace Eyer {
             return -1;
         }
 
+        playerConfig = _playerConfig;
+
         frameQueueManager->ClearAndDelete();
 
-        readerThread = new AVReaderThread(url, openEventId, eventQueue, frameQueueManager);
+        readerThread = new AVReaderThread(url, playerConfig, openEventId, eventQueue, frameQueueManager);
         readerThread->SetSurface(surface);
         readerThread->Start();
 
@@ -56,7 +58,7 @@ namespace Eyer {
         readerThread->GetMediaInfo(mediaInfo);
 
         if(playerCtr == nullptr){
-            playerCtr = new AVPlayCtrThread(frameQueueManager, eventQueue, mediaInfo, videoTime);
+            playerCtr = new AVPlayCtrThread(playerConfig, frameQueueManager, eventQueue, mediaInfo, videoTime);
 
             glCtxMut.lock();
             playerCtr->SetGLCtx(glCtx);
@@ -127,6 +129,20 @@ namespace Eyer {
 
             playerCtr->StopEventLoop();
         }
+
+        return 0;
+    }
+
+    int EyerPlayerThreadManager::SwitchRepresentation(int representation)
+    {
+        if(readerThread == nullptr){
+            return -1;
+        }
+
+        SWITCH_Representation_Runnable representationRunnable(readerThread, representation);
+        readerThread->PushEvent(&representationRunnable);
+        readerThread->StartEventLoop();
+        readerThread->StopEventLoop();
 
         return 0;
     }

@@ -3,7 +3,6 @@ include_directories (./)
 
 add_library(
         EyerCodec
-        EyerMediaCodec2.cpp
         EyerMediaCodec.cpp
 )
 

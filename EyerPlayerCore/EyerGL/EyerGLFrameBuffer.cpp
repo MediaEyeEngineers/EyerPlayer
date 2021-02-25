@@ -3,7 +3,7 @@
 #include "GLHeader.h"
 
 namespace Eyer {
-    EyerGLFrameBuffer::EyerGLFrameBuffer(int w, int h, EyerGLTexture * _texture, EyerGLContext * _ctx)
+    EyerGLFrameBuffer::EyerGLFrameBuffer(int w, int h, EyerGLTexture * _texture, EyerGLContextFunc * _ctx)
     {
         ctx = _ctx;
 
