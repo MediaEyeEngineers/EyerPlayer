@@ -19,6 +19,10 @@ public class EyerPlayerJNI {
     public static native int        switch_representation       (long player, int representation);
 
 
+    public static native int        player_render_init          (long player);
+    public static native int        player_render_draw          (long player, int texId);
+    public static native int        player_render_uninit        (long player);
+
     public static native int        player_gl_init              ();
     public static native int        player_gl_draw              (int texId);
     public static native int        player_gl_viewport          (int w, int h);

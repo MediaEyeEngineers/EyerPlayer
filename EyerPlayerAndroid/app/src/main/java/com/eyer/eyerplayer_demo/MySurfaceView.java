@@ -50,7 +50,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
     private void init() {
         setEGLContextClientVersion(3);
         setRenderer(this);
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setKeepScreenOn(true);
 
         player = new EyerPlayer();
@@ -122,7 +122,7 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        // Log.e("Eyer OpenGL", "onDrawFrame");
+        Log.e("Eyer OpenGL", "onDrawFrame");
         surfaceTexture.updateTexImage();
         EyerPlayerJNI.player_gl_draw(textureId_mediacodec);
     }
