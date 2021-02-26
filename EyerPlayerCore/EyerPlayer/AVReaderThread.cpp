@@ -103,6 +103,10 @@ namespace Eyer {
         int videoStreamIndex = -1;
         int audioStreamIndex = -1;
 
+        int AudioChannels = -1;
+        int AudioSampleRate = -1;
+        std::string aCodec;
+        std::string vCodec;
         double duration = 0.0;
 
         if(reader != nullptr){
@@ -129,6 +133,9 @@ namespace Eyer {
 
         // 获取视频流编号
         videoStreamIndex = reader->GetVideoStreamIndex();
+
+        vCodec = reader->getCodecName(videoStreamIndex);
+
         EyerLog("Video Index: %d\n", videoStreamIndex);
         if(videoStreamIndex >= 0){
             Eyer::EyerAVStream videoStream;
@@ -151,9 +158,21 @@ namespace Eyer {
                 videoThread->Start();
             }
         }
+
         // 获取音频流编号
         audioStreamIndex = reader->GetAudioStreamIndex();
+
+        aCodec = reader->getCodecName(audioStreamIndex);
+        AudioChannels = reader->getAudioChannels(audioStreamIndex);
+        AudioSampleRate = reader->getAudioSampleRate(audioStreamIndex);
+
+        mediaInfo.setVideoAndAudioInformation(vCodec, aCodec);
+        mediaInfo.setAudioInformation(AudioSampleRate, AudioChannels);
+
         EyerLog("Audio Index: %d\n", audioStreamIndex);
+        EyerLog("Audio AudioChannels: %d\n", AudioChannels);
+        EyerLog("Audio AudioSampleRate: %d\n", AudioSampleRate);
+
         if(audioStreamIndex >= 0){
             Eyer::EyerAVStream audioStream;
             reader->GetStream(audioStream, audioStreamIndex);

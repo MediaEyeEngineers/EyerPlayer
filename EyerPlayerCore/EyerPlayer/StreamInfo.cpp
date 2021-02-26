@@ -20,7 +20,11 @@ namespace Eyer {
     {
         width = streamInfo.width;
         height = streamInfo.height;
-        
+
+        audioSampleRate = streamInfo.audioSampleRate;
+        audioChannels = streamInfo.audioChannels;
+        videoOrAudioCodecName = streamInfo.videoOrAudioCodecName;
+
         return *this;
     }
 
@@ -40,4 +44,6 @@ namespace Eyer {
         height = h;
         return 0;
     }
+
+
 }

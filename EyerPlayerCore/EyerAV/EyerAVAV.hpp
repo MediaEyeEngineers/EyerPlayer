@@ -215,6 +215,14 @@ namespace Eyer
         int GetStreamTimeBase(EyerAVRational & rational, int streamIndex);
 
         int PrintInfo();
+
+
+        int getAudioChannels(int audioStreamIndex);
+
+        int getAudioSampleRate(int audioStreamIndex);
+
+        std::string getCodecName(int index);
+
     };
 
     class EyerAVWriter
