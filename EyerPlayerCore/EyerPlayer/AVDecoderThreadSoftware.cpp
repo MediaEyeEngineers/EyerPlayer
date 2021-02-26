@@ -33,17 +33,6 @@ namespace Eyer {
             }
         }
 
-
-        int ret = decoder.SendPacket(nullptr);
-        while (1) {
-            Eyer::EyerAVFrame frame;
-            ret = decoder.RecvFrame(&frame);
-            if(ret){
-                break;
-            }
-            EyerLog("frame: %lld\n", frame.GetPTS());
-        }
-
         decoder.Flush();
 
         return 0;
@@ -93,7 +82,6 @@ namespace Eyer {
             cacheSize -= pkt->GetSize();
 
             ret = decoder.SendPacket(pkt);
-            // EyerLog("Deocder ret: %d\n", ret);
             if (ret) {
                 continue;
             }
