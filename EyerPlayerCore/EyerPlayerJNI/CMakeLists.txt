@@ -9,6 +9,7 @@ add_library(
         JniUtil.cpp
         EyerPlayerJNI.cpp
         EyerGLContextJNI.cpp
+        EyerPlayerRender.cpp
 )
 
 target_link_libraries (EyerPlayerJNI

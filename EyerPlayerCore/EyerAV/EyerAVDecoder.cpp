@@ -156,4 +156,10 @@ namespace Eyer
         return ret;
 #endif
     }
+
+    int EyerAVDecoder::Flush()
+    {
+        avcodec_flush_buffers(piml->codecContext);
+        return 0;
+    }
 }

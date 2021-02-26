@@ -28,6 +28,7 @@ namespace Eyer {
         }
 
         Eyer::EyerString url;
+        EyerPlayerConfig playerConfig;
     };
 
     class EventOpenResponse : public Eyer::EyerEvent

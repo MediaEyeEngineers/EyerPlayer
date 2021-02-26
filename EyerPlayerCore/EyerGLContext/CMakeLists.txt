@@ -12,7 +12,7 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Android")
         MESSAGE(STATUS "current platform: Android")
         add_library(
                 EyerGLContext
-                EyerGLContextThread.cpp)
+                EyerGLContextThread_Android.cpp)
 
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         MESSAGE(STATUS "current platform: Darwin")
