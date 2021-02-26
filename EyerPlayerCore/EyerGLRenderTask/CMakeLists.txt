@@ -6,6 +6,8 @@ add_library(
         EyerGLRenderTask
         YUVRenderTask.cpp
         TextureRenderTask.cpp
+        YUVRender.hpp
+        YUVRender.cpp
         )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")

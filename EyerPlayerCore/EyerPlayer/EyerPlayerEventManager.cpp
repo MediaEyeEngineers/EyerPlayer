@@ -6,10 +6,10 @@
 
 namespace Eyer
 {
-    EyerPlayerEventManager::EyerPlayerEventManager()
+    EyerPlayerEventManager::EyerPlayerEventManager(AVFrameQueueManager * _frameQueueManager)
     {
         eventQueue = new Eyer::EyerEventQueue();
-        playerManager = new EyerPlayerThreadManager(eventQueue);
+        playerManager = new EyerPlayerThreadManager(eventQueue, _frameQueueManager);
     }
 
     EyerPlayerEventManager::~EyerPlayerEventManager()
@@ -23,11 +23,6 @@ namespace Eyer
             delete eventQueue;
             eventQueue = nullptr;
         }
-    }
-
-    EyerPlayerThreadManager * EyerPlayerEventManager::GetEyerPlayerThreadManager()
-    {
-        return playerManager;
     }
 
     int EyerPlayerEventManager::SetCallback(EyerPlayerCallback * _callback)

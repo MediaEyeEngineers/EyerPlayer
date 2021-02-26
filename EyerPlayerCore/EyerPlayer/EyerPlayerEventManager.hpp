@@ -11,7 +11,7 @@ namespace Eyer
     class EyerPlayerEventManager : public Eyer::EyerThread 
     {
     public:
-        EyerPlayerEventManager();
+        EyerPlayerEventManager(AVFrameQueueManager * _frameQueueManager);
         ~EyerPlayerEventManager();
 
         virtual void Run();
@@ -25,7 +25,6 @@ namespace Eyer
         int SetSurface(jobject _surface);
         int SetCallback(EyerPlayerCallback * callback);
 
-        EyerPlayerThreadManager * GetEyerPlayerThreadManager();
 
     private:
         EyerEventQueue * eventQueue = nullptr;

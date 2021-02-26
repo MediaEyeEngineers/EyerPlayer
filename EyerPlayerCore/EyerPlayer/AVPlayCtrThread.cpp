@@ -114,7 +114,16 @@ namespace Eyer {
                 }
                 if(videoFrame != nullptr){
                     // 判断视频是否应该播放
-                    if(videoFrame->timePts <= dTime){
+                    double timePts = videoFrame->timePts;
+
+                    // EyerLog("timePts: %f, dTime: %f\n", timePts, dTime);
+                    if(dTime - timePts >= 0.1){
+                        if(videoFrame != nullptr){
+                            delete videoFrame;
+                            videoFrame = nullptr;
+                        }
+                    }
+                    else if (timePts <= dTime) {
                         videoRenderFrameQueue->Push(videoFrame);
                         videoFrame = nullptr;
                         if(videoFrame != nullptr){
@@ -124,6 +133,9 @@ namespace Eyer {
                     }
                 }
             }
+
+
+
 
             if(audioFrame == nullptr){
                 if(audioFrameQueue != nullptr){
@@ -170,6 +182,24 @@ namespace Eyer {
         }
 
         opensl->ClearAllCache();
+
+
+        if(videoFrame != nullptr){
+            delete videoFrame;
+            videoFrame = nullptr;
+        }
+
+        AVFrameQueue * videoRenderFrameQueue = nullptr;
+        frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_RENDER_VIDEO, &videoRenderFrameQueue);
+
+        while(videoRenderFrameQueue->Size() > 0){
+            Eyer::EyerAVFrame * frame = nullptr;
+            videoRenderFrameQueue->FrontPop(&frame);
+            if(frame != nullptr){
+                delete frame;
+                frame = nullptr;
+            }
+        }
 
         return 0;
     }

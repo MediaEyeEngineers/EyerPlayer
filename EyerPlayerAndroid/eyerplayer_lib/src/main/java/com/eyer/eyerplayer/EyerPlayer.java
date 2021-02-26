@@ -6,9 +6,7 @@ import com.eyer.eyerplayer.callback.EyerCallback;
 
 public class EyerPlayer {
 
-
-
-    private long nativeId = 0;
+    protected long nativeId = 0;
 
     public EyerPlayer(){
         nativeId = EyerPlayerJNI.player_init();

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.eyer.eyerplayer.EyerPlayer;
 import com.eyer.eyerplayer.EyerPlayerListener;
+import com.eyer.eyerplayer.EyerPlayerView;
 import com.eyer.eyerplayer.mediainfo.EyerMediaInfo;
 
 import java.io.File;
@@ -33,13 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_stop = null;
     private Button btn_play = null;
     private Button btn_pause = null;
-    private Button btn_switch = null;
 
     private TextView log_textview = null;
 
     private SeekBar progress_seek_bar = null;
 
-    private MySurfaceView video_view = null;
+    private EyerPlayerView video_view = null;
 
     private boolean isSeeking = false;
 
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         btn_stop = findViewById(R.id.btn_stop);
         btn_pause = findViewById(R.id.btn_pause);
         btn_play = findViewById(R.id.btn_play);
-        btn_switch = findViewById(R.id.btn_switch);
         log_textview = findViewById(R.id.log_textview);
 
         progress_seek_bar = findViewById(R.id.progress_seek_bar);
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         btn_play.setOnClickListener(new MyClickListener());
         btn_pause.setOnClickListener(new MyClickListener());
         btn_stop.setOnClickListener(new MyClickListener());
-        btn_switch.setOnClickListener(new MyClickListener());
 
         progress_seek_bar.setOnTouchListener(new MySeekBarOnTouchListener());
     }
@@ -149,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
                 videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/size_merge.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_1080p.mp4";
 
                 Log.e("MainActivity", videoPath);
@@ -172,9 +170,6 @@ public class MainActivity extends AppCompatActivity {
             }
             if(view == btn_stop){
                 video_view.stop();
-            }
-            if(view == btn_switch){
-                video_view.switchRepresentation(1);
             }
         }
     }

@@ -3,26 +3,15 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    EyerPlayerThreadManager::EyerPlayerThreadManager(Eyer::EyerEventQueue * _eventQueue)
+    EyerPlayerThreadManager::EyerPlayerThreadManager(Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         eventQueue = _eventQueue;
-        frameQueueManager = new AVFrameQueueManager();
+        frameQueueManager = _frameQueueManager;
     }
 
     EyerPlayerThreadManager::~EyerPlayerThreadManager()
     {
         Stop();
-
-        if(frameQueueManager != nullptr){
-            frameQueueManager->ClearAndDelete();
-            delete frameQueueManager;
-            frameQueueManager = nullptr;
-        }
-    }
-
-    AVFrameQueueManager * EyerPlayerThreadManager::GetAVFrameQueueManager()
-    {
-        return frameQueueManager;
     }
 
     int EyerPlayerThreadManager::Open(Eyer::EyerString url, const EyerPlayerConfig & _playerConfig, long long openEventId)

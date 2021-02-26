@@ -3,6 +3,7 @@
 
 #include "EyerPlayerEventManager.hpp"
 #include "EyerGLRenderTask/YUVRenderTask.hpp"
+#include "EyerGLRenderTask/YUVRender.hpp"
 #include <string>
 #include <jni.h>
 
@@ -17,6 +18,10 @@ namespace Eyer
         EyerPlayerConfig playerConfig;
 
         YUVRenderTask * yuvRenderTask = nullptr;
+
+        YUVRender yuvRender;
+
+        AVFrameQueueManager * frameQueueManager = nullptr;
     };
 }
 
