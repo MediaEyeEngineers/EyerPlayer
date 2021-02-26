@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "MyOpenGLView.h"
+#import "Box.h"
 
 @interface ViewController ()
 
@@ -19,9 +20,23 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    MyOpenGLView * openGLView = [[MyOpenGLView alloc] init];
-    openGLView.name = @"喵呜";
-    NSLog(@"name: %@\n", openGLView.name);
+    
+    CGRect frame = CGRectMake(300, 300, 300, 50);
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = frame;
+    [button setTitle:@"新添加的动态按钮" forState: UIControlStateNormal];
+    button.backgroundColor = [UIColor clearColor];
+    button.tag = 2000;
+    // [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    /*
+    EAGLContext * context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    GLKView * glkView = (GLKView *)self.view;
+    glkView.context = context;
+    
+    glkView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+    glkView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    */
 }
 
 @end
