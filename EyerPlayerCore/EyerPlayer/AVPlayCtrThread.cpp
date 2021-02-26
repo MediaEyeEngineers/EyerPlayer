@@ -6,13 +6,14 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVPlayCtrThread::AVPlayCtrThread(AVFrameQueueManager * _frameQueueManager, EyerEventQueue * _eventQueue, MediaInfo & _mediaInfo, double _videoTime)
+    AVPlayCtrThread::AVPlayCtrThread(const Eyer::EyerPlayerConfig & _playerConfig, AVFrameQueueManager * _frameQueueManager, EyerEventQueue * _eventQueue, MediaInfo & _mediaInfo, double _videoTime)
     {
-        mediaInfo = _mediaInfo;
-        frameQueueManager = _frameQueueManager;
-        eventQueue = _eventQueue;
+        playerConfig        = _playerConfig;
+        mediaInfo           = _mediaInfo;
+        frameQueueManager   = _frameQueueManager;
+        eventQueue          = _eventQueue;
 
-        opensl = new EyerOpenSL();
+        opensl              = new EyerOpenSL();
     }
 
     AVPlayCtrThread::~AVPlayCtrThread()
@@ -32,8 +33,11 @@ namespace Eyer {
         AVFrameQueue * videoFrameQueue = nullptr;
         AVFrameQueue * audioFrameQueue = nullptr;
 
+        AVFrameQueue * videoRenderFrameQueue = nullptr;
+
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &videoFrameQueue);
         frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &audioFrameQueue);
+        frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_RENDER_VIDEO, &videoRenderFrameQueue);
 
         startTime = Eyer::EyerTime::GetTime();
 
@@ -61,8 +65,6 @@ namespace Eyer {
                 // dTime = mediaInfo.GetDuration();
             }
 
-            // progress = 0.5;
-
             long long processNowTime = Eyer::EyerTime::GetTime();
             if(processNowTime - lastProcessTime >= 1000){
                 long long requestId = 1;
@@ -77,60 +79,60 @@ namespace Eyer {
 
 
 
-
-
-            if(mediaCodec == nullptr){  
-                frameQueueManager->GetMediaCodecQueue(&mediaCodec);
-            }
-
-            if(mediaCodec != nullptr){
-                if(outindex < 0){
-                    outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
-                    if(outindex >= 0){
-                        videoFrameTime = mediaCodec->getOutTime();
-                    }
+            if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
+                if(mediaCodec == nullptr){
+                    frameQueueManager->GetMediaCodecQueue(&mediaCodec);
                 }
 
-                if(outindex >= 0){
-                    double timePts = videoFrameTime / 1000.0;
+                if(mediaCodec != nullptr){
+                    if(outindex < 0){
+                        outindex = mediaCodec->dequeueOutputBuffer(1000 * 1);
+                        if(outindex >= 0){
+                            videoFrameTime = mediaCodec->getOutTime();
+                        }
+                    }
+
+                    if(outindex >= 0){
+                        double timePts = videoFrameTime / 1000.0;
+                        if(dTime - timePts >= 0.1){
+                            mediaCodec->releaseOutputBuffer(outindex, false);
+                            outindex = -1;
+                        }
+                        else if (timePts <= dTime) {
+                            mediaCodec->releaseOutputBuffer(outindex, true);
+                            outindex = -1;
+                        }
+                    }
+                }
+            }
+
+            else if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
+                if(videoFrame == nullptr){
+                    if(videoFrameQueue != nullptr){
+                        videoFrameQueue->FrontPop(&videoFrame);
+                    }
+                }
+                if(videoFrame != nullptr){
+                    // 判断视频是否应该播放
+                    double timePts = videoFrame->timePts;
+
+                    // EyerLog("timePts: %f, dTime: %f\n", timePts, dTime);
                     if(dTime - timePts >= 0.1){
-                        mediaCodec->releaseOutputBuffer(outindex, false);
-                        outindex = -1;
+                        if(videoFrame != nullptr){
+                            delete videoFrame;
+                            videoFrame = nullptr;
+                        }
                     }
                     else if (timePts <= dTime) {
-                        mediaCodec->releaseOutputBuffer(outindex, true);
-                        outindex = -1;
-                    }
-                }
-            }
-
-
-            /*
-            if(videoFrame == nullptr){
-                if(videoFrameQueue != nullptr){
-                    videoFrameQueue->FrontPop(&videoFrame);
-                }
-            }
-            if(videoFrame != nullptr){
-                // 判断视频是否应该播放
-                if(videoFrame->timePts <= dTime){
-                    mut.lock();
-                    if(glCtx != nullptr){
-                        YUVRenderTask * yuvRenderTask = new YUVRenderTask();
-                        yuvRenderTask->SetFrame(videoFrame);
-                        glCtx->AddRenderTask(yuvRenderTask);
+                        videoRenderFrameQueue->Push(videoFrame);
                         videoFrame = nullptr;
-                    }
-                    mut.unlock();
-
-                    if(videoFrame != nullptr){
-                        delete videoFrame;
-                        videoFrame = nullptr;
+                        if(videoFrame != nullptr){
+                            delete videoFrame;
+                            videoFrame = nullptr;
+                        }
                     }
                 }
             }
-            */
-
 
 
 
@@ -180,6 +182,24 @@ namespace Eyer {
         }
 
         opensl->ClearAllCache();
+
+
+        if(videoFrame != nullptr){
+            delete videoFrame;
+            videoFrame = nullptr;
+        }
+
+        AVFrameQueue * videoRenderFrameQueue = nullptr;
+        frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_RENDER_VIDEO, &videoRenderFrameQueue);
+
+        while(videoRenderFrameQueue->Size() > 0){
+            Eyer::EyerAVFrame * frame = nullptr;
+            videoRenderFrameQueue->FrontPop(&frame);
+            if(frame != nullptr){
+                delete frame;
+                frame = nullptr;
+            }
+        }
 
         return 0;
     }

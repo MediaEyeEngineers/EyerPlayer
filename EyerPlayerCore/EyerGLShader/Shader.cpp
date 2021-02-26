@@ -198,7 +198,7 @@ namespace Eyer
     );
 
     char * EYER_GL_SHADER::YUV_2_TEXTURE_FRAGMENT_SHADER = (char *)SHADER(
-
+        precision mediump float;
         out vec4 color;
 
         uniform sampler2D y;

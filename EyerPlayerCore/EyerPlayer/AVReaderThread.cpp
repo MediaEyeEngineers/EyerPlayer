@@ -4,13 +4,15 @@
 #include "PlayerEvent.hpp"
 
 namespace Eyer {
-    AVReaderThread::AVReaderThread(Eyer::EyerString _url, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
+    AVReaderThread::AVReaderThread(Eyer::EyerString _url, const EyerPlayerConfig & _playerConfig, long long _openEventId, Eyer::EyerEventQueue * _eventQueue, AVFrameQueueManager * _frameQueueManager)
     {
         url = _url;
         openEventId = _openEventId;
         eventQueue = _eventQueue;
 
         frameQueueManager = _frameQueueManager;
+
+        playerConfig = _playerConfig;
     }
 
     AVReaderThread::~AVReaderThread()
@@ -56,6 +58,13 @@ namespace Eyer {
 
     int AVReaderThread::Seek(double time)
     {
+        EyerLog("Reader Seek Start\n");
+        if(reader != nullptr){
+            reader->Seek(time);
+        }
+        EyerLog("Reader Seek End\n");
+
+        EyerLog("Reader Seek Decoder Start\n");
         if(audioThread != nullptr){
             SEEK_Decoder_Runnable seekDecoderRunnable(audioThread);
             audioThread->PushEvent(&seekDecoderRunnable);
@@ -67,18 +76,14 @@ namespace Eyer {
             videoThread->StartEventLoop();
         }
 
-        EyerLog("Reader Seek Start\n");
-        if(reader != nullptr){
-            reader->Seek(time);
-        }
-        EyerLog("Reader Seek End\n");
-
         if(audioThread != nullptr){
             audioThread->StopEventLoop();
         }
         if(videoThread != nullptr){
             videoThread->StopEventLoop();
         }
+
+        EyerLog("Reader Seek Decoder End\n");
 
         return 0;
     }
@@ -137,11 +142,14 @@ namespace Eyer {
 
             if(videoThread == nullptr){
                 // 创建视频解码线程
-                videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
-                // videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+                if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
+                    videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+                }
+                else if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
+                    videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
+                }
                 videoThread->Start();
             }
-
         }
         // 获取音频流编号
         audioStreamIndex = reader->GetAudioStreamIndex();
@@ -179,6 +187,7 @@ namespace Eyer {
             EventLoop();
 
             int videoCacheSize = videoThread->GetPacketSize();
+            // EyerLog("videoCacheSize: %d\n", videoCacheSize);
             // int audioCacheSize = audioThread->GetPacketSize();
             int audioCacheSize = 0;
             // EyerLog("Video CacheSize: %d, Audio CacheSize: %d\n", videoCacheSize, audioCacheSize);
@@ -236,7 +245,7 @@ namespace Eyer {
             delete audioThread;
             audioThread = nullptr;
         }
-         */
+        */
 
         EyerLog("AVReader Thread Stop\n");
 

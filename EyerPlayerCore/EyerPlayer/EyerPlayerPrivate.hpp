@@ -2,6 +2,8 @@
 #define	EYER_PLAYER_PRIVATE_H
 
 #include "EyerPlayerEventManager.hpp"
+#include "EyerGLRenderTask/YUVRenderTask.hpp"
+#include "EyerGLRenderTask/YUVRender.hpp"
 #include <string>
 #include <jni.h>
 
@@ -13,6 +15,13 @@ namespace Eyer
         EyerPlayerEventManager * eventManager = nullptr;
         std::string url;
         jobject surface = nullptr;
+        EyerPlayerConfig playerConfig;
+
+        YUVRenderTask * yuvRenderTask = nullptr;
+
+        YUVRender yuvRender;
+
+        AVFrameQueueManager * frameQueueManager = nullptr;
     };
 }
 

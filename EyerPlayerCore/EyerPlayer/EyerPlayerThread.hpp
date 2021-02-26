@@ -12,6 +12,7 @@
 #include "EyerCodec/EyerCodec.hpp"
 #include "EyerPlayerThread.hpp"
 #include "MediaInfo.hpp"
+#include "EyerPlayer.hpp"
 
 namespace Eyer {
     class AVReaderThread;
@@ -32,7 +33,8 @@ namespace Eyer {
     class AVReaderThread : public Eyer::EyerThread
     {
     public:
-        AVReaderThread(Eyer::EyerString url, long long openEventId, Eyer::EyerEventQueue * eventQueue, AVFrameQueueManager * frameQueueManager);
+        AVReaderThread(Eyer::EyerString _url, const Eyer::EyerPlayerConfig &_playerConfig, long long _openEventId, EyerEventQueue *_eventQueue, AVFrameQueueManager *_frameQueueManager);
+
         ~AVReaderThread();
 
         virtual void Run();
@@ -66,6 +68,8 @@ namespace Eyer {
 
         Eyer::EyerAVReader * reader = nullptr;
         int representation = 1;
+
+        Eyer::EyerPlayerConfig playerConfig;
     };
 
 
@@ -138,10 +142,11 @@ namespace Eyer {
         STATUS_PLAYING = 1,
         STATUS_PAUSEING = 2
     };
+
     class AVPlayCtrThread : public Eyer::EyerThread
     {
     public:
-        AVPlayCtrThread(AVFrameQueueManager * frameQueueManager, EyerEventQueue * eventQueue, MediaInfo & mediaInfo, double videoTime);
+        AVPlayCtrThread(const Eyer::EyerPlayerConfig & _playerConfig, AVFrameQueueManager * frameQueueManager, EyerEventQueue * eventQueue, MediaInfo & mediaInfo, double videoTime);
         ~AVPlayCtrThread();
 
         virtual void Run();
@@ -152,6 +157,7 @@ namespace Eyer {
         int Pause();
         int Seek(double time);
     private:
+        Eyer::EyerPlayerConfig playerConfig;
         AVFrameQueueManager * frameQueueManager = nullptr;
         EyerEventQueue * eventQueue = nullptr;
 

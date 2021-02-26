@@ -89,6 +89,54 @@ JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_switch_1representa
 
 /*
  * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_ctx_create
+ * Signature: (Landroid/view/Surface;J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1ctx_1create
+  (JNIEnv *, jclass, jobject, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_ctx_set_wh
+ * Signature: (JII)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1ctx_1set_1wh
+  (JNIEnv *, jclass, jlong, jint, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_gl_ctx_destroyed
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1gl_1ctx_1destroyed
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_render_init
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1render_1init
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_render_draw
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1render_1draw
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
+ * Method:    player_render_uninit
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_eyer_eyerplayer_EyerPlayerJNI_player_1render_1uninit
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_eyer_eyerplayer_EyerPlayerJNI
  * Method:    player_gl_init
  * Signature: ()I
  */

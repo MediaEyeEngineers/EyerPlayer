@@ -16,11 +16,6 @@ namespace Eyer
     {
         EyerLog("EyerGLContextThread Start\n");
 
-        EGLContext mEglContext;
-        EGLConfig eglConfig;
-        EGLSurface window;
-        EGLDisplay mEglDisplay;
-
         const EGLint attrib_config_list[] = {
                 EGL_RENDERABLE_TYPE,    EGL_OPENGL_ES3_BIT,
                 EGL_SURFACE_TYPE,       EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
@@ -77,30 +72,15 @@ namespace Eyer
 
         eglMakeCurrent(mEglDisplay, window, window, mEglContext);
 
-        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        Render();
+
+        /*
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
-
-            int queueSize = taskQueue.Size();
-            while(queueSize > 0){
-                EyerGLRenderTask * renderTask = nullptr;
-                taskQueue.FrontPop(&renderTask);
-                if(renderTask != nullptr){
-                    renderTask->Init();
-
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                    renderTask->Render();
-                    glFinish();
-                    eglSwapBuffers(mEglDisplay, window);
-
-                    renderTask->Destory();
-
-                    delete renderTask;
-                }
-                queueSize = taskQueue.Size();
-            }
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
-
+        */
 
         eglDestroySurface(mEglDisplay, window);
         eglDestroyContext(mEglDisplay, mEglContext);
@@ -109,16 +89,16 @@ namespace Eyer
         EyerLog("EyerGLContextThread End\n");
     }
 
+    int EyerGLContextThread::SwapBuffers()
+    {
+        eglSwapBuffers(mEglDisplay, window);
+        return 0;
+    }
+
     int EyerGLContextThread::SetWH(int _w, int _h)
     {
         w = _w;
         h = _h;
-        return 0;
-    }
-
-    int EyerGLContextThread::AddRenderTask(EyerGLRenderTask * task)
-    {
-        taskQueue.Push(task);
         return 0;
     }
 

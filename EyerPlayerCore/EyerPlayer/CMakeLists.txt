@@ -22,6 +22,7 @@ add_library(
         AVFrameQueueManager.cpp
         EyerPlayerCallback.cpp
 
+        EyerPlayerRenderThread.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")

@@ -280,6 +280,8 @@ namespace Eyer
 
         int GetFrameSize();
         int GetSampleRate();
+
+        int Flush();
     };
 
     enum CodecId
