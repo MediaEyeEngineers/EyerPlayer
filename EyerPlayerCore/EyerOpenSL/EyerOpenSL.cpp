@@ -28,7 +28,7 @@ namespace Eyer
     }
 
 
-    EyerOpenSL::EyerOpenSL(MediaInfo m)
+    EyerOpenSL::EyerOpenSL(MediaInfo &m)
     {
         audioFrameQueue = new AVFrameQueue();
 

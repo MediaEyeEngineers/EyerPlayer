@@ -218,15 +218,5 @@ namespace Eyer
     }
 
 
-    int EyerAVReader::getAudioChannels(int audioStreamIndex){
-        return piml->formatCtx->streams[audioStreamIndex]->codec->channels;
-    }
 
-    int EyerAVReader::getAudioSampleRate(int audioStreamIndex){
-        return piml->formatCtx->streams[audioStreamIndex]->codec->sample_rate;
-    }
-
-    std::string EyerAVReader::getCodecName(int index){
-        return avcodec_get_name(piml->formatCtx->streams[index]->codec->codec_id);
-    }
 }

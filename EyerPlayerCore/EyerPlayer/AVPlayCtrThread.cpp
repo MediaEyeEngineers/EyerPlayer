@@ -29,7 +29,6 @@ namespace Eyer {
     {
         mediaInfo.Print();
 
-
         JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
         EyerLog("PlayCtr Thread Start\n");
 

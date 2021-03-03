@@ -217,11 +217,7 @@ namespace Eyer
         int PrintInfo();
 
 
-        int getAudioChannels(int audioStreamIndex);
 
-        int getAudioSampleRate(int audioStreamIndex);
-
-        std::string getCodecName(int index);
 
     };
 
@@ -254,6 +250,12 @@ namespace Eyer
         EyerAVStreamPrivate * piml = nullptr;
         EyerAVRational timebase;
         double duration = 0;
+
+    private:
+
+
+
+
     public:
         EyerAVStream();
         ~EyerAVStream();
@@ -270,6 +272,14 @@ namespace Eyer
 
         int GetWidth();
         int GetHeight();
+
+        int GetAudioChannels();
+
+        int GetAudioSampleRate();
+
+        std::string GetCodecName();
+
+
     };
 
     class EyerAVDecoder

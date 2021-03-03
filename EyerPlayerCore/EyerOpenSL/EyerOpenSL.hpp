@@ -21,7 +21,7 @@ namespace Eyer{
 
     class EyerOpenSL {
     public:
-        EyerOpenSL(MediaInfo m);
+        EyerOpenSL(MediaInfo &m);
         ~EyerOpenSL();
 
         int Print();
