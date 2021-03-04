@@ -220,9 +220,11 @@ namespace Eyer
             yuv.y = texture(u, t).r - 0.5;
             yuv.z = texture(v, t).r - 0.5;
 
+            rgb = mat3( 1, 1, 1,
+                        0, -0.3437, 1.7722,
+                        1.4017, -0.7142, 0) * yuv;
 
-
-            color = vec4(yuv, 1.0);
+            color = vec4(rgb, 1.0);
         }
     );
 
