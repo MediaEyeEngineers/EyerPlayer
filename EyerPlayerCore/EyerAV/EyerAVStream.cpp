@@ -86,4 +86,29 @@ namespace Eyer
     {
         return piml->codecpar->height;
     }
+
+    int EyerAVStream::GetAudioChannels(){
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){
+            return -1;
+        }
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_AUDIO){
+            return piml->codec->channels;
+        }
+        return -2;
+    }
+
+    int EyerAVStream::GetAudioSampleRate(){
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){
+            return -1;
+        }
+        if(piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_AUDIO){
+            return piml->codec->sample_rate;
+        }
+        return -2;
+    }
+
+    std::string EyerAVStream::GetCodecName(){
+        return avcodec_get_name(piml->codec->codec_id);
+    }
+
 }

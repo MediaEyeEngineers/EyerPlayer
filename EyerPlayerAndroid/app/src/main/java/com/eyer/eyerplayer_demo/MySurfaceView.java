@@ -85,7 +85,9 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        Log.e("Eyer OpenGL", "onSurfaceCreated");
+        // 控件创建把Opengl初始化
+
+        //T Log.e("Eyer OpenGL", "onSurfaceCreated");
 
         player.renderInit();
 
@@ -98,18 +100,23 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
 
-        Log.e("Eyer OpenGL", "textureId_mediacodec: " + textureId_mediacodec);
+        //T Log.e("Eyer OpenGL", "textureId_mediacodec: " + textureId_mediacodec);
+
 
         surfaceTexture = new SurfaceTexture(textureId_mediacodec);
+
         surface = new Surface(surfaceTexture);
+
         surfaceTexture.setOnFrameAvailableListener(this);
 
         player.setSurface(surface);
     }
 
+
+
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Log.e("Eyer OpenGL", "onSurfaceChanged");
+        //T Log.e("Eyer OpenGL", "onSurfaceChanged");
         GLES20.glViewport(0, 0, width, height);
     }
 
@@ -121,8 +128,6 @@ public class MySurfaceView extends GLSurfaceView implements GLSurfaceView.Render
 
         player.renderDraw(textureId_mediacodec);
     }
-
-
 
 
     @Override

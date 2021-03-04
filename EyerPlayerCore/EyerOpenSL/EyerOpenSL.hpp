@@ -9,6 +9,7 @@
 #include <SLES/OpenSLES_Android.h>
 #include <EyerAV/EyerAVAV.hpp>
 #include <EyerPlayer/PlayerQueueManager.hpp>
+#include "EyerPlayer/MediaInfo.hpp"
 
 namespace Eyer{
 
@@ -20,7 +21,7 @@ namespace Eyer{
 
     class EyerOpenSL {
     public:
-        EyerOpenSL();
+        EyerOpenSL(MediaInfo &m);
         ~EyerOpenSL();
 
         int Print();
@@ -29,6 +30,7 @@ namespace Eyer{
 
         int PutFrame(EyerAVFrame * frame);
         int GetFrame(EyerAVFrame * * frame);
+
     private:
         SLObjectItf engineObject = nullptr;
         SLEngineItf engineEngine = nullptr;
@@ -40,6 +42,8 @@ namespace Eyer{
 
 
         AVFrameQueue * audioFrameQueue = nullptr;
+
+
     };
 }
 

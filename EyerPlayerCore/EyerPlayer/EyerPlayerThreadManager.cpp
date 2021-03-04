@@ -55,6 +55,7 @@ namespace Eyer {
             playerCtr = new AVPlayCtrThread(playerConfig, frameQueueManager, eventQueue, mediaInfo, videoTime);
 
             glCtxMut.lock();
+            // glCtx为null
             playerCtr->SetGLCtx(glCtx);
             glCtxMut.unlock();
 

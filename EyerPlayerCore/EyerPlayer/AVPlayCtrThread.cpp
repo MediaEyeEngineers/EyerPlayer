@@ -13,7 +13,8 @@ namespace Eyer {
         frameQueueManager   = _frameQueueManager;
         eventQueue          = _eventQueue;
 
-        opensl              = new EyerOpenSL();
+        opensl              = new EyerOpenSL(_mediaInfo);
+
     }
 
     AVPlayCtrThread::~AVPlayCtrThread()
@@ -26,8 +27,9 @@ namespace Eyer {
 
     void AVPlayCtrThread::Run()
     {
-        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
+        mediaInfo.Print();
 
+        JNIEnv * env = Eyer::EyerJNIEnvManager::AttachCurrentThread();
         EyerLog("PlayCtr Thread Start\n");
 
         AVFrameQueue * videoFrameQueue = nullptr;
@@ -44,6 +46,9 @@ namespace Eyer {
         Eyer::EyerMediaCodec * mediaCodec = nullptr;
 
         long long lastProcessTime = Eyer::EyerTime::GetTime();
+
+
+
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 

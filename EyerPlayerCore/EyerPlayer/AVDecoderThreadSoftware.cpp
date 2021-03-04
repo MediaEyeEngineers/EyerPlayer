@@ -5,6 +5,7 @@ namespace Eyer {
     AVDecoderThreadSoftware::AVDecoderThreadSoftware (Eyer::EyerAVStream & _stream, AVFrameQueueManager * _frameQueueManager)
             : AVDecoderThread(_stream, _frameQueueManager)
     {
+
     }
 
     AVDecoderThreadSoftware::~AVDecoderThreadSoftware()
@@ -48,6 +49,7 @@ namespace Eyer {
 
         AVFrameQueue * frameQueue = nullptr;
         if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_VIDEO) {
+            // 获取到视频队列
             frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_VIDEO, &frameQueue);
         } else if (stream.GetStreamType() == Eyer::EyerAVStreamType::STREAM_TYPE_AUDIO) {
             frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &frameQueue);
@@ -69,10 +71,12 @@ namespace Eyer {
 
             Eyer::EyerAVPacket *pkt = nullptr;
             pktQueue.FrontPop(&pkt);
+
             if (pkt == nullptr) {
                 continue;
             }
 
+            // 如果当前是最后一个packet
             if(pkt->IsLast()){
                 if (pkt != nullptr) {
                     delete pkt;
@@ -114,6 +118,10 @@ namespace Eyer {
                 pkt = nullptr;
             }
         }
+
+
+
+        // 发送空包  查询是否还有残余 frame
 
         ret = decoder.SendPacket(nullptr);
         while (1) {

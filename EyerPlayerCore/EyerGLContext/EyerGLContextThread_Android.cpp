@@ -14,6 +14,7 @@ namespace Eyer
 
     void EyerGLContextThread::Run()
     {
+
         EyerLog("EyerGLContextThread Start\n");
 
         const EGLint attrib_config_list[] = {
