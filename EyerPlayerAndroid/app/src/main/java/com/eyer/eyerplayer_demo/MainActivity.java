@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         progress_seek_bar.setOnTouchListener(new MySeekBarOnTouchListener());
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -109,8 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class MyEyerPlayerListener implements EyerPlayerListener
-    {
+    private class MyEyerPlayerListener implements EyerPlayerListener {
         @Override
         public int onOpen(int status, EyerMediaInfo _mediaInfo) {
             String log = "open video ";
@@ -143,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             if(view == btn_open){
                 String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/demo.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/rangzidanfei.mp4";
-                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
+                videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/demo/demo1.mp4";
+                // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/xinxiaomen.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/size_merge.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/bbb_sunflower_2160p_60fps_normal.mp4";
                 // videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ST/w.mp4";
@@ -154,12 +156,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", videoPath);
 
                 File videoFile = new File(videoPath);
+
                 if(videoFile.exists()){
                     Log.e("MainActivity", videoFile.canRead() + "");
                 }
 
                 // videoPath = "http://redknot.cn/sohu/hls/shuw.m3u8";
                 // videoPath = "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd";
+
                 video_view.open(videoPath);
             }
             if(view == btn_play){
@@ -174,8 +178,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class MySeekBarOnTouchListener implements View.OnTouchListener
-    {
+    private class MySeekBarOnTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){

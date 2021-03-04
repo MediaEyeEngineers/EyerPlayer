@@ -103,6 +103,11 @@ namespace Eyer {
         int videoStreamIndex = -1;
         int audioStreamIndex = -1;
 
+        int audioChannels = -1;
+        int audioSampleRate = -1;
+        std::string aCodec;
+        std::string vCodec;
+
         double duration = 0.0;
 
         if(reader != nullptr){
@@ -129,10 +134,13 @@ namespace Eyer {
 
         // 获取视频流编号
         videoStreamIndex = reader->GetVideoStreamIndex();
+
         EyerLog("Video Index: %d\n", videoStreamIndex);
         if(videoStreamIndex >= 0){
             Eyer::EyerAVStream videoStream;
             reader->GetStream(videoStream, videoStreamIndex);
+
+            vCodec = videoStream.GetCodecName();
 
             Eyer::EyerAVRational timebase;
             reader->GetStreamTimeBase(timebase, videoStreamIndex);
@@ -142,21 +150,32 @@ namespace Eyer {
 
             if(videoThread == nullptr){
                 // 创建视频解码线程
+
                 if(playerConfig.videoDecoder == EyerVideoDecoder::SOFTWORE){
                     videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
                 }
                 else if(playerConfig.videoDecoder == EyerVideoDecoder::MEDIACODEC){
                     videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
                 }
+
+                // videoThread = new AVDecoderThreadMediaCodec(videoStream, frameQueueManager, surface);
+
+                videoThread = new AVDecoderThreadSoftware(videoStream, frameQueueManager);
+
                 videoThread->Start();
             }
         }
+
         // 获取音频流编号
         audioStreamIndex = reader->GetAudioStreamIndex();
-        EyerLog("Audio Index: %d\n", audioStreamIndex);
+
         if(audioStreamIndex >= 0){
             Eyer::EyerAVStream audioStream;
             reader->GetStream(audioStream, audioStreamIndex);
+
+            aCodec = audioStream.GetCodecName();
+            audioChannels = audioStream.GetAudioChannels();
+            audioSampleRate = audioStream.GetAudioSampleRate();
 
             Eyer::EyerAVRational timebase;
             reader->GetStreamTimeBase(timebase, audioStreamIndex);
@@ -167,6 +186,9 @@ namespace Eyer {
                 audioThread->Start();
             }
         }
+        // 设置音视频编码信息
+        mediaInfo.setVideoAndAudioInformation(vCodec, aCodec);
+        mediaInfo.setAudioInformation(audioSampleRate, audioChannels);
 
         status = AVReaderStatus::READER_STATUS_OPEN_SUCCESS;
 

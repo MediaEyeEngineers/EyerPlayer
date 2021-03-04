@@ -215,6 +215,10 @@ namespace Eyer
         int GetStreamTimeBase(EyerAVRational & rational, int streamIndex);
 
         int PrintInfo();
+
+
+
+
     };
 
     class EyerAVWriter
@@ -246,6 +250,12 @@ namespace Eyer
         EyerAVStreamPrivate * piml = nullptr;
         EyerAVRational timebase;
         double duration = 0;
+
+    private:
+
+
+
+
     public:
         EyerAVStream();
         ~EyerAVStream();
@@ -262,6 +272,14 @@ namespace Eyer
 
         int GetWidth();
         int GetHeight();
+
+        int GetAudioChannels();
+
+        int GetAudioSampleRate();
+
+        std::string GetCodecName();
+
+
     };
 
     class EyerAVDecoder
