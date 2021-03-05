@@ -28,7 +28,7 @@ namespace Eyer
     }
 
 
-    EyerOpenSL::EyerOpenSL(MediaInfo &m)
+    EyerOpenSL::EyerOpenSL(MediaInfo & mediaInfo)
     {
         audioFrameQueue = new AVFrameQueue();
 
@@ -70,15 +70,15 @@ namespace Eyer
 
 
         SLDataLocator_AndroidSimpleBufferQueue que = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 10};
-        SLDataFormat_PCM pcm = {
-                SL_DATAFORMAT_PCM,
-                static_cast<SLuint32>(m.audioStream.audioChannels),
-                static_cast<SLuint32>(m.audioStream.audioSampleRate*1000),
-                SL_PCMSAMPLEFORMAT_FIXED_32,
-                SL_PCMSAMPLEFORMAT_FIXED_32,
-                SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT ,
-                SL_BYTEORDER_LITTLEENDIAN
-        };
+        SLDataFormat_PCM pcm = {0};
+
+        pcm.formatType      = SL_DATAFORMAT_PCM;
+        pcm.numChannels     = mediaInfo.audioStream.audioChannels;
+        pcm.samplesPerSec   = mediaInfo.audioStream.audioSampleRate * 1000;
+        pcm.bitsPerSample   = SL_PCMSAMPLEFORMAT_FIXED_32;
+        pcm.containerSize   = SL_PCMSAMPLEFORMAT_FIXED_32;
+        pcm.channelMask     = SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT;
+        pcm.endianness      = SL_BYTEORDER_LITTLEENDIAN;
 
         SLDataSource ds = {&que, &pcm};
 

@@ -38,38 +38,29 @@ namespace Eyer {
         ~AVReaderThread();
 
         virtual void Run();
-        int MainRun();
 
         int Seek(double time);
 
-        int SwitchRepresentation(int representation);
-
-        int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
         int SetSurface(jobject _surface);
 
-        AVReaderStatus GetAVReaderStatus();
-        int GetMediaInfo(MediaInfo & mediaInfo);
+        const MediaInfo GetMediaInfo();
 
     private:
         Eyer::EyerString url;
         long long openEventId = -1;
         Eyer::EyerEventQueue * eventQueue = nullptr;
+        AVFrameQueueManager * frameQueueManager = nullptr;
+
+        jobject surface = nullptr;
 
         AVDecoderThread * audioThread = nullptr;
         AVDecoderThread * videoThread = nullptr;
 
-        AVFrameQueueManager * frameQueueManager = nullptr;
-
-        MediaInfo mediaInfo;
-        AVReaderStatus status = AVReaderStatus::READER_STATUS_WAIT;
-
-        Eyer::EyerGLContextThread * glCtx = nullptr;
-        jobject surface = nullptr;
-
         Eyer::EyerAVReader * reader = nullptr;
-        int representation = 1;
 
         Eyer::EyerPlayerConfig playerConfig;
+
+        MediaInfo mediaInfo;
     };
 
 
@@ -151,8 +142,6 @@ namespace Eyer {
 
         virtual void Run();
 
-        int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
-
         int Play();
         int Pause();
         int Seek(double time);
@@ -160,9 +149,6 @@ namespace Eyer {
         Eyer::EyerPlayerConfig playerConfig;
         AVFrameQueueManager * frameQueueManager = nullptr;
         EyerEventQueue * eventQueue = nullptr;
-
-        std::mutex mut;
-        Eyer::EyerGLContextThread * glCtx = nullptr;
 
         std::mutex statusMut;
         AVPlayCtrStatus status = AVPlayCtrStatus::STATUS_PLAYING;

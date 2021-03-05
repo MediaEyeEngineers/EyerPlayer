@@ -425,7 +425,7 @@ namespace Eyer {
         virtual void Run()
         {
             EyerLog("SWITCH_Representation_Runnable\n");
-            readerThread->SwitchRepresentation(representation);
+            // readerThread->SwitchRepresentation(representation);
         }
 
     private:

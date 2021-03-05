@@ -19,12 +19,8 @@ namespace Eyer
         int PushEvent(Eyer::EyerEvent * event);
         long long GenId();
 
-        int SetGLCtx(Eyer::EyerGLContextThread * _glCtx);
-        int UnbindGLCtx();
-
         int SetSurface(jobject _surface);
         int SetCallback(EyerPlayerCallback * callback);
-
 
     private:
         EyerEventQueue * eventQueue = nullptr;

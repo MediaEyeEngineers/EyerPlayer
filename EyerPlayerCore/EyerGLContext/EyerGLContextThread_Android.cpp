@@ -76,13 +76,6 @@ namespace Eyer
         glClearColor(0.0, 0.0, 0.0, 1.0);
         Render();
 
-        /*
-        while(!stopFlag){
-            Eyer::EyerTime::EyerSleepMilliseconds(1);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        }
-        */
-
         eglDestroySurface(mEglDisplay, window);
         eglDestroyContext(mEglDisplay, mEglContext);
         eglTerminate(mEglDisplay);
