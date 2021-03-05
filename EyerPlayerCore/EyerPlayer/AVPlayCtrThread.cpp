@@ -14,7 +14,6 @@ namespace Eyer {
         eventQueue          = _eventQueue;
 
         opensl              = new EyerOpenSL(_mediaInfo);
-
     }
 
     AVPlayCtrThread::~AVPlayCtrThread()
@@ -47,8 +46,6 @@ namespace Eyer {
 
         long long lastProcessTime = Eyer::EyerTime::GetTime();
 
-
-
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
 
@@ -63,11 +60,9 @@ namespace Eyer {
                 continue;
             }
 
-
-
-            double progress = dTime / mediaInfo.GetDuration();
+            double progress = dTime / mediaInfo.duration;
             if(progress >= 1.0){
-                // dTime = mediaInfo.GetDuration();
+                dTime = mediaInfo.duration;
             }
 
             long long processNowTime = Eyer::EyerTime::GetTime();
@@ -165,14 +160,6 @@ namespace Eyer {
         Eyer::EyerJNIEnvManager::jvm->DetachCurrentThread();
 
         EyerLog("PlayCtr Thread End\n");
-    }
-
-    int AVPlayCtrThread::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
-    {
-        mut.lock();
-        glCtx = _glCtx;
-        mut.unlock();
-        return 0;
     }
 
     int AVPlayCtrThread::Seek(double time)

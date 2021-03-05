@@ -17,9 +17,6 @@ namespace Eyer {
         int Seek(double time);
         int SwitchRepresentation(int representation);
 
-        int SetGLCtx(Eyer::EyerGLContextThread * glCtx);
-        int UnbindGLCtx();
-
         int SetSurface(jobject _surface);
 
     private:

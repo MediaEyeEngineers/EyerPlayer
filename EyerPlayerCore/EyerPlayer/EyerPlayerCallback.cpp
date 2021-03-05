@@ -30,9 +30,9 @@ namespace Eyer
             EyerLog("MediaCodec Thread: onOpen GetMethodID Fail\n");
         }
 
-        int width = mediaInfo.videoStream.GetWidth();
-        int height = mediaInfo.videoStream.GetHeight();
-        double duration = mediaInfo.GetDuration();
+        int width = mediaInfo.videoStream.width;
+        int height = mediaInfo.videoStream.height;
+        double duration = mediaInfo.duration;
 
         int ret = env->CallIntMethod(callback, eyerCallbackMethod_onOpen, (int)status, duration, width, height);
 

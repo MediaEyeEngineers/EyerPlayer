@@ -35,15 +35,11 @@ namespace Eyer{
         SLObjectItf engineObject = nullptr;
         SLEngineItf engineEngine = nullptr;
 
-
         SLObjectItf player = nullptr;
         SLPlayItf iplayer = nullptr;
         SLAndroidSimpleBufferQueueItf pcmQue = nullptr;
 
-
         AVFrameQueue * audioFrameQueue = nullptr;
-
-
     };
 }
 

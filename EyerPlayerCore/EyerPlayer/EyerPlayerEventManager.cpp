@@ -140,15 +140,6 @@ namespace Eyer
         return eventQueue->GetEventId();
     }
 
-    int EyerPlayerEventManager::SetGLCtx(Eyer::EyerGLContextThread * glCtx)
-    {
-        return playerManager->SetGLCtx(glCtx);
-    }
-    int EyerPlayerEventManager::UnbindGLCtx()
-    {
-        return playerManager->UnbindGLCtx();
-    }
-
     int EyerPlayerEventManager::SetSurface(jobject surface)
     {
         return playerManager->SetSurface(surface);

@@ -122,16 +122,6 @@ namespace Eyer
         return 0;
     }
 
-    int EyerPlayer::BindGLContext(Eyer::EyerGLContextThread * ctx)
-    {
-        return piml->eventManager->SetGLCtx(ctx);
-    }
-
-    int EyerPlayer::UnBindGLContext()
-    {
-        return piml->eventManager->UnbindGLCtx();
-    }
-
     int EyerPlayer::SetSurface(jobject _surface)
     {
         return piml->eventManager->SetSurface(_surface);
