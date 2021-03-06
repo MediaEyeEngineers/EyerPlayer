@@ -23,6 +23,7 @@ namespace Eyer {
             frameQueueManager->GetQueue(EventTag::FRAME_QUEUE_DECODER_AUDIO, &frameQueue);
         }
 
+        // 情况已经解出来待播放的帧
         if(frameQueue != nullptr){
             while(frameQueue->Size() > 0){
                 Eyer::EyerAVFrame * frame = nullptr;
@@ -34,17 +35,7 @@ namespace Eyer {
             }
         }
 
-
-        int ret = decoder.SendPacket(nullptr);
-        while (1) {
-            Eyer::EyerAVFrame frame;
-            ret = decoder.RecvFrame(&frame);
-            if(ret){
-                break;
-            }
-            EyerLog("frame: %lld\n", frame.GetPTS());
-        }
-
+        // 重制解码器
         decoder.Flush();
 
         return 0;
@@ -97,7 +88,6 @@ namespace Eyer {
             cacheSize -= pkt->GetSize();
 
             ret = decoder.SendPacket(pkt);
-            // EyerLog("Deocder ret: %d\n", ret);
             if (ret) {
                 continue;
             }

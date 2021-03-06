@@ -23,27 +23,7 @@ namespace Eyer {
 
         audioSampleRate = streamInfo.audioSampleRate;
         audioChannels = streamInfo.audioChannels;
-        videoOrAudioCodecName = streamInfo.videoOrAudioCodecName;
 
         return *this;
     }
-
-    int StreamInfo::GetWidth()
-    {
-        return width;
-    }
-
-    int StreamInfo::GetHeight()
-    {
-        return height;
-    }
-
-    int StreamInfo::SetWH(int w, int h)
-    {
-        width = w;
-        height = h;
-        return 0;
-    }
-
-
 }
