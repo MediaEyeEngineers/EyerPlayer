@@ -6,6 +6,10 @@
 //
 
 #import "OGLControllerViewController.h"
+#import <OpenGLES/EAGLIOSurface.h>
+#import <GLKit/GLKit.h>
+
+#include "Test.hpp"
 
 @interface OGLControllerViewController ()
 
@@ -16,13 +20,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor redColor];
     
     NSLog(@"OGLControllerViewController viewDidLoad\n");
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+
+    
+    int width = self.view.frame.size.width;
+    int height = self.view.frame.size.height;
+    
+    RedknotTest test;
+    
+    NSLog(@"width: %d, height: %d\n", width, height);
     
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     btn.frame = CGRectMake(100, 100, 100, 100);

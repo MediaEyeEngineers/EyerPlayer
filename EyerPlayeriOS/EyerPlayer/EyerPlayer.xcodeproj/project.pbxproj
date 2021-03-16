@@ -12,7 +12,8 @@
 		013D134126005B2200AC9B7F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 013D134026005B2200AC9B7F /* main.m */; };
 		013D134B26005B2300AC9B7F /* EyerPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 013D134A26005B2300AC9B7F /* EyerPlayerTests.m */; };
 		013D135626005B2300AC9B7F /* EyerPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 013D135526005B2300AC9B7F /* EyerPlayerUITests.m */; };
-		013D136B26005F5B00AC9B7F /* OGLControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 013D136A26005F5B00AC9B7F /* OGLControllerViewController.m */; };
+		013D136B26005F5B00AC9B7F /* OGLControllerViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 013D136A26005F5B00AC9B7F /* OGLControllerViewController.mm */; };
+		013D137D2600944500AC9B7F /* Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 013D137B2600944500AC9B7F /* Test.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +47,9 @@
 		013D135526005B2300AC9B7F /* EyerPlayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EyerPlayerUITests.m; sourceTree = "<group>"; };
 		013D135726005B2300AC9B7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		013D136926005F5B00AC9B7F /* OGLControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OGLControllerViewController.h; sourceTree = "<group>"; };
-		013D136A26005F5B00AC9B7F /* OGLControllerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OGLControllerViewController.m; sourceTree = "<group>"; };
+		013D136A26005F5B00AC9B7F /* OGLControllerViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OGLControllerViewController.mm; sourceTree = "<group>"; };
+		013D137B2600944500AC9B7F /* Test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Test.cpp; sourceTree = "<group>"; };
+		013D137C2600944500AC9B7F /* Test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Test.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +106,9 @@
 				013D133F26005B2200AC9B7F /* Info.plist */,
 				013D134026005B2200AC9B7F /* main.m */,
 				013D136926005F5B00AC9B7F /* OGLControllerViewController.h */,
-				013D136A26005F5B00AC9B7F /* OGLControllerViewController.m */,
+				013D136A26005F5B00AC9B7F /* OGLControllerViewController.mm */,
+				013D137B2600944500AC9B7F /* Test.cpp */,
+				013D137C2600944500AC9B7F /* Test.hpp */,
 			);
 			path = EyerPlayer;
 			sourceTree = "<group>";
@@ -253,7 +258,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				013D136B26005F5B00AC9B7F /* OGLControllerViewController.m in Sources */,
+				013D136B26005F5B00AC9B7F /* OGLControllerViewController.mm in Sources */,
+				013D137D2600944500AC9B7F /* Test.cpp in Sources */,
 				013D133026005B2100AC9B7F /* AppDelegate.m in Sources */,
 				013D134126005B2200AC9B7F /* main.m in Sources */,
 			);
