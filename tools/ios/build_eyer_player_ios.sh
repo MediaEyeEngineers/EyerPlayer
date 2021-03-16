@@ -22,5 +22,10 @@ cmake ../ \
 -DCMAKE_TOOLCHAIN_FILE=${basepath}/tools/ios-cmake/ios.toolchain.cmake \
 -DPLATFORM=OS64COMBINED
 
-cmake --build . --config Release
-cmake --install . --config Release
+# cmake --build . --config Release
+# cmake --install . --config Release
+
+cmake --build . --config Release --target install
+
+cd ${basepath}
+cp -r EyerPlayerCore/install Lib/player_install
