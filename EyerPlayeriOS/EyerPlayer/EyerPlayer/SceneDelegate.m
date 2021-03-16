@@ -2,8 +2,7 @@
 //  SceneDelegate.m
 //  EyerPlayer
 //
-//  Created by Yuqiao Miao on 2020/8/31.
-//  Copyright © 2020 Yuqiao Miao. All rights reserved.
+//  Created by lichi on 2021/3/16.
 //
 
 #import "SceneDelegate.h"
@@ -26,7 +25,7 @@
     // Called as the scene is being released by the system.
     // This occurs shortly after the scene enters the background, or when its session is discarded.
     // Release any resources associated with this scene that can be re-created the next time the scene connects.
-    // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+    // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
 }
 
 

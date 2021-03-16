@@ -2,14 +2,13 @@
 //  ViewController.h
 //  EyerPlayer
 //
-//  Created by Yuqiao Miao on 2020/8/31.
-//  Copyright © 2020 Yuqiao Miao. All rights reserved.
+//  Created by lichi on 2021/3/16.
 //
 
 #import <UIKit/UIKit.h>
-#import <GLKit/GLKView.h>
 
 @interface ViewController : UIViewController
+
 
 @end
 
