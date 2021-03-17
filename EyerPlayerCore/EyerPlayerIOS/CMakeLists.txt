@@ -1,22 +1,22 @@
 include_directories (../)
 include_directories (./)
 
-add_library(
+ADD_LIBRARY(
         EyerPlayerIOS
-        SHARED
+        STATIC
         EyerPlayerIOS.hpp
         EyerPlayerIOS.cpp
 )
 
-set(HEADER_FILES
+SET(HEADER_FILES
         EyerPlayerIOS.hpp
 )
 
-set(RESOURCE_FILES
+SET(RESOURCE_FILES
         README.md
 )
 
-set_target_properties(EyerPlayerIOS PROPERTIES
+SET_TARGET_PROPERTIES(EyerPlayerIOS PROPERTIES
         FRAMEWORK TRUE
         FRAMEWORK_VERSION A
         MACOSX_FRAMEWORK_IDENTIFIER com.zzsin.eyerplayer

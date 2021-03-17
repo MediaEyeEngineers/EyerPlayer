@@ -8,6 +8,7 @@
 #import "OGLControllerViewController.h"
 #import <OpenGLES/EAGLIOSurface.h>
 #import <GLKit/GLKit.h>
+#import <EyerPlayerIOS/EyerPlayerIOS.hpp>
 
 #include "Test.hpp"
 
@@ -28,10 +29,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    
     int width = self.view.frame.size.width;
     int height = self.view.frame.size.height;
     
+    Eyer::EyerPlayerIOS player;
     RedknotTest test;
     
     NSLog(@"width: %d, height: %d\n", width, height);
