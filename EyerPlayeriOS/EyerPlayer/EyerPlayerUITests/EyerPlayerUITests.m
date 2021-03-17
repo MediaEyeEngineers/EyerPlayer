@@ -2,8 +2,7 @@
 //  EyerPlayerUITests.m
 //  EyerPlayerUITests
 //
-//  Created by Yuqiao Miao on 2020/8/31.
-//  Copyright © 2020 Yuqiao Miao. All rights reserved.
+//  Created by lichi on 2021/3/16.
 //
 
 #import <XCTest/XCTest.h>
@@ -39,7 +38,7 @@
 - (void)testLaunchPerformance {
     if (@available(macOS 10.15, iOS 13.0, tvOS 13.0, *)) {
         // This measures how long it takes to launch your application.
-        [self measureWithMetrics:@[XCTOSSignpostMetric.applicationLaunchMetric] block:^{
+        [self measureWithMetrics:@[[[XCTApplicationLaunchMetric alloc] init]] block:^{
             [[[XCUIApplication alloc] init] launch];
         }];
     }
