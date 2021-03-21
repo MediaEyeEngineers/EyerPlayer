@@ -55,9 +55,6 @@ namespace Eyer {
         EyerPlayer();
         ~EyerPlayer();
 
-        int BindGLContext(Eyer::EyerGLContextThread * ctx);
-        int UnBindGLContext();
-
         int SetSurface(jobject surface);
         int SetCallback(EyerPlayerCallback * callback);
 

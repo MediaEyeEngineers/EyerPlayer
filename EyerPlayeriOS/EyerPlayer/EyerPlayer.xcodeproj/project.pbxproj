@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0143B19A25E8F961001A08D2 /* Box.m in Sources */ = {isa = PBXBuildFile; fileRef = 0143B19925E8F961001A08D2 /* Box.m */; };
+		0143B1A325E90529001A08D2 /* MyGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0143B1A225E90529001A08D2 /* MyGLView.m */; };
 		40A38DC324FC287100DE1263 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC224FC287100DE1263 /* AppDelegate.m */; };
 		40A38DC624FC287100DE1263 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC524FC287100DE1263 /* SceneDelegate.m */; };
 		40A38DC924FC287100DE1263 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A38DC824FC287100DE1263 /* ViewController.m */; };
@@ -37,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0143B19825E8F961001A08D2 /* Box.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Box.h; sourceTree = "<group>"; };
+		0143B19925E8F961001A08D2 /* Box.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Box.m; sourceTree = "<group>"; };
+		0143B1A125E90529001A08D2 /* MyGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyGLView.h; sourceTree = "<group>"; };
+		0143B1A225E90529001A08D2 /* MyGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyGLView.m; sourceTree = "<group>"; };
 		40A38DBE24FC287100DE1263 /* EyerPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyerPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A38DC124FC287100DE1263 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		40A38DC224FC287100DE1263 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -120,6 +126,10 @@
 				40A38DCF24FC287300DE1263 /* LaunchScreen.storyboard */,
 				40A38DD224FC287300DE1263 /* Info.plist */,
 				40A38DD324FC287300DE1263 /* main.m */,
+				0143B19825E8F961001A08D2 /* Box.h */,
+				0143B19925E8F961001A08D2 /* Box.m */,
+				0143B1A125E90529001A08D2 /* MyGLView.h */,
+				0143B1A225E90529001A08D2 /* MyGLView.m */,
 			);
 			path = EyerPlayer;
 			sourceTree = "<group>";
@@ -275,8 +285,10 @@
 				40A38DC924FC287100DE1263 /* ViewController.m in Sources */,
 				40A38DC324FC287100DE1263 /* AppDelegate.m in Sources */,
 				40A38DF824FC312100DE1263 /* MyOpenGLView.m in Sources */,
+				0143B19A25E8F961001A08D2 /* Box.m in Sources */,
 				40A38DD424FC287300DE1263 /* main.m in Sources */,
 				40A38DC624FC287100DE1263 /* SceneDelegate.m in Sources */,
+				0143B1A325E90529001A08D2 /* MyGLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,7 +464,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zzsin.eyerplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -469,7 +481,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = videox.video.EyerPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zzsin.eyerplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

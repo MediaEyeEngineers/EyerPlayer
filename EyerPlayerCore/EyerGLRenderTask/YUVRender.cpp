@@ -74,7 +74,6 @@ namespace Eyer
         yuv2texture->PutTexture("v", v, 2);
 
         yuv2texture->PutUniform1i("colorRange", 1);
-        yuv2texture->PutUniform1i("reverseY", 1);
 
         free(yData);
         free(uData);

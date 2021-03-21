@@ -44,21 +44,10 @@ namespace Eyer {
             return -1;
         }
 
-        if(readerThread->GetAVReaderStatus() != AVReaderStatus::READER_STATUS_OPEN_SUCCESS){
-            return -2;
-        }
-
-        MediaInfo mediaInfo;
-        readerThread->GetMediaInfo(mediaInfo);
+        MediaInfo mediaInfo = readerThread->GetMediaInfo();
 
         if(playerCtr == nullptr){
             playerCtr = new AVPlayCtrThread(playerConfig, frameQueueManager, eventQueue, mediaInfo, videoTime);
-
-            glCtxMut.lock();
-            // glCtx为null
-            playerCtr->SetGLCtx(glCtx);
-            glCtxMut.unlock();
-
             playerCtr->Start();
         }
 
@@ -138,30 +127,6 @@ namespace Eyer {
         readerThread->PushEvent(&representationRunnable);
         readerThread->StartEventLoop();
         readerThread->StopEventLoop();
-
-        return 0;
-    }
-
-    int EyerPlayerThreadManager::SetGLCtx(Eyer::EyerGLContextThread * _glCtx)
-    {
-        glCtxMut.lock();
-        glCtx = _glCtx;
-        if(playerCtr != nullptr){
-            playerCtr->SetGLCtx(glCtx);
-        }
-        glCtxMut.unlock();
-
-        return 0;
-    }
-
-    int EyerPlayerThreadManager::UnbindGLCtx()
-    {
-        glCtxMut.lock();
-        glCtx = nullptr;
-        if(playerCtr != nullptr){
-            playerCtr->SetGLCtx(glCtx);
-        }
-        glCtxMut.unlock();
 
         return 0;
     }
