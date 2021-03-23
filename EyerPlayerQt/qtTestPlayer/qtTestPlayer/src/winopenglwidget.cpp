@@ -38,7 +38,9 @@ winOpenglWidget::~winOpenglWidget(){
     glDeleteBuffers(1, &eboID);
 }
 
-
+void winOpenglWidget::setSign(signalPlayer *sign){
+    this->playerSign = sign;
+}
 
 void winOpenglWidget::createPlayer(){
     if(player == nullptr){
@@ -49,17 +51,18 @@ void winOpenglWidget::createPlayer(){
 
     if(m_pTimer == nullptr){
         m_pTimer = new QTimer(this);
-        m_pTimer->setInterval(5);
+        m_pTimer->setInterval(1);
         connect(m_pTimer, &QTimer::timeout, this, [=](){
-             qDebug() << "m_pTimer is run ";
+             //qDebug() << "m_pTimer is run ";
              if(fream == nullptr){
-                player->controllerThread->freamQueue.Pop(&fream);
-                if(fream != nullptr){
-
-
-                   update();
+                if(player->controllerThread->stopFlag == 0){
+                    closePlayer();
+                }else{
+                    player->controllerThread->freamQueue.Pop(&fream);
+                    if(fream != nullptr){
+                        update();
+                    }
                 }
-
              }
         });
         m_pTimer->start();
@@ -108,7 +111,6 @@ void winOpenglWidget::closePlayer(){
         player = nullptr;
         qDebug() << "delete player; ";
     }
-    update();
 
 }
 
@@ -116,12 +118,12 @@ void winOpenglWidget::paintGL() {
     if(!isPlay){
         return;
     }
-    qDebug() << "paintGL";
+
     if(fream == nullptr){
         qDebug() << "fream == nullptr";
         return;
     }
-    std::cout << "playing: " << 1.0 * fream->getFreamTime() / 60000 << std::endl;;
+    //std::cout << "playing: " << 1.0 * fream->getFreamTime() / 60000 << std::endl;;
     int width=1920, height=1080;
 
     glClearColor(0.0, 0.0, 0.0, 0.0);

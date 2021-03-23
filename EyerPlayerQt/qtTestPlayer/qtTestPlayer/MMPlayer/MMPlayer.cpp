@@ -32,9 +32,7 @@ int MMPlayer::close() {
 
 	if (controllerThread != NULL) {
 		// 处于活跃线程 先暂停
-		if (controllerThread->stopFlag == 1) {
-			controllerThread->stop();
-		}
+        controllerThread->stop();
 		delete controllerThread;
 		controllerThread = nullptr;
 	}

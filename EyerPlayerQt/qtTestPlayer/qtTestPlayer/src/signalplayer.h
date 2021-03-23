@@ -1,7 +1,7 @@
 #ifndef SIGNALPLAYER_H
 #define SIGNALPLAYER_H
 
-#include "winopenglwidget.h"
+
 
 #include <QObject>
 #include <QWidget>
@@ -18,9 +18,9 @@ public:
     void stop();
     void conninuePlay();
     void close();
-
+QTimer *pTimer = nullptr;
 private:
-    QTimer *m_pTimer = nullptr;
+
 };
 
 #endif // SIGNALPLAYER_H

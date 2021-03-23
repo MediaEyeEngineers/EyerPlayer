@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include "MMPlayer/MMPlayer.h"
 #include <QDebug>
+#include <QTimer>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -16,7 +17,20 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     winOpenglWidget *winOpengl = new winOpenglWidget(ui->openglWidget);
     signalPlayer *s = new signalPlayer(this);
+    QTimer *timer = new QTimer(this);
+
     ui->lineEdit->setText("c://demo/demo1.mp4");
+
+    ui->playerTime->setDigitCount(5);
+    ui->playerTime->setStyleSheet("border: 1px solid green; color: green; background: silver;");// 设置样式
+    ui->playerTime->display(0);
+
+    timer->setInterval(1000);
+
+    connect(timer, &QTimer::timeout, this, [=](){
+        ui->playerTime->display( ui->playerTime->value()+1);
+        ui->horizontalSlider->setValue(ui->horizontalSlider->value()+1);
+    });
 
     connect(ui->openPathButton, &QPushButton::clicked, s, [=](){
 //    打开文件
@@ -24,11 +38,14 @@ Widget::Widget(QWidget *parent)
         s->openFile(this);
     });
 
-    connect(ui->playButton,&QPushButton::clicked, s, [=](){
+    connect(ui->playButton, &QPushButton::clicked, s, [=](){
         if(ui->lineEdit->text().length() >= 3){
             winOpengl->createPlayer();
         }
-        s->play(ui->playerTime);
+        if(timer != nullptr){
+            timer->start();
+        }
+//        s->play(ui->playerTime);
     });
 
 

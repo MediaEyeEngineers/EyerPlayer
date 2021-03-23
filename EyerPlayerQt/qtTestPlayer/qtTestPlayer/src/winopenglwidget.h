@@ -12,6 +12,7 @@
 
 #include "MMPlayer/MMPlayer.h"
 #include "MMThread/MMThread.h"
+#include "signalplayer.h"
 
 class winOpenglWidget:  public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -24,15 +25,22 @@ public:
     void stopPlayer();
     void continuePlayer();
     void closePlayer();
+
+    void setSign(signalPlayer *uiSign);
+
 protected:
     virtual void paintGL() override;
     virtual void initializeGL() override;
     virtual void resizeGL(int w, int h) override;
 
 private:
-     bool isPlay = false;
-    QWidget *parent = 0;
-    QTimer *m_pTimer = 0;
+    signalPlayer *playerSign;
+
+    bool isPlay = false;
+
+    QWidget *parent = nullptr;
+    QTimer *m_pTimer = nullptr;
+
     QOpenGLShaderProgram shaderProgram;
     MMPlayer *player = nullptr;
 
