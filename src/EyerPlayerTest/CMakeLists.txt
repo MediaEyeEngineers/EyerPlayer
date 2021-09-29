@@ -1,0 +1,18 @@
+INCLUDE_DIRECTORIES(../)
+INCLUDE_DIRECTORIES(./)
+
+ADD_EXECUTABLE(
+    EyerPlayerTest
+    Main.cpp
+)
+
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerPlayer)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerCore)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerThread)
+
+INSTALL(
+    TARGETS EyerPlayerTest
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
