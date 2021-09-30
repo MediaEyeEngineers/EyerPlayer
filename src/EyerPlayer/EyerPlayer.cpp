@@ -25,6 +25,12 @@ namespace Eyer
             piml->threadReader = new ThreadReader();
             piml->threadReader->Start();
         }
+
+        if(piml->threadPlayCtr == nullptr){
+            piml->threadPlayCtr = new ThreadPlayCtr();
+            piml->threadPlayCtr->Start();
+        }
+
         else {
             return -1;
         }
@@ -41,11 +47,19 @@ namespace Eyer
     int EyerPlayer::Stop()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
+
         if(piml->threadReader != nullptr){
             piml->threadReader->Stop();
             delete piml->threadReader;
             piml->threadReader = nullptr;
         }
+
+        if(piml->threadPlayCtr != nullptr){
+            piml->threadPlayCtr->Stop();
+            delete piml->threadPlayCtr;
+            piml->threadPlayCtr = nullptr;
+        }
+
         return 0;
     }
 }
