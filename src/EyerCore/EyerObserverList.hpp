@@ -51,9 +51,20 @@ namespace Eyer
             }
 
             t = vector[index];
-            NotifyObserver();
 
             return 0;
+        }
+
+        T Get(int index)
+        {
+            if(index < 0) {
+                // return -1;
+            }
+            if(index >= Size()){
+                // return -1;
+            }
+
+            return vector[index];
         }
 
         int Remove(int index)

@@ -1,7 +1,7 @@
 INCLUDE_DIRECTORIES (../)
 INCLUDE_DIRECTORIES (./)
 
-ADD_LIBRARY(
+ADD_LIBRARY (
         EyerPlayer
 
         EyerPlayer.hpp

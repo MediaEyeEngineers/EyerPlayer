@@ -25,12 +25,14 @@ namespace Eyer
             piml->threadReader = new ThreadReader();
             piml->threadReader->Start();
         }
+        else {
+            return -1;
+        }
 
         if(piml->threadPlayCtr == nullptr){
             piml->threadPlayCtr = new ThreadPlayCtr();
             piml->threadPlayCtr->Start();
         }
-
         else {
             return -1;
         }
