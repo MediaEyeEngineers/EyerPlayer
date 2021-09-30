@@ -9,6 +9,12 @@ ADD_LIBRARY(
 
         ThreadReader.hpp
         ThreadReader.cpp
+
+        ThreadDecode.hpp
+        ThreadDecode.cpp
+
+        ThreadPlayCtr.hpp
+        ThreadPlayCtr.cpp
 )
 
 SET(HEAD_FILES
