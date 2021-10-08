@@ -32,8 +32,11 @@ namespace Eyer
 
         int EventLoop();
 
+        int Notify();
+
     protected:
         std::atomic_int stopFlag {0};
+        std::condition_variable cv;
 
     private:
         std::thread * t = nullptr;

@@ -11,8 +11,9 @@ namespace Eyer
         EyerPlayer();
         ~EyerPlayer();
 
-        int Start();
+        int Play();
         int Pause();
+        int Resume();
         int Stop();
 
     private:

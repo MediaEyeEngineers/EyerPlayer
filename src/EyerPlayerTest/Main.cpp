@@ -5,18 +5,24 @@
 
 int main(int argc,char **argv)
 {
-    printf("hello world\n");
+    Eyer::BLOCK_TIME * blockTime = new Eyer::BLOCK_TIME("Main\n");
+
+
 
     Eyer::EyerPlayer player;
 
-    player.Start();
-
+    player.Play();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
 
     player.Pause();
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 1);
+
+    player.Resume();
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
 
     player.Stop();
 
+    delete blockTime;
 
     return 0;
 }

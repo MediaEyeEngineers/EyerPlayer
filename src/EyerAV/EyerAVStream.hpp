@@ -11,6 +11,11 @@ namespace Eyer
     public:
         EyerAVStream();
         ~EyerAVStream();
+
+        EyerAVStream(const EyerAVStream & stream);
+        EyerAVStream(EyerAVStream && stream);
+
+        EyerAVStream & operator = (const EyerAVStream & stream);
     public:
         EyerAVStreamPrivate * piml = nullptr;
     };

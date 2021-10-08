@@ -2,38 +2,39 @@
 
 #include "EyerPlayerPrivate.hpp"
 
+#include "EventRequest.hpp"
+#include "EventResponse.hpp"
+
+#include "EventRequest_Play.hpp"
+
 namespace Eyer
 {
     EyerPlayer::EyerPlayer()
     {
         piml = new EyerPlayerPrivate();
+        piml->threadEventLoop = new ThreadEventLoop();
+        piml->threadEventLoop->Start();
     }
 
     EyerPlayer::~EyerPlayer()
     {
-        Stop();
+        if(piml->threadEventLoop != nullptr){
+            piml->threadEventLoop->Stop();
+            delete piml->threadEventLoop;
+            piml->threadEventLoop = nullptr;
+        }
         if(piml != nullptr){
             delete piml;
             piml = nullptr;
         }
     }
 
-    int EyerPlayer::Start()
+    int EyerPlayer::Play()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        if(piml->threadReader == nullptr){
-            piml->threadReader = new ThreadReader();
-            piml->threadReader->Start();
-        }
 
-        if(piml->threadPlayCtr == nullptr){
-            piml->threadPlayCtr = new ThreadPlayCtr();
-            piml->threadPlayCtr->Start();
-        }
-
-        else {
-            return -1;
-        }
+        EyerSmartPtr<EventRequest_Play> event(new EventRequest_Play());
+        piml->threadEventLoop->PushEvent(event);
 
         return 0;
     }
@@ -41,25 +42,24 @@ namespace Eyer
     int EyerPlayer::Pause()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
+        EyerSmartPtr<EventRequest> event(new EventRequest());
+        piml->threadEventLoop->PushEvent(event);
+        return 0;
+    }
+
+    int EyerPlayer::Resume()
+    {
+        std::lock_guard<std::mutex> lg(piml->mut);
+        EyerSmartPtr<EventRequest> event(new EventRequest());
+        piml->threadEventLoop->PushEvent(event);
         return 0;
     }
 
     int EyerPlayer::Stop()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-
-        if(piml->threadReader != nullptr){
-            piml->threadReader->Stop();
-            delete piml->threadReader;
-            piml->threadReader = nullptr;
-        }
-
-        if(piml->threadPlayCtr != nullptr){
-            piml->threadPlayCtr->Stop();
-            delete piml->threadPlayCtr;
-            piml->threadPlayCtr = nullptr;
-        }
-
+        EyerSmartPtr<EventRequest> event(new EventRequest());
+        piml->threadEventLoop->PushEvent(event);
         return 0;
     }
 }

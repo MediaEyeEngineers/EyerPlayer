@@ -19,10 +19,6 @@
 #include "EyerAVADTS.hpp"
 #include "EyerAVADTSUtil.hpp"
 #include "EyerAVPixelFrame.hpp"
-#include "EyerAVCSEI.hpp"
-#include "EyerAnnexBParse.hpp"
-#include "EyerNALUnit.hpp"
-#include "EyerNALUnitSEI.hpp"
 #include "EyerAVDecoderBoxGroup.hpp"
 #include "EyerAVSnapshotTask.hpp"
 

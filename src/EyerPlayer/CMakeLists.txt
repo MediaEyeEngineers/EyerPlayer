@@ -1,7 +1,7 @@
 INCLUDE_DIRECTORIES (../)
 INCLUDE_DIRECTORIES (./)
 
-ADD_LIBRARY(
+ADD_LIBRARY (
         EyerPlayer
 
         EyerPlayer.hpp
@@ -15,6 +15,18 @@ ADD_LIBRARY(
 
         ThreadPlayCtr.hpp
         ThreadPlayCtr.cpp
+
+        ThreadEventLoop.hpp
+        ThreadEventLoop.cpp
+
+        EventRequest.hpp
+        EventRequest.cpp
+
+        EventResponse.hpp
+        EventResponse.cpp
+
+        EventRequest_Play.hpp
+        EventRequest_Play.cpp
 )
 
 SET(HEAD_FILES
