@@ -21,4 +21,23 @@ namespace Eyer
             piml = nullptr;
         }
     }
+
+    EyerAVStream::EyerAVStream(const EyerAVStream & stream)
+    {
+        *this = stream;
+    }
+
+    EyerAVStream::EyerAVStream(EyerAVStream && stream)
+    {
+        piml = new EyerAVStreamPrivate();
+        piml->codecpar = stream.piml->codecpar;
+        stream.piml->codecpar = nullptr;
+    }
+
+    EyerAVStream & EyerAVStream::operator = (const EyerAVStream & stream)
+    {
+        avcodec_parameters_copy(piml->codecpar, stream.piml->codecpar);
+        piml->timebase = stream.piml->timebase;
+        return *this;
+    }
 }

@@ -21,6 +21,7 @@ namespace Eyer
 
         int GetStreamCount();
         int GetStream(EyerAVStream & stream, int index);
+        EyerAVStream GetStream(int index);
 
         int GetTimebase(EyerAVRational & timebase, int streamIndex);
 

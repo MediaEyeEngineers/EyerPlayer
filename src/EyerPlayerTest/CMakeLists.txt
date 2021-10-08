@@ -13,6 +13,8 @@ TARGET_LINK_LIBRARIES(EyerPlayerTest EyerThread)
 
 TARGET_LINK_LIBRARIES(EyerPlayerTest avformat)
 TARGET_LINK_LIBRARIES(EyerPlayerTest avcodec)
+TARGET_LINK_LIBRARIES(EyerPlayerTest swresample)
+TARGET_LINK_LIBRARIES(EyerPlayerTest swscale)
 TARGET_LINK_LIBRARIES(EyerPlayerTest avutil)
 
 TARGET_LINK_LIBRARIES(EyerPlayerTest z)

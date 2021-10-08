@@ -24,7 +24,7 @@ namespace Eyer
             }
         }
 
-        int Push(T & t)
+        int Push(const T & t)
         {
             std::lock_guard<std::mutex> lg(mut);
             queue.push(t);

@@ -20,19 +20,54 @@ namespace Eyer
         int streamCount = reader.GetStreamCount();
         EyerLog("Stream Count: %d\n", streamCount);
 
-        int videoStream = reader.GetVideoStreamIndex();
-        EyerLog("Video Stream Index: %d\n", videoStream);
+        int videoStreamIndex = reader.GetVideoStreamIndex();
+        EyerLog("Video Stream Index: %d\n", videoStreamIndex);
 
-        int audioStream = reader.GetAudioStreamIndex();
-        EyerLog("Audio Stream Index: %d\n", audioStream);
+        int audioStreamIndex = reader.GetAudioStreamIndex();
+        EyerLog("Audio Stream Index: %d\n", audioStreamIndex);
 
-        ThreadDecode decoder;
-        decoder.Start();
+
+        EyerAVStream videoStream = reader.GetStream(videoStreamIndex);
+        Eyer::EyerObserverQueue<EyerAVPacket *> queueVideoPacket;
+        ThreadDecode videoDecoderThread(videoStream, &queueVideoPacket);
+        videoDecoderThread.Start();
+
+        EyerAVStream audioStream = reader.GetStream(audioStreamIndex);
+        Eyer::EyerObserverQueue<EyerAVPacket *> queueAideoPacket;
+        ThreadDecode audioDecoderThread(audioStream, &queueAideoPacket);
+        audioDecoderThread.Start();
+
         // 该线程用于读取视频流
         while(!stopFlag) {
+            EyerAVPacket * packet = new EyerAVPacket();
+            int ret = reader.Read(*packet);
+            if(ret){
+                // 读取失败或者网络出错
+                if(packet != nullptr){
+                    delete packet;
+                    packet = nullptr;
+                }
+                break;
+            }
 
+            // EyerLog("pts: %lld\n", packet->GetPTS());
+            if(packet->GetStreamIndex() == videoStreamIndex){
+                queueVideoPacket.Push(packet);
+            }
+            else if(packet->GetStreamIndex() == audioStreamIndex){
+                queueAideoPacket.Push(packet);
+            }
+            else {
+                if(packet != nullptr){
+                    delete packet;
+                    packet = nullptr;
+                }
+            }
         }
-        decoder.Stop();
+
+        videoDecoderThread.Stop();
+        audioDecoderThread.Stop();
+
         EyerLog("ThreadReader End\n");
     }
 }
