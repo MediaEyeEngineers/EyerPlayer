@@ -2,10 +2,7 @@
 
 #include "EyerPlayerPrivate.hpp"
 
-#include "EventRequest.hpp"
-#include "EventResponse.hpp"
-
-#include "EventRequest_Play.hpp"
+#include "EyerEvent/EyerEventHeader.hpp"
 
 namespace Eyer
 {
@@ -42,7 +39,8 @@ namespace Eyer
     int EyerPlayer::Pause()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        EyerSmartPtr<EventRequest> event(new EventRequest());
+
+        EyerSmartPtr<EventRequest> event(new EventRequest_Pause());
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }
@@ -58,7 +56,7 @@ namespace Eyer
     int EyerPlayer::Stop()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        EyerSmartPtr<EventRequest> event(new EventRequest());
+        EyerSmartPtr<EventRequest> event(new EventRequest_Stop());
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }

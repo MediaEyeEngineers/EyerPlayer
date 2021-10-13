@@ -5,10 +5,18 @@
 
 namespace Eyer
 {
+    class ThreadEventLoop;
+
     class ThreadReader : public EyerThread
     {
     public:
+        ThreadReader(ThreadEventLoop * _eventLoop);
+        ~ThreadReader();
+
         virtual void Run() override;
+
+    private:
+        ThreadEventLoop * eventLoop = nullptr;
     };
 }
 

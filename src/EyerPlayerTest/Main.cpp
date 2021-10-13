@@ -5,20 +5,20 @@
 
 int main(int argc,char **argv)
 {
-    Eyer::BLOCK_TIME * blockTime = new Eyer::BLOCK_TIME("Main\n");
+    Eyer::BLOCK_TIME * blockTime = new Eyer::BLOCK_TIME("Main");
 
 
 
     Eyer::EyerPlayer player;
 
     player.Play();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 5);
 
     player.Pause();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 1);
 
     player.Resume();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 5);
 
     player.Stop();
 

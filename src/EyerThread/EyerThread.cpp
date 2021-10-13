@@ -115,6 +115,7 @@ namespace Eyer
 
     int EyerThread::Notify()
     {
+        // std::unique_lock<std::mutex> locker(mut);
         cv.notify_all();
         return 0;
     }

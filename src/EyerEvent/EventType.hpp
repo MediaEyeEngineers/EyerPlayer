@@ -8,6 +8,12 @@ namespace Eyer
         PLAY_REQUEST,
         PLAY_RESPONSE,
 
+        PAUSE_REQUEST,
+        PAUSE_RESPONSE,
+
+        STOP_REQUEST,
+        STOP_RESPONSE,
+
         UNKNOW
     };
 }
