@@ -1,9 +1,21 @@
 #include "ThreadPlayCtr.hpp"
 
 #include "EyerCore/EyerCore.hpp"
+#include "ThreadEventLoop.hpp"
 
 namespace Eyer
 {
+    ThreadPlayCtr::ThreadPlayCtr(ThreadEventLoop * _eventLoop)
+        : eventLoop(_eventLoop)
+    {
+
+    }
+
+    ThreadPlayCtr::~ThreadPlayCtr()
+    {
+
+    }
+
     void ThreadPlayCtr::Run()
     {
         EyerLog("ThreadPlayCtr Start\n");

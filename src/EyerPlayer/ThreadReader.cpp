@@ -4,9 +4,21 @@
 #include "EyerAV/EyerAV.hpp"
 
 #include "ThreadDecode.hpp"
+#include "ThreadEventLoop.hpp"
 
 namespace Eyer
 {
+    ThreadReader::ThreadReader(ThreadEventLoop * _eventLoop)
+        : eventLoop(_eventLoop)
+    {
+
+    }
+
+    ThreadReader::~ThreadReader()
+    {
+
+    }
+
     void ThreadReader::Run()
     {
         EyerLog("ThreadReader Start\n");
@@ -25,6 +37,7 @@ namespace Eyer
 
         int audioStreamIndex = reader.GetAudioStreamIndex();
         EyerLog("Audio Stream Index: %d\n", audioStreamIndex);
+
 
 
         EyerAVStream videoStream = reader.GetStream(videoStreamIndex);

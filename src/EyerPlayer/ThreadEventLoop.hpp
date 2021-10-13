@@ -4,7 +4,9 @@
 #include "EyerThread/EyerThread.hpp"
 #include "EyerAV/EyerAV.hpp"
 #include "EyerCore/EyerCore.hpp"
-#include "Event.hpp"
+#include "EyerEvent/EyerEventHeader.hpp"
+#include "ThreadReader.hpp"
+#include "ThreadPlayCtr.hpp"
 
 namespace Eyer
 {
@@ -22,6 +24,12 @@ namespace Eyer
 
     private:
         EyerObserverQueue<EyerSmartPtr<Event>> eventQueue;
+
+        int ProcessEvent(const EyerSmartPtr<Event> & event);
+
+        // 线程
+        ThreadPlayCtr * playCtrThread = nullptr;
+        ThreadReader * readerThread = nullptr;
     };
 }
 

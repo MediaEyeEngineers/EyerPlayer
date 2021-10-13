@@ -36,7 +36,9 @@ namespace Eyer
 
     protected:
         std::atomic_int stopFlag {0};
+
         std::condition_variable cv;
+        std::mutex mut;
 
     private:
         std::thread * t = nullptr;
