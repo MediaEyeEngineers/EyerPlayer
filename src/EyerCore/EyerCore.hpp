@@ -19,7 +19,6 @@
 #include "EyerTable.hpp"
 #include "EyerRand.hpp"
 
-#include "EyerLogThread.hpp"
 #include "EyerBufferPlus.hpp"
 
 #include "EyerBitStream.hpp"
@@ -28,5 +27,6 @@
 #include "EyerSharedCount.hpp"
 #include "EyerFileReader.hpp"
 #include "EyerObserverList.hpp"
+#include "EyerObserverQueue.hpp"
 
 #endif

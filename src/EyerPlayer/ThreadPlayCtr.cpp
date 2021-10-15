@@ -5,7 +5,7 @@
 
 namespace Eyer
 {
-    ThreadPlayCtr::ThreadPlayCtr(ThreadEventLoop * _eventLoop)
+    ThreadPlayCtr::ThreadPlayCtr(QueueBox * _queueBox, ThreadEventLoop * _eventLoop)
         : eventLoop(_eventLoop)
     {
 

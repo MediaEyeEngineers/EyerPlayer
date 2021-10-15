@@ -1,18 +1,25 @@
 #include "ThreadDecode.hpp"
 
 #include "EyerCore/EyerCore.hpp"
+#include "QueueBox.hpp"
+#include "EyerAV/EyerAV.hpp"
 
 namespace Eyer
 {
-    ThreadDecode::ThreadDecode(const Eyer::EyerAVStream & _stream, Eyer::EyerObserverQueue<EyerAVPacket *> * _packetQueue)
+    ThreadDecode::ThreadDecode(const Eyer::EyerAVStream & _stream, QueueBox * _queueBox)
+        : stream(_stream)
+        , queueBox(_queueBox)
     {
-        stream = _stream;
-        packetQueue = _packetQueue;
     }
 
     ThreadDecode::~ThreadDecode()
     {
 
+    }
+
+    int ThreadDecode::GetStreamId()
+    {
+        return stream.GetStreamId();
     }
 
     void ThreadDecode::Run()
@@ -28,32 +35,7 @@ namespace Eyer
         }
 
         while(!stopFlag) {
-            if(packetQueue->Size() > 0){
-                EyerAVPacket * packet = nullptr;
-                packetQueue->FrontPop(packet);
-                if(packet != nullptr){
-                    decoder.SendPacket(*packet);
-                    while(1){
-                        EyerAVFrame * frame = new EyerAVFrame();
-                        ret = decoder.RecvFrame(*frame);
-                        if(ret){
-                            if(frame != nullptr){
-                                delete frame;
-                                frame = nullptr;
-                            }
-                            break;
-                        }
-                        EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
-                        if(frame != nullptr){
-                            delete frame;
-                            frame = nullptr;
-                        }
-                    }
 
-                    delete packet;
-                    packet = nullptr;
-                }
-            }
         }
 
         EyerLog("ThreadDecode End\n");

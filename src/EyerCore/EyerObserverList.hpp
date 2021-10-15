@@ -3,8 +3,8 @@
 
 #include <mutex>
 #include <queue>
-
 #include <vector>
+#include <algorithm>
 
 #include "EyerSubject.hpp"
 
@@ -87,8 +87,11 @@ namespace Eyer
             return vector.size();
         }
 
-
-
+        int Sort(bool (*sortFunc)(T & a, T & b))
+        {
+            std::sort(vector.begin(), vector.end(), sortFunc);
+            return 0;
+        }
 
         int PushLock(const T & t)
         {

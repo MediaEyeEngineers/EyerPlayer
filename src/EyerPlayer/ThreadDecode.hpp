@@ -7,17 +7,21 @@
 
 namespace Eyer
 {
+    class QueueBox;
+
     class ThreadDecode : public EyerThread
     {
     public:
-        ThreadDecode(const Eyer::EyerAVStream & stream, Eyer::EyerObserverQueue<EyerAVPacket *> * _packetQueue);
+        ThreadDecode(const Eyer::EyerAVStream & _stream, QueueBox * _queueBox);
         ~ThreadDecode();
 
         virtual void Run() override;
 
+        int GetStreamId();
+
     private:
-        Eyer::EyerObserverQueue<EyerAVPacket *> * packetQueue = nullptr;
         Eyer::EyerAVStream stream;
+        QueueBox * queueBox = nullptr;
     };
 }
 
