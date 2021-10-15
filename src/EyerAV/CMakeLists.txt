@@ -110,11 +110,6 @@ SET(HEAD_FILES
         EyerAVADTS.hpp
         EyerAVPixelFormat.hpp
         EyerAVPixelFrame.hpp
-        EyerAVCSEI.hpp
-        EyerAvcC.hpp
-        EyerAnnexBParse.hpp
-        EyerNALUnit.hpp
-        EyerNALUnitSEI.hpp
         EyerAVDecoderBoxGroup.hpp
         EyerAVDecoderLineParams.hpp
         EyerAVSnapshotTask.hpp

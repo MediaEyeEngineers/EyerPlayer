@@ -31,6 +31,7 @@ namespace Eyer
     {
         piml = new EyerAVStreamPrivate();
         piml->codecpar = stream.piml->codecpar;
+        piml->stream_id = stream.piml->stream_id;
         stream.piml->codecpar = nullptr;
     }
 
@@ -38,6 +39,12 @@ namespace Eyer
     {
         avcodec_parameters_copy(piml->codecpar, stream.piml->codecpar);
         piml->timebase = stream.piml->timebase;
+        piml->stream_id = stream.piml->stream_id;
         return *this;
+    }
+
+    int EyerAVStream::GetStreamId()
+    {
+        return piml->stream_id;
     }
 }

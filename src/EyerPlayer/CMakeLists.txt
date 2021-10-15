@@ -18,6 +18,9 @@ ADD_LIBRARY (
 
         ThreadEventLoop.hpp
         ThreadEventLoop.cpp
+
+        QueueBox.hpp
+        QueueBox.cpp
 )
 
 SET(HEAD_FILES

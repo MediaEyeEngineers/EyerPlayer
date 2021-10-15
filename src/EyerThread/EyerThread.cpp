@@ -37,8 +37,8 @@ namespace Eyer
             return -1;
         }
 
-        stopFlag = 1;
-        Notify();
+        SetStopFlag();
+
         if(t != nullptr){
             t->join();
             delete t;
@@ -46,6 +46,12 @@ namespace Eyer
         }
         stopFlag = 0;
 
+        return 0;
+    }
+
+    int EyerThread::SetStopFlag()
+    {
+        stopFlag = 1;
         return 0;
     }
 
@@ -84,8 +90,6 @@ namespace Eyer
 
         eventLoopFlag = true;
 
-        Notify();
-
         for(int i=0;i<eventQueue.size();i++){
             eventQueue[i]->promise.get_future().get();
         }
@@ -110,13 +114,6 @@ namespace Eyer
     int EyerThread::PushEvent(EyerRunnable * runnable)
     {
         eventQueue.push_back(runnable);
-        return 0;
-    }
-
-    int EyerThread::Notify()
-    {
-        // std::unique_lock<std::mutex> locker(mut);
-        cv.notify_all();
         return 0;
     }
 }

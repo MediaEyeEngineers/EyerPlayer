@@ -2,6 +2,7 @@
 #define EYERCAMERA_THREADPLAYCTR_HPP
 
 #include "EyerThread/EyerThread.hpp"
+#include "QueueBox.hpp"
 
 namespace Eyer
 {
@@ -10,13 +11,14 @@ namespace Eyer
     class ThreadPlayCtr : public EyerThread
     {
     public:
-        ThreadPlayCtr(ThreadEventLoop * _eventLoop);
+        ThreadPlayCtr(QueueBox * _queueBox, ThreadEventLoop * _eventLoop);
         ~ThreadPlayCtr();
 
         virtual void Run() override;
 
     private:
         ThreadEventLoop * eventLoop = nullptr;
+        QueueBox * queueBox = nullptr;
     };
 }
 

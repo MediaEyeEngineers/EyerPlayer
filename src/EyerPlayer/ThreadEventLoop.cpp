@@ -4,12 +4,10 @@ namespace Eyer
 {
     ThreadEventLoop::ThreadEventLoop()
     {
-        eventQueue.AddObserver(this);
     }
 
     ThreadEventLoop::~ThreadEventLoop()
     {
-        eventQueue.RemoveObserver(this);
     }
 
     int ThreadEventLoop::PushEvent(const EyerSmartPtr<Event> & event)
@@ -21,12 +19,10 @@ namespace Eyer
     void ThreadEventLoop::Run()
     {
         EyerLog("ThreadEventLoop Start\n");
-
-        std::unique_lock<std::mutex> locker(mut);
-
-        while(1){
-            if(stopFlag){
-                break;
+        std::unique_lock<std::mutex> locker(mtx);
+        while(!stopFlag){
+            while(!stopFlag && eventQueue.Size() <= 0) {
+                cv.wait(locker);
             }
 
             while(eventQueue.Size() > 0) {
@@ -36,19 +32,15 @@ namespace Eyer
                     ProcessEvent(event);
                 }
             }
-
-            // Eyer::EyerTime::EyerSleepMilliseconds(1);
-
-
-            cv.wait(locker);
         }
-
         EyerLog("ThreadEventLoop End\n");
     }
 
-    int ThreadEventLoop::Update()
+    int ThreadEventLoop::SetStopFlag()
     {
-        Notify();
+        std::unique_lock<std::mutex> locker(mtx);
+        stopFlag = 1;
+        cv.notify_all();
         return 0;
     }
 
@@ -59,11 +51,11 @@ namespace Eyer
             if(readerThread != nullptr){
                 // 报错，请先暂停
             }
-            readerThread = new ThreadReader(this);
+            readerThread = new ThreadReader(&queueBox, this);
             readerThread->Start();
 
-            playCtrThread = new ThreadPlayCtr(this);
-            playCtrThread->Start();
+            // playCtrThread = new ThreadPlayCtr(this);
+            // playCtrThread->Start();
         }
         else if(event->type == EventType::PAUSE_REQUEST){
             EyerLog("PAUSE_REQUEST\n");

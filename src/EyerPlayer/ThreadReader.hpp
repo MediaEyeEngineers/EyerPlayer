@@ -2,6 +2,7 @@
 #define EYERCAMERA_THREADREADER_HPP
 
 #include "EyerThread/EyerThread.hpp"
+#include "QueueBox.hpp"
 
 namespace Eyer
 {
@@ -10,13 +11,16 @@ namespace Eyer
     class ThreadReader : public EyerThread
     {
     public:
-        ThreadReader(ThreadEventLoop * _eventLoop);
+        ThreadReader(QueueBox * _queueBox, ThreadEventLoop * _eventLoop);
         ~ThreadReader();
 
         virtual void Run() override;
 
+        virtual int SetStopFlag() override;
+
     private:
         ThreadEventLoop * eventLoop = nullptr;
+        QueueBox * queueBox = nullptr;
     };
 }
 

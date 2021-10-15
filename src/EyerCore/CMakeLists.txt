@@ -35,12 +35,6 @@ add_library(
         EyerMD5.hpp
         EyerSockaddr.cpp
         EyerSockaddr.hpp
-        EyerLogThread.cpp
-        EyerLogThread.hpp
-        EyerLogBean.cpp
-        EyerLogBean.hpp
-        EyerLogParam.cpp
-        EyerLogParam.hpp
         BLOCK_TIME.cpp
         BLOCK_TIME.hpp
         EyerTable.cpp
@@ -55,7 +49,6 @@ add_library(
         EyerObserverQueue_C.cpp
         EyerBuffer.h
         EyerBuffer_C.cpp
-        eyer_log_thread_flag.hpp
         EyerBufferPlus.cpp
         EyerBufferPlus.hpp
 
@@ -101,9 +94,6 @@ set(head_files
         EyerMD5.hpp
         EyerSockaddr.hpp
         BLOCK_TIME.hpp
-        EyerLogParam.hpp
-        EyerLogBean.hpp
-        EyerLogThread.hpp
         EyerTable.hpp
         EyerRand.hpp
         EyerObserverQueue.h

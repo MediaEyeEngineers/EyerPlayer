@@ -10,6 +10,7 @@ namespace Eyer
     public:
         AVCodecParameters * codecpar = nullptr;
         AVRational timebase;
+        int stream_id = 0;
     };
 }
 

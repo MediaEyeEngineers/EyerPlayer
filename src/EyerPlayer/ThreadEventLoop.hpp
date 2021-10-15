@@ -7,10 +7,11 @@
 #include "EyerEvent/EyerEventHeader.hpp"
 #include "ThreadReader.hpp"
 #include "ThreadPlayCtr.hpp"
+#include "QueueBox.hpp"
 
 namespace Eyer
 {
-    class ThreadEventLoop : public EyerThread, public EyerObserver
+    class ThreadEventLoop : public EyerThread
     {
     public:
         ThreadEventLoop();
@@ -20,12 +21,16 @@ namespace Eyer
 
         virtual void Run() override;
 
-        virtual int Update() override;
+        virtual int SetStopFlag() override;
 
     private:
+        int ProcessEvent(const EyerSmartPtr<Event> & event);
+
+        std::mutex mtx;
+        std::condition_variable cv;
         EyerObserverQueue<EyerSmartPtr<Event>> eventQueue;
 
-        int ProcessEvent(const EyerSmartPtr<Event> & event);
+        QueueBox queueBox;
 
         // 线程
         ThreadPlayCtr * playCtrThread = nullptr;

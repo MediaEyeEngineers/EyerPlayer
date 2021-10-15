@@ -22,6 +22,8 @@ namespace Eyer
         int Start();
         int Stop();
 
+        virtual int SetStopFlag();
+
         virtual void Run() = 0;
 
 
@@ -32,13 +34,8 @@ namespace Eyer
 
         int EventLoop();
 
-        int Notify();
-
     protected:
         std::atomic_int stopFlag {0};
-
-        std::condition_variable cv;
-        std::mutex mut;
 
     private:
         std::thread * t = nullptr;
