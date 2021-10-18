@@ -19,8 +19,17 @@ namespace Eyer
 
         int GetStreamId();
 
+        int PutPacket(EyerAVPacket * packet);
+
+        virtual int SetStopFlag() override;
+
+    public:
+        std::atomic_int packetCacheSize {0};
+
     private:
         Eyer::EyerAVStream stream;
+        Eyer::EyerObserverQueue<EyerAVPacket *> packetQueue;
+
         QueueBox * queueBox = nullptr;
     };
 }

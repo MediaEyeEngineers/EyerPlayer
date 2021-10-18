@@ -21,6 +21,18 @@ ADD_LIBRARY (
 
         QueueBox.hpp
         QueueBox.cpp
+
+        VideoOutputQueue.hpp
+        VideoOutputQueue.cpp
+
+        DecodeQueue.hpp
+        DecodeQueue.cpp
+
+        DecodeQueueVideo.hpp
+        DecodeQueueVideo.cpp
+
+        DecodeQueueVideoFFmpeg.hpp
+        DecodeQueueVideoFFmpeg.cpp
 )
 
 SET(HEAD_FILES

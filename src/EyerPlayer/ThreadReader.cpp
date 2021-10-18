@@ -24,7 +24,12 @@ namespace Eyer
     {
         EyerLog("ThreadReader Start\n");
 
-        Eyer::EyerAVReader reader("/Users/miaoyuqiao/Desktop/HDR/1080_1920_HDR_Color_Card.mp4");
+        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/color_card_hevc_3840x2160_yuv420p10le_hlg_bt2020_rotate_270.MOV";
+        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/1080_1920_HDR_Color_Card.mp4";
+        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
+        Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
+
+        Eyer::EyerAVReader reader(path);
         int ret = reader.Open();
         if(ret){
             // 打开失败
@@ -40,37 +45,50 @@ namespace Eyer
         int audioStreamIndex = reader.GetAudioStreamIndex();
         EyerLog("Audio Stream Index: %d\n", audioStreamIndex);
 
-        EyerAVStream videoStream = reader.GetStream(videoStreamIndex);
-        EyerAVStream audioStream = reader.GetStream(audioStreamIndex);
+        const EyerAVStream & videoStream = reader.GetStream(videoStreamIndex);
+        const EyerAVStream & audioStream = reader.GetStream(audioStreamIndex);
 
         queueBox->AddStream(audioStream);
         queueBox->AddStream(videoStream);
         queueBox->StartDeocder();
 
-        std::unique_lock<std::mutex> locker(queueBox->mtx);
+
         // 该线程用于读取视频流
         while(!stopFlag) {
+            std::unique_lock<std::mutex> locker(queueBox->mtx);
             // 缓存 1MB
             int maxCahceSize = 1024 * 1024;
             while(!stopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
                 queueBox->cv.wait(locker);
             }
 
-            if(queueBox->GetPacketQueueCacheSize() < maxCahceSize){
-                EyerAVPacket * packet = new EyerAVPacket();
-                int ret = reader.Read(*packet);
-                if(ret){
-                    // 读取失败或者网络出错
-                    if(packet != nullptr){
-                        delete packet;
-                        packet = nullptr;
-                    }
-                    break;
+            if(queueBox->GetPacketQueueCacheSize() >= maxCahceSize){
+                continue;
+            }
+
+            // EyerLog("GetPacketQueueCacheSize: %d\n", queueBox->GetPacketQueueCacheSize());
+
+            locker.unlock();
+
+            EyerAVPacket * packet = new EyerAVPacket();
+            int ret = reader.Read(*packet);
+            if(ret){
+                // 读取出错
+                if(packet != nullptr){
+                    delete packet;
+                    packet = nullptr;
                 }
+                continue;
+            }
 
-                EyerLog("pts: %lld\n", packet->GetPTS());
-                queueBox->PutPacket(packet);
+            locker.lock();
+            ret = queueBox->PutPacket(packet);
+            if(ret == 0){
+                queueBox->cv.notify_all();
+            }
+            locker.unlock();
 
+            if(ret != 0){
                 if(packet != nullptr){
                     delete packet;
                     packet = nullptr;

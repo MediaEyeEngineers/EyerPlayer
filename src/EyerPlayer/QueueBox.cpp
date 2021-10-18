@@ -22,19 +22,19 @@ namespace Eyer
     {
         for(int i=0; i<streamList.size(); i++){
             const EyerAVStream & stream = streamList[i];
-            ThreadDecode * decoderThread = new ThreadDecode(stream, this);
-            decoderList.push_back(decoderThread);
-            decoderThread->Start();
+            ThreadDecode * decodeThread = new ThreadDecode(stream, this);
+            decodeThread->Start();
+            decoderList.push_back(decodeThread);
         }
         return 0;
     }
 
     int QueueBox::StopDecoder()
     {
-        for(int i=0;i<decoderList.size();i++){
-            ThreadDecode * decoderThread = decoderList[i];
-            decoderThread->Stop();
-            delete decoderThread;
+        for(int i=0; i<decoderList.size(); i++) {
+            ThreadDecode * decodeThread = decoderList[i];
+            decodeThread->Stop();
+            delete decodeThread;
         }
         decoderList.clear();
         return 0;
@@ -42,18 +42,24 @@ namespace Eyer
 
     int QueueBox::GetPacketQueueCacheSize()
     {
-        return packetCacheSize;
+        int size = 0;
+        for(int i=0; i<decoderList.size(); i++) {
+            ThreadDecode *decodeThread = decoderList[i];
+            size += decodeThread->packetCacheSize;
+        }
+        return size;
     }
 
     int QueueBox::PutPacket(EyerAVPacket * packet)
     {
-        for(int i=0;i<decoderList.size();i++) {
-            ThreadDecode * decoderThread = decoderList[i];
-            if(decoderThread->GetStreamId() == packet->GetStreamIndex()){
-                packetCacheSize += packet->GetSize();
-                break;
+        int streamIndex = packet->GetStreamIndex();
+        for(int i=0; i<decoderList.size(); i++){
+            ThreadDecode * decodeThread = decoderList[i];
+            if(decodeThread->GetStreamId() == streamIndex){
+                decodeThread->PutPacket(packet);
+                return 0;
             }
         }
-        return 0;
+        return -1;
     }
 }
