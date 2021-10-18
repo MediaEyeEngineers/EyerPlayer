@@ -12,13 +12,13 @@ int main(int argc,char **argv)
     Eyer::EyerPlayer player;
 
     player.Play();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 5);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
 
     player.Pause();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 1);
 
     player.Resume();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 5);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
 
     player.Stop();
 

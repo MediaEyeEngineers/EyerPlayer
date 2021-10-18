@@ -23,6 +23,7 @@ namespace Eyer
     }
 
     EyerAVStream::EyerAVStream(const EyerAVStream & stream)
+        : EyerAVStream()
     {
         *this = stream;
     }

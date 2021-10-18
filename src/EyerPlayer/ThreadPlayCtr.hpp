@@ -15,7 +15,7 @@ namespace Eyer
         ~ThreadPlayCtr();
 
         virtual void Run() override;
-
+        virtual int SetStopFlag() override;
     private:
         ThreadEventLoop * eventLoop = nullptr;
         QueueBox * queueBox = nullptr;

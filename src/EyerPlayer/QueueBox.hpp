@@ -1,9 +1,14 @@
 #ifndef EYERPLAYER_QUEUEBOX_HPP
 #define EYERPLAYER_QUEUEBOX_HPP
 
+#include "EyerCore/EyerCore.hpp"
 #include "EyerThread/EyerThread.hpp"
 #include "EyerAV/EyerAV.hpp"
+
 #include "ThreadDecode.hpp"
+#include "VideoOutputQueue.hpp"
+
+#include "DecodeQueueVideoFFmpeg.hpp"
 
 namespace Eyer
 {
@@ -21,14 +26,16 @@ namespace Eyer
 
         int PutPacket(EyerAVPacket * packet);
 
+
+
         std::mutex mtx;
         std::condition_variable cv;
 
     private:
-        std::atomic_int packetCacheSize {0};
         std::vector<EyerAVStream> streamList;
-
         std::vector<ThreadDecode *> decoderList;
+
+        DecodeQueueVideoFFmpeg videoDecoder;
     };
 }
 

@@ -7,6 +7,7 @@ namespace Eyer
 {
     ThreadPlayCtr::ThreadPlayCtr(QueueBox * _queueBox, ThreadEventLoop * _eventLoop)
         : eventLoop(_eventLoop)
+        , queueBox(_queueBox)
     {
 
     }
@@ -21,8 +22,21 @@ namespace Eyer
         EyerLog("ThreadPlayCtr Start\n");
         // 该线程用于控制视频流
         while(!stopFlag) {
+            std::unique_lock<std::mutex> locker(queueBox->mtx);
+            while(!stopFlag) {
+                queueBox->cv.wait(locker);
+            }
+
 
         }
         EyerLog("ThreadPlayCtr End\n");
+    }
+
+    int ThreadPlayCtr::SetStopFlag()
+    {
+        std::unique_lock<std::mutex> locker(queueBox->mtx);
+        stopFlag = 1;
+        queueBox->cv.notify_all();
+        return 0;
     }
 }

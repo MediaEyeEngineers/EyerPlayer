@@ -49,13 +49,13 @@ namespace Eyer
         if(event->type == EventType::PLAY_REQUEST){
             EyerLog("PLAY_REQUEST\n");
             if(readerThread != nullptr){
-                // 报错，请先暂停
+                // 报错，请别瞎比启动
             }
             readerThread = new ThreadReader(&queueBox, this);
             readerThread->Start();
 
-            // playCtrThread = new ThreadPlayCtr(this);
-            // playCtrThread->Start();
+            playCtrThread = new ThreadPlayCtr(&queueBox, this);
+            playCtrThread->Start();
         }
         else if(event->type == EventType::PAUSE_REQUEST){
             EyerLog("PAUSE_REQUEST\n");
