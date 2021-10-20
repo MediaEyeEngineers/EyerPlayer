@@ -22,36 +22,41 @@ namespace Eyer
     {
         for(int i=0; i<streamList.size(); i++){
             const EyerAVStream & stream = streamList[i];
-            ThreadDecode * decodeThread = new ThreadDecode(stream, this);
-            decodeThread->Start();
-            decoderList.push_back(decodeThread);
+            EyerDeocdeQueue * decoderQueue = new EyerDeocdeQueueFFmpeg(stream);
+            decoderQueue->Start();
+            decoderQueueList.push_back(decoderQueue);
         }
         return 0;
     }
 
     int QueueBox::StopDecoder()
     {
-        for(int i=0; i<decoderList.size(); i++) {
-            ThreadDecode * decodeThread = decoderList[i];
-            decodeThread->Stop();
-            delete decodeThread;
+        for(int i=0; i<decoderQueueList.size(); i++) {
+            EyerDeocdeQueue * decoderQueue = decoderQueueList[i];
+            decoderQueue->Stop();
+            delete decoderQueue;
         }
-        decoderList.clear();
+        decoderQueueList.clear();
         return 0;
     }
 
     int QueueBox::GetPacketQueueCacheSize()
     {
+        /*
         int size = 0;
         for(int i=0; i<decoderList.size(); i++) {
             ThreadDecode *decodeThread = decoderList[i];
             size += decodeThread->packetCacheSize;
         }
         return size;
+         */
+
+        return 0;
     }
 
     int QueueBox::PutPacket(EyerAVPacket * packet)
     {
+        /*
         int streamIndex = packet->GetStreamIndex();
         for(int i=0; i<decoderList.size(); i++){
             ThreadDecode * decodeThread = decoderList[i];
@@ -60,6 +65,7 @@ namespace Eyer
                 return 0;
             }
         }
+        */
         return -1;
     }
 }

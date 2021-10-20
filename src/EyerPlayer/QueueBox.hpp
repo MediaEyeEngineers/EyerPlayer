@@ -6,9 +6,8 @@
 #include "EyerAV/EyerAV.hpp"
 
 #include "ThreadDecode.hpp"
-#include "VideoOutputQueue.hpp"
 
-#include "DecodeQueueVideoFFmpeg.hpp"
+#include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
 
 namespace Eyer
 {
@@ -33,9 +32,7 @@ namespace Eyer
 
     private:
         std::vector<EyerAVStream> streamList;
-        std::vector<ThreadDecode *> decoderList;
-
-        DecodeQueueVideoFFmpeg videoDecoder;
+        std::vector<EyerDeocdeQueue *> decoderQueueList;
     };
 }
 
