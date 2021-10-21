@@ -2,10 +2,8 @@
 #define EYERPLAYER_QUEUEBOX_HPP
 
 #include "EyerCore/EyerCore.hpp"
-#include "EyerThread/EyerThread.hpp"
+#include "EyerThread/EyerThreadHeader.hpp"
 #include "EyerAV/EyerAV.hpp"
-
-#include "ThreadDecode.hpp"
 
 #include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
 
@@ -21,18 +19,19 @@ namespace Eyer
         int StartDeocder();
         int StopDecoder();
 
+        bool IsStart();
+
         int GetPacketQueueCacheSize();
 
         int PutPacket(EyerAVPacket * packet);
 
-
-
-        std::mutex mtx;
-        std::condition_variable cv;
+        EyerConditionVariableBox cvBox;
 
     private:
         std::vector<EyerAVStream> streamList;
         std::vector<EyerDeocdeQueue *> decoderQueueList;
+
+        std::atomic<bool> isStart = false;
     };
 }
 

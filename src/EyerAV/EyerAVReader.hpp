@@ -28,6 +28,8 @@ namespace Eyer
         int Seek(double time);
 
         int Read(EyerAVPacket & packet);
+        int Read(EyerAVPacket * packet);
+        EyerSmartPtr<EyerAVPacket> Read(int & ret);
 
         int GetAudioStreamIndex() const;
         int GetVideoStreamIndex() const;

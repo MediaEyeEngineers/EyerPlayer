@@ -19,8 +19,8 @@ namespace Eyer
     void ThreadEventLoop::Run()
     {
         EyerLog("ThreadEventLoop Start\n");
-        std::unique_lock<std::mutex> locker(mtx);
         while(!stopFlag){
+            std::unique_lock<std::mutex> locker(mtx);
             while(!stopFlag && eventQueue.Size() <= 0) {
                 cv.wait(locker);
             }
@@ -53,9 +53,6 @@ namespace Eyer
             }
             readerThread = new ThreadReader(&queueBox, this);
             readerThread->Start();
-
-            playCtrThread = new ThreadPlayCtr(&queueBox, this);
-            playCtrThread->Start();
         }
         else if(event->type == EventType::PAUSE_REQUEST){
             EyerLog("PAUSE_REQUEST\n");
@@ -69,11 +66,6 @@ namespace Eyer
                 readerThread->Stop();
                 delete readerThread;
                 readerThread = nullptr;
-            }
-            if(playCtrThread != nullptr){
-                playCtrThread->Stop();
-                delete playCtrThread;
-                playCtrThread = nullptr;
             }
         }
         else {

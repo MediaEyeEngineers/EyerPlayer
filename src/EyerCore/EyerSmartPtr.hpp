@@ -9,7 +9,7 @@ namespace Eyer
     class EyerSmartPtr
     {
     public:
-        explicit EyerSmartPtr(T * _ptr) {
+        explicit EyerSmartPtr(T * _ptr = nullptr) {
             ptr = _ptr;
             if(ptr != nullptr){
                 sharedCount = new EyerSharedCount();
@@ -42,6 +42,25 @@ namespace Eyer
             }
         }
 
+        const EyerSmartPtr & operator = (const EyerSmartPtr & smartPtr)
+        {
+            // 原来指向的需要减去一个引用
+            if(ptr != nullptr && sharedCount->Reduce() <= 0){
+                delete ptr;
+                delete sharedCount;
+            }
+
+            ptr = smartPtr.ptr;
+            if(ptr != nullptr){
+                smartPtr.sharedCount->Add();
+                sharedCount = smartPtr.sharedCount;
+            }
+
+            return *this;
+        }
+
+
+
         T & operator * () const {
             return * ptr;
         }
@@ -72,23 +91,6 @@ namespace Eyer
 
         long GetRefCount(){
             return sharedCount->Get();
-        }
-
-        const EyerSmartPtr & operator = (const EyerSmartPtr & smartPtr)
-        {
-            // 原来指向的需要减去一个引用
-            if(ptr != nullptr && sharedCount->Reduce() <= 0){
-                delete ptr;
-                delete sharedCount;
-            }
-
-            ptr = smartPtr.ptr;
-            if(ptr != nullptr){
-                smartPtr.sharedCount->Add();
-                sharedCount = smartPtr.sharedCount;
-            }
-
-            return *this;
         }
 
         // const EyerSmartPtr & operator = (const EyerSmartPtr &) = delete;

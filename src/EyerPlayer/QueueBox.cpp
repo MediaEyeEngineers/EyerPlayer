@@ -22,10 +22,12 @@ namespace Eyer
     {
         for(int i=0; i<streamList.size(); i++){
             const EyerAVStream & stream = streamList[i];
-            EyerDeocdeQueue * decoderQueue = new EyerDeocdeQueueFFmpeg(stream);
-            decoderQueue->Start();
+            EyerDeocdeQueue * decoderQueue = new EyerDeocdeQueueFFmpeg(stream, &cvBox);
+            decoderQueue->StartDecode();
             decoderQueueList.push_back(decoderQueue);
         }
+
+        isStart = true;
         return 0;
     }
 
@@ -33,39 +35,40 @@ namespace Eyer
     {
         for(int i=0; i<decoderQueueList.size(); i++) {
             EyerDeocdeQueue * decoderQueue = decoderQueueList[i];
-            decoderQueue->Stop();
+            decoderQueue->StopDecode();
             delete decoderQueue;
         }
         decoderQueueList.clear();
+
+        isStart = false;
         return 0;
     }
 
     int QueueBox::GetPacketQueueCacheSize()
     {
-        /*
         int size = 0;
-        for(int i=0; i<decoderList.size(); i++) {
-            ThreadDecode *decodeThread = decoderList[i];
-            size += decodeThread->packetCacheSize;
+        for(int i=0; i<decoderQueueList.size(); i++) {
+            EyerDeocdeQueue * decoderQueue = decoderQueueList[i];
+            size += decoderQueue->GetPacketCacheSize();
         }
         return size;
-         */
-
-        return 0;
     }
 
     int QueueBox::PutPacket(EyerAVPacket * packet)
     {
-        /*
         int streamIndex = packet->GetStreamIndex();
-        for(int i=0; i<decoderList.size(); i++){
-            ThreadDecode * decodeThread = decoderList[i];
-            if(decodeThread->GetStreamId() == streamIndex){
-                decodeThread->PutPacket(packet);
+        for(int i=0; i<decoderQueueList.size(); i++){
+            EyerDeocdeQueue * decoderQueue = decoderQueueList[i];
+            if(decoderQueue->GetStreamId() == streamIndex){
+                decoderQueue->PutPacket(packet);
                 return 0;
             }
         }
-        */
         return -1;
+    }
+
+    bool QueueBox::IsStart()
+    {
+        return isStart;
     }
 }

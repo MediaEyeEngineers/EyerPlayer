@@ -3,7 +3,12 @@ include_directories (./)
 
 add_library(
         EyerThread
+
+        EyerThread.hpp
         EyerThread.cpp
+
+        EyerConditionVariableBox.hpp
+        EyerConditionVariableBox.cpp
 )
 
 set(head_files

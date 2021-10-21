@@ -2,22 +2,21 @@
 #define EYERPLAYER_EYERDEOCDEQUEUEFFMPEG_HPP
 
 #include "EyerDeocdeQueue.hpp"
-#include "FFmpegDecodeThread.hpp"
+#include "EyerThread/EyerThreadHeader.hpp"
 
 namespace Eyer
 {
     class EyerDeocdeQueueFFmpeg : public EyerDeocdeQueue
     {
     public:
-        EyerDeocdeQueueFFmpeg(const EyerAVStream & stream);
+        EyerDeocdeQueueFFmpeg(const EyerAVStream & stream, EyerConditionVariableBox * _cvBox);
         ~EyerDeocdeQueueFFmpeg();
 
-        virtual int Start() override;
-        virtual int Stop() override;
-        virtual int PutPacket(EyerAVPacket & packet) override;
+        virtual void Run() override;
+        virtual int SetStopFlag() override;
 
-    private:
-        FFmpegDecodeThread * decodeThread = nullptr;
+        virtual int StartDecode() override;
+        virtual int StopDecode() override;
     };
 }
 

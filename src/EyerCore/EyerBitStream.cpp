@@ -160,7 +160,8 @@ namespace Eyer
             return true;
         }
 
-        if(p_pos = (end - start)){
+        p_pos = (end - start);
+        if(p_pos){
             if(bits_left > traing_len){
                 return true;
             }

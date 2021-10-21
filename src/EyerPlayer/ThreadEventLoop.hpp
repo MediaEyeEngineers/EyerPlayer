@@ -33,7 +33,6 @@ namespace Eyer
         QueueBox queueBox;
 
         // 线程
-        ThreadPlayCtr * playCtrThread = nullptr;
         ThreadReader * readerThread = nullptr;
     };
 }

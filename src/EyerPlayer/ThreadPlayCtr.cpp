@@ -22,9 +22,9 @@ namespace Eyer
         EyerLog("ThreadPlayCtr Start\n");
         // 该线程用于控制视频流
         while(!stopFlag) {
-            std::unique_lock<std::mutex> locker(queueBox->mtx);
+            std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
             while(!stopFlag) {
-                queueBox->cv.wait(locker);
+                queueBox->cvBox.cv.wait(locker);
             }
 
 
@@ -34,9 +34,9 @@ namespace Eyer
 
     int ThreadPlayCtr::SetStopFlag()
     {
-        std::unique_lock<std::mutex> locker(queueBox->mtx);
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
         stopFlag = 1;
-        queueBox->cv.notify_all();
+        queueBox->cvBox.cv.notify_all();
         return 0;
     }
 }

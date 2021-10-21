@@ -2,21 +2,33 @@
 #define EYERPLAYER_EYERDEOCDEQUEUE_HPP
 
 #include "EyerAV/EyerAV.hpp"
+#include "EyerThread/EyerThreadHeader.hpp"
 
 namespace Eyer
 {
-    class EyerDeocdeQueue
+    class EyerDeocdeQueue : public EyerThread
     {
     public:
-        EyerDeocdeQueue(const EyerAVStream & stream);
+        EyerDeocdeQueue(const EyerAVStream & _stream, EyerConditionVariableBox * _cvBox);
         virtual ~EyerDeocdeQueue();
 
-        virtual int Start() = 0;
-        virtual int Stop() = 0;
-        virtual int PutPacket(EyerAVPacket & packet) = 0;
+        virtual int StartDecode() = 0;
+        virtual int StopDecode() = 0;
+
+        int PutPacket(EyerAVPacket * packet);
+        int GetPacketCacheSize();
+
+        int GetFrameSize();
+
+        int GetStreamId();
 
     protected:
         EyerAVStream stream;
+        EyerConditionVariableBox * cvBox = nullptr;
+
+        std::atomic<int> packetQueueSize {0};
+        Eyer::EyerObserverQueue<EyerAVPacket *> packetQueue;
+        Eyer::EyerObserverQueue<EyerAVFrame *> frameQueue;
     };
 }
 

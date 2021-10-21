@@ -11,9 +11,6 @@ ADD_LIBRARY (
 
         EyerDeocdeQueueFFmpeg.hpp
         EyerDeocdeQueueFFmpeg.cpp
-
-        FFmpegDecodeThread.hpp
-        FFmpegDecodeThread.cpp
 )
 
 SET(HEAD_FILES

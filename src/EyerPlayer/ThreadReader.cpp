@@ -3,7 +3,6 @@
 #include "EyerCore/EyerCore.hpp"
 #include "EyerAV/EyerAV.hpp"
 
-#include "ThreadDecode.hpp"
 #include "ThreadEventLoop.hpp"
 
 namespace Eyer
@@ -52,29 +51,29 @@ namespace Eyer
         queueBox->AddStream(videoStream);
         queueBox->StartDeocder();
 
+        ThreadPlayCtr playCtr(queueBox, eventLoop);
+        playCtr.Start();
 
         // 该线程用于读取视频流
         while(!stopFlag) {
-            std::unique_lock<std::mutex> locker(queueBox->mtx);
+            std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
             // 缓存 1MB
             int maxCahceSize = 1024 * 1024;
             while(!stopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
-                queueBox->cv.wait(locker);
+                queueBox->cvBox.cv.wait(locker);
             }
 
             if(queueBox->GetPacketQueueCacheSize() >= maxCahceSize){
                 continue;
             }
 
-            // EyerLog("GetPacketQueueCacheSize: %d\n", queueBox->GetPacketQueueCacheSize());
-
             locker.unlock();
 
             EyerAVPacket * packet = new EyerAVPacket();
-            int ret = reader.Read(*packet);
+            int ret = reader.Read(packet);
             if(ret){
                 // 读取出错
-                if(packet != nullptr){
+                if(packet != nullptr) {
                     delete packet;
                     packet = nullptr;
                 }
@@ -84,26 +83,27 @@ namespace Eyer
             locker.lock();
             ret = queueBox->PutPacket(packet);
             if(ret == 0){
-                queueBox->cv.notify_all();
-            }
-            locker.unlock();
-
-            if(ret != 0){
-                if(packet != nullptr){
+                queueBox->cvBox.cv.notify_all();
+            } else {
+                // 插入失败
+                if(packet != nullptr) {
                     delete packet;
                     packet = nullptr;
                 }
             }
+            locker.unlock();
         }
+
+        playCtr.Stop();
 
         queueBox->StopDecoder();
         EyerLog("ThreadReader End\n");
     }
 
     int ThreadReader::SetStopFlag(){
-        std::unique_lock<std::mutex> locker(queueBox->mtx);
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
         stopFlag = 1;
-        queueBox->cv.notify_all();
+        queueBox->cvBox.cv.notify_all();
         return 0;
     }
 }

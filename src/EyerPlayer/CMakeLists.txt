@@ -10,9 +10,6 @@ ADD_LIBRARY (
         ThreadReader.hpp
         ThreadReader.cpp
 
-        ThreadDecode.hpp
-        ThreadDecode.cpp
-
         ThreadPlayCtr.hpp
         ThreadPlayCtr.cpp
 
@@ -21,9 +18,6 @@ ADD_LIBRARY (
 
         QueueBox.hpp
         QueueBox.cpp
-
-        VideoOutputQueue.hpp
-        VideoOutputQueue.cpp
 )
 
 SET(HEAD_FILES
