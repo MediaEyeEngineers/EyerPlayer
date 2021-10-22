@@ -19,9 +19,6 @@ namespace Eyer
 
     void ThreadPlayCtr::Run()
     {
-        int videoStreamId = 0;
-        int audioStreamId = 1;
-
         EyerLog("ThreadPlayCtr Start\n");
 
         long long startTime = -1;
@@ -43,9 +40,6 @@ namespace Eyer
 
             locker.unlock();
 
-            EyerDeocdeQueue * videoDecodeQueue = queueBox->GetDeocdeQueue(videoStreamId);
-            EyerDeocdeQueue * audioDecodeQueue = queueBox->GetDeocdeQueue(audioStreamId);
-
             if(startTime <= 0){
                 startTime = Eyer::EyerTime::GetTime();
             }
@@ -53,49 +47,23 @@ namespace Eyer
             long long nowTime = Eyer::EyerTime::GetTime();
 
             long long dTime = nowTime - startTime;
-            EyerLog("D Time: %lld\n", dTime);
-            {
-                /*
-                videoDecodeQueue->FrameQueueLock();
-                EyerLog("A\n");
-                int size = videoDecodeQueue->FrameQueueGetSize();
-                EyerLog("B: %d\n", size);
-                if(size > 0){
-                    EyerLog("BC\n");
-                    locker.lock();
-                    EyerLog("C\n");
-                    EyerAVFrame * frame = videoDecodeQueue->FrameQueueFrontPop();
-                    EyerLog("D\n");
-                    queueBox->cvBox.cv.notify_all();
-                    locker.unlock();
+            for(int i=0;i<2;i++){
+                EyerAVFrame * frame = nullptr;
 
-                    if(frame != nullptr){
-                        EyerLog("%f\n", frame->GetSecPTS());
-                        delete frame;
-                        frame = nullptr;
-                    }
-                }
-                videoDecodeQueue->FrameQueueUnlock();
-                */
-            }
-            /*
-            {
-                audioDecodeQueue->FrameQueueLock();
-                int size = audioDecodeQueue->FrameQueueGetSize();
-                if(size > 0){
-                    std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
-                    EyerAVFrame * frame = audioDecodeQueue->FrameQueueFrontPop();
+                locker.lock();
+                frame = GetFrameFromDecodeQueue(i);
+                if(frame != nullptr){
                     queueBox->cvBox.cv.notify_all();
-                    if(frame != nullptr){
-                        delete frame;
-                        frame = nullptr;
-                    }
                 }
-                audioDecodeQueue->FrameQueueUnlock();
-            }
-            */
+                locker.unlock();
 
-            Eyer::EyerTime::EyerSleepMilliseconds(10);
+                if(frame != nullptr){
+                    EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
+                    EyerLog("D Time: %f\n", dTime / 1000.0);
+                    delete frame;
+                    frame = nullptr;
+                }
+            }
         }
         EyerLog("ThreadPlayCtr End\n");
     }
@@ -106,5 +74,20 @@ namespace Eyer
         stopFlag = 1;
         queueBox->cvBox.cv.notify_all();
         return 0;
+    }
+
+    EyerAVFrame * ThreadPlayCtr::GetFrameFromDecodeQueue(int streamId)
+    {
+        EyerAVFrame * frame = nullptr;
+
+        EyerDeocdeQueue * decodeQueue = queueBox->GetDeocdeQueue(streamId);
+        decodeQueue->FrameQueueLock();
+        int size = decodeQueue->FrameQueueGetSize();
+        if(size > 0){
+            frame = decodeQueue->FrameQueueFrontPop();
+        }
+        decodeQueue->FrameQueueUnlock();
+
+        return frame;
     }
 }

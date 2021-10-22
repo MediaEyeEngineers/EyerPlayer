@@ -48,7 +48,7 @@ namespace Eyer
             std::unique_lock<std::mutex> locker(cvBox->mtx);
             while(!stopFlag){
                 // 查看 packet 缓存数据是否为 0
-                if(packetQueue.SizeLock() > 0){
+                if(packetQueueSize > 0){
                     // 在看 Frame 缓存是否为 0
                     if(frameQueue.SizeLock() < 5){
                         break;
@@ -64,6 +64,8 @@ namespace Eyer
             EyerAVPacket * packet = nullptr;
 
             // 尝试从缓存队列里取出来一个 Packet
+
+
             packetQueue.Lock();
             int size = packetQueue.Size();
             if(size > 0){
@@ -97,19 +99,12 @@ namespace Eyer
                     break;
                 }
 
-                EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
+                // EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
 
                 locker.lock();
                 frameQueue.PushLock(frame);
                 cvBox->cv.notify_all();
                 locker.unlock();
-
-                /*
-                if(frame != nullptr){
-                    delete frame;
-                    frame = nullptr;
-                }
-                */
             }
 
             if(packet != nullptr){
@@ -117,6 +112,7 @@ namespace Eyer
                 packet = nullptr;
             }
         }
+        Eyer::EyerTime::EyerSleepMilliseconds(500);
         EyerLog("FFmpegDecodeThread Stop\n");
     }
 

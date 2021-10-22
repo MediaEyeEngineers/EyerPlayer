@@ -26,7 +26,8 @@ namespace Eyer
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/color_card_hevc_3840x2160_yuv420p10le_hlg_bt2020_rotate_270.MOV";
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/1080_1920_HDR_Color_Card.mp4";
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
-        Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
+        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
+        Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
 
         Eyer::EyerAVReader reader(path);
         int ret = reader.Open();
@@ -51,6 +52,7 @@ namespace Eyer
         queueBox->AddStream(videoStream);
         queueBox->StartDeocder();
 
+        // 开始播放控制线程
         ThreadPlayCtr playCtr(queueBox, eventLoop);
         playCtr.Start();
 
