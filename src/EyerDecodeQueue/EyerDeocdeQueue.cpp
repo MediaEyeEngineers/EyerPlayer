@@ -33,8 +33,26 @@ namespace Eyer
         return stream.GetStreamId();
     }
 
-    int EyerDeocdeQueue::GetFrameSize()
+
+
+
+    int EyerDeocdeQueue::FrameQueueLock()
     {
-        return frameQueue.SizeLock();
+        return frameQueue.Lock();
+    }
+
+    int EyerDeocdeQueue::FrameQueueUnlock()
+    {
+        return frameQueue.Unlock();
+    }
+
+    int EyerDeocdeQueue::FrameQueueGetSize()
+    {
+        return frameQueue.Size();
+    }
+
+    EyerAVFrame * EyerDeocdeQueue::FrameQueueFrontPop()
+    {
+        return frameQueue.FrontPop();
     }
 }

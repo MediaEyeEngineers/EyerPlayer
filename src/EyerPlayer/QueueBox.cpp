@@ -27,7 +27,10 @@ namespace Eyer
             decoderQueueList.push_back(decoderQueue);
         }
 
+        std::unique_lock<std::mutex> locker(cvBox.mtx);
         isStart = true;
+        cvBox.cv.notify_all();
+
         return 0;
     }
 
@@ -40,7 +43,9 @@ namespace Eyer
         }
         decoderQueueList.clear();
 
+        std::unique_lock<std::mutex> locker(cvBox.mtx);
         isStart = false;
+        cvBox.cv.notify_all();
         return 0;
     }
 
@@ -70,5 +75,17 @@ namespace Eyer
     bool QueueBox::IsStart()
     {
         return isStart;
+    }
+
+    EyerDeocdeQueue * QueueBox::GetDeocdeQueue(int streamIndex)
+    {
+        for(int i=0; i<decoderQueueList.size(); i++) {
+            EyerDeocdeQueue * decoderQueue = decoderQueueList[i];
+            if(decoderQueue->GetStreamId() == streamIndex){
+                return decoderQueue;
+            }
+        }
+
+        return nullptr;
     }
 }

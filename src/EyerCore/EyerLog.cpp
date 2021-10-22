@@ -19,9 +19,6 @@ void eyer_log_log(const char * file, const char * function, int line, int level,
     vsnprintf(log_str, 4096, format, args);
     va_end(args);
 
-
-
-
     std::string logstr;
 
     char levelStr[8];

@@ -22,8 +22,9 @@ namespace Eyer
         bool IsStart();
 
         int GetPacketQueueCacheSize();
-
         int PutPacket(EyerAVPacket * packet);
+
+        EyerDeocdeQueue * GetDeocdeQueue(int streamIndex);
 
         EyerConditionVariableBox cvBox;
 
@@ -31,7 +32,7 @@ namespace Eyer
         std::vector<EyerAVStream> streamList;
         std::vector<EyerDeocdeQueue *> decoderQueueList;
 
-        std::atomic<bool> isStart = false;
+        std::atomic<bool> isStart {false};
     };
 }
 

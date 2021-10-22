@@ -18,7 +18,10 @@ namespace Eyer
         int PutPacket(EyerAVPacket * packet);
         int GetPacketCacheSize();
 
-        int GetFrameSize();
+        int FrameQueueLock();
+        int FrameQueueUnlock();
+        int FrameQueueGetSize();
+        EyerAVFrame * FrameQueueFrontPop();
 
         int GetStreamId();
 

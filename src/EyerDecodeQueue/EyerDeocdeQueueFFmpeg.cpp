@@ -83,6 +83,8 @@ namespace Eyer
                 continue;
             }
 
+            locker.unlock();
+
             // 取成功了
             ret = decoder.SendPacket(packet);
             if(ret){
@@ -96,7 +98,11 @@ namespace Eyer
                 }
 
                 EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
+
+                locker.lock();
                 frameQueue.PushLock(frame);
+                cvBox->cv.notify_all();
+                locker.unlock();
 
                 /*
                 if(frame != nullptr){
