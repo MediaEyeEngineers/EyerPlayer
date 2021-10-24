@@ -34,6 +34,7 @@ namespace Eyer
         if(ret){
             // 打开失败
             // eventLoop->PushEvent()
+            EyerLog("Open Fail\n");
         }
 
         int streamCount = reader.GetStreamCount();

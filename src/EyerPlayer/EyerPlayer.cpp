@@ -29,18 +29,15 @@ namespace Eyer
     int EyerPlayer::Play()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-
-        EyerSmartPtr<EventRequest_Play> event(new EventRequest_Play());
+        EventRequest_Play * event = new EventRequest_Play();
         piml->threadEventLoop->PushEvent(event);
-
         return 0;
     }
 
     int EyerPlayer::Pause()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-
-        EyerSmartPtr<EventRequest> event(new EventRequest_Pause());
+        EventRequest_Pause * event = new EventRequest_Pause();
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }
@@ -48,7 +45,7 @@ namespace Eyer
     int EyerPlayer::Resume()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        EyerSmartPtr<EventRequest> event(new EventRequest());
+        EventRequest * event = new EventRequest();
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }
@@ -56,8 +53,14 @@ namespace Eyer
     int EyerPlayer::Stop()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        EyerSmartPtr<EventRequest> event(new EventRequest_Stop());
+        EventRequest_Stop * event = new EventRequest_Stop();
         piml->threadEventLoop->PushEvent(event);
         return 0;
+    }
+
+
+    QueueBox * EyerPlayer::GetQueueBox()
+    {
+        return piml->threadEventLoop->GetQueueBox();
     }
 }

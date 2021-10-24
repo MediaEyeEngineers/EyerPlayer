@@ -88,4 +88,9 @@ namespace Eyer
 
         return nullptr;
     }
+
+    EyerObserverQueue<EyerAVFrame *> * QueueBox::GetOutputQueue()
+    {
+        return &outputQueue;
+    }
 }

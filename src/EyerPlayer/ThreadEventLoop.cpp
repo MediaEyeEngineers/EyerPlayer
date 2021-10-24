@@ -8,11 +8,19 @@ namespace Eyer
 
     ThreadEventLoop::~ThreadEventLoop()
     {
+        eventQueue.Lock();
+        while(eventQueue.Size() > 0){
+            Event * event = eventQueue.FrontPop();
+            delete event;
+        }
+        eventQueue.Unlock();
     }
 
-    int ThreadEventLoop::PushEvent(const EyerSmartPtr<Event> & event)
+    int ThreadEventLoop::PushEvent(Event * event)
     {
+        std::unique_lock<std::mutex> locker(mtx);
         eventQueue.Push(event);
+        cv.notify_all();
         return 0;
     }
 
@@ -21,18 +29,30 @@ namespace Eyer
         EyerLog("ThreadEventLoop Start\n");
         while(!stopFlag){
             std::unique_lock<std::mutex> locker(mtx);
-            while(!stopFlag && eventQueue.Size() <= 0) {
+            while(!stopFlag && eventQueue.SizeLock() <= 0) {
                 cv.wait(locker);
             }
 
+            eventQueue.Lock();
             while(eventQueue.Size() > 0) {
-                EyerSmartPtr<Event> event(nullptr);
-                eventQueue.FrontPop(event);
+                Event * event = eventQueue.FrontPop();
                 if (event != nullptr) {
                     ProcessEvent(event);
                 }
+                if(event != nullptr){
+                    delete event;
+                    event = nullptr;
+                }
             }
+            eventQueue.Unlock();
         }
+
+        eventQueue.Lock();
+        while(eventQueue.Size() > 0){
+            Event * event = eventQueue.FrontPop();
+            delete event;
+        }
+        eventQueue.Unlock();
         EyerLog("ThreadEventLoop End\n");
     }
 
@@ -44,7 +64,7 @@ namespace Eyer
         return 0;
     }
 
-    int ThreadEventLoop::ProcessEvent(const EyerSmartPtr<Event> & event)
+    int ThreadEventLoop::ProcessEvent(Event * event)
     {
         if(event->type == EventType::PLAY_REQUEST){
             EyerLog("PLAY_REQUEST\n");
@@ -73,5 +93,10 @@ namespace Eyer
         }
 
         return 0;
+    }
+
+    QueueBox * ThreadEventLoop::GetQueueBox()
+    {
+        return &queueBox;
     }
 }

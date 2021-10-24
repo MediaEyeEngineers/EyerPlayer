@@ -17,21 +17,20 @@ namespace Eyer
         ThreadEventLoop();
         ~ThreadEventLoop();
 
-        int PushEvent(const EyerSmartPtr<Event> & event);
+        int PushEvent(Event * event);
+        QueueBox * GetQueueBox();
 
         virtual void Run() override;
-
         virtual int SetStopFlag() override;
 
     private:
-        int ProcessEvent(const EyerSmartPtr<Event> & event);
+        int ProcessEvent(Event * event);
 
         std::mutex mtx;
         std::condition_variable cv;
-        EyerObserverQueue<EyerSmartPtr<Event>> eventQueue;
+        EyerObserverQueue<Event *> eventQueue;
 
         QueueBox queueBox;
-
         // 线程
         ThreadReader * readerThread = nullptr;
     };

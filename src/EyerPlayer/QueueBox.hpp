@@ -26,11 +26,13 @@ namespace Eyer
 
         EyerDeocdeQueue * GetDeocdeQueue(int streamIndex);
 
+        EyerObserverQueue<EyerAVFrame *> * GetOutputQueue();
         EyerConditionVariableBox cvBox;
 
     private:
         std::vector<EyerAVStream> streamList;
         std::vector<EyerDeocdeQueue *> decoderQueueList;
+        EyerObserverQueue<EyerAVFrame *> outputQueue;
 
         std::atomic<bool> isStart {false};
     };
