@@ -1,6 +1,8 @@
 #ifndef EYERLIB_EYERSHAREDCOUNT_HPP
 #define EYERLIB_EYERSHAREDCOUNT_HPP
 
+#include <thread>
+
 namespace Eyer
 {
     class EyerSharedCount
@@ -13,7 +15,7 @@ namespace Eyer
         long Reduce();
         long Get();
     private:
-        long count = 0;
+        std::atomic<long> count {0};
     };
 }
 

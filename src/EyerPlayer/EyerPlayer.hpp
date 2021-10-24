@@ -1,6 +1,8 @@
 #ifndef EYERCAMERA_EYERPLAYER_HPP
 #define EYERCAMERA_EYERPLAYER_HPP
 
+#include "QueueBox.hpp"
+
 namespace Eyer
 {
     class EyerPlayerPrivate;
@@ -16,6 +18,8 @@ namespace Eyer
         int Resume();
         int Stop();
 
+        // Output
+        QueueBox * GetQueueBox();
     private:
         EyerPlayerPrivate * piml = nullptr;
     };

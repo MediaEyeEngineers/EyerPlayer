@@ -29,9 +29,9 @@ SET(HEAD_FILES
         EyerEventHeader.hpp
         )
 
-INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerPlayer)
+INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerEvent)
 INSTALL(
-        TARGETS EyerPlayer
+        TARGETS EyerEvent
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

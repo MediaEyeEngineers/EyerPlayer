@@ -101,10 +101,26 @@ namespace Eyer {
         return ret;
     }
 
+    int EyerAVReader::Read(EyerAVPacket * packet)
+    {
+        int ret = av_read_frame(piml->formatCtx, packet->piml->packet);
+        return ret;
+    }
+
     int EyerAVReader::Read(EyerAVPacket & packet)
     {
         int ret = av_read_frame(piml->formatCtx, packet.piml->packet);
         return ret;
+    }
+
+    EyerSmartPtr<EyerAVPacket> EyerAVReader::Read(int & ret)
+    {
+        EyerAVPacket * packetPtr = new EyerAVPacket();
+        EyerSmartPtr<EyerAVPacket> packet(packetPtr);
+
+        ret = Read(packetPtr);
+
+        return packet;
     }
 
     int EyerAVReader::GetVideoStreamIndex() const

@@ -40,9 +40,19 @@ namespace Eyer
         return ret;
     }
 
+    int EyerAVDecoder::SendPacket(EyerAVPacket * packet)
+    {
+        return avcodec_send_packet(piml->codecContext, packet->piml->packet);
+    }
+
     int EyerAVDecoder::SendPacket(EyerAVPacket & packet)
     {
         return avcodec_send_packet(piml->codecContext, packet.piml->packet);
+    }
+
+    int EyerAVDecoder::SendPacket(EyerSmartPtr<EyerAVPacket> & packet)
+    {
+        return avcodec_send_packet(piml->codecContext, packet->piml->packet);
     }
 
     int EyerAVDecoder::SendPacketNull()
@@ -59,6 +69,16 @@ namespace Eyer
         }
 
         return ret;
+    }
+
+    EyerSmartPtr<EyerAVFrame> EyerAVDecoder::RecvFrame(int & ret)
+    {
+        EyerAVFrame * avFrame = new EyerAVFrame();
+        EyerSmartPtr<EyerAVFrame> frame(avFrame);
+
+        ret = RecvFrame(*avFrame);
+
+        return frame;
     }
 
     int EyerAVDecoder::GetTimebase(EyerAVRational & timebase)

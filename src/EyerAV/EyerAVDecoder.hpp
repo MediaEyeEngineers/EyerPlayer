@@ -19,9 +19,13 @@ namespace Eyer
 
         int GetTimebase(EyerAVRational & timebase);
 
+        int SendPacket(EyerAVPacket * packet);
         int SendPacket(EyerAVPacket & packet);
+        int SendPacket(EyerSmartPtr<EyerAVPacket> & packet);
+
         int SendPacketNull();
         int RecvFrame(EyerAVFrame & frame);
+        EyerSmartPtr<EyerAVFrame> RecvFrame(int & ret);
 
     private:
         // 禁止拷贝

@@ -1,0 +1,16 @@
+#ifndef EYERLIB_EYERGLTEXTURETYPE_HPP
+#define EYERLIB_EYERGLTEXTURETYPE_HPP
+
+namespace Eyer
+{
+    enum EyerGLTextureType
+    {
+        EYER_GL_TEXTURE_2D,
+
+#ifdef EYER_PLATFORM_ANDROID
+        EYER_GL_TEXTURE_EXTERNAL_OES
+#endif
+    };
+}
+
+#endif //EYERLIB_EYERGLTEXTURETYPE_HPP

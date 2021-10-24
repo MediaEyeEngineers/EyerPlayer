@@ -19,6 +19,8 @@ namespace Eyer
     private:
         ThreadEventLoop * eventLoop = nullptr;
         QueueBox * queueBox = nullptr;
+
+        EyerAVFrame * GetFrameFromDecodeQueue(int streamId);
     };
 }
 

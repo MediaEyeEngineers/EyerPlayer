@@ -1,2 +1,4 @@
 .idea/
 cmake-build-debug/
+player_core_build/
+install/

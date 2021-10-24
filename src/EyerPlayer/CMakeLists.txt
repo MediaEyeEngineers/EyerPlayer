@@ -10,9 +10,6 @@ ADD_LIBRARY (
         ThreadReader.hpp
         ThreadReader.cpp
 
-        ThreadDecode.hpp
-        ThreadDecode.cpp
-
         ThreadPlayCtr.hpp
         ThreadPlayCtr.cpp
 
@@ -21,22 +18,11 @@ ADD_LIBRARY (
 
         QueueBox.hpp
         QueueBox.cpp
-
-        VideoOutputQueue.hpp
-        VideoOutputQueue.cpp
-
-        DecodeQueue.hpp
-        DecodeQueue.cpp
-
-        DecodeQueueVideo.hpp
-        DecodeQueueVideo.cpp
-
-        DecodeQueueVideoFFmpeg.hpp
-        DecodeQueueVideoFFmpeg.cpp
 )
 
 SET(HEAD_FILES
         EyerPlayer.hpp
+        QueueBox.hpp
         )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerPlayer)

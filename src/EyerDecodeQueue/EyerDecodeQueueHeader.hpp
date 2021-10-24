@@ -1,0 +1,7 @@
+#ifndef EYERPLAYER_EYERDECODEQUEUEHEADER_HPP
+#define EYERPLAYER_EYERDECODEQUEUEHEADER_HPP
+
+#include "EyerDeocdeQueue.hpp"
+#include "EyerDeocdeQueueFFmpeg.hpp"
+
+#endif //EYERPLAYER_EYERDECODEQUEUEHEADER_HPP
