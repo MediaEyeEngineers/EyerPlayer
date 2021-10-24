@@ -1,5 +1,7 @@
 #include "QueueBox.hpp"
 
+#include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
+
 namespace Eyer
 {
     QueueBox::QueueBox()
@@ -89,8 +91,13 @@ namespace Eyer
         return nullptr;
     }
 
-    EyerObserverQueue<EyerAVFrame *> * QueueBox::GetOutputQueue()
+    EyerObserverQueue<EyerAVFrame *> * QueueBox::GetVideoOutputQueue()
     {
-        return &outputQueue;
+        return &videoOutputQueue;
+    }
+
+    EyerObserverQueue<EyerAVFrame *> * QueueBox::GetAudioOutputQueue()
+    {
+        return &audioOutputQueue;
     }
 }

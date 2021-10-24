@@ -28,6 +28,7 @@ namespace Eyer
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
         Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
+        // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/tututu.mp4";
 
         Eyer::EyerAVReader reader(path);
         int ret = reader.Open();

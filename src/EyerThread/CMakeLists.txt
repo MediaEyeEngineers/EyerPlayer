@@ -13,6 +13,8 @@ add_library(
 
 set(head_files
         EyerThread.hpp
+        EyerThreadHeader.hpp
+        EyerConditionVariableBox.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerThread)

@@ -2,6 +2,7 @@
 
 #include "EyerCore/EyerCore.hpp"
 #include "ThreadEventLoop.hpp"
+#include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
 
 namespace Eyer
 {
@@ -76,11 +77,20 @@ namespace Eyer
                 double playTime = videoFrame->GetSecPTS();
                 if(dTime >= playTime){
                     // EyerLog("Video PlayTime: %f\n", playTime);
-                    queueBox->GetOutputQueue()->PushLock(videoFrame);
-                    /*
-                    delete videoFrame;
-                    videoFrame = nullptr;
-                    */
+                    locker.lock();
+                    EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetVideoOutputQueue();
+                    outputQueue->Lock();
+                    outputQueue->Push(videoFrame);
+                    while(outputQueue->Size() >= 5){
+                        EyerAVFrame * f = outputQueue->FrontPop();
+                        if(f != nullptr){
+                            delete f;
+                        }
+                    }
+                    outputQueue->Unlock();
+                    queueBox->cvBox.cv.notify_all();
+                    locker.unlock();
+
                     videoFrame = nullptr;
                 }
             }
@@ -88,11 +98,20 @@ namespace Eyer
                 double playTime = audioFrame->GetSecPTS();
                 if(dTime >= playTime){
                     // EyerLog("Audio PlayTime: %f\n", playTime);
-                    queueBox->GetOutputQueue()->PushLock(audioFrame);
-                    /*
-                    delete audioFrame;
-                    audioFrame = nullptr;
-                    */
+                    locker.lock();
+                    EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetAudioOutputQueue();
+                    outputQueue->Lock();
+                    outputQueue->Push(audioFrame);
+                    while(outputQueue->Size() >= 5){
+                        EyerAVFrame * f = outputQueue->FrontPop();
+                        if(f != nullptr){
+                            delete f;
+                        }
+                    }
+                    outputQueue->Unlock();
+                    queueBox->cvBox.cv.notify_all();
+                    locker.unlock();
+
                     audioFrame = nullptr;
                 }
             }

@@ -5,10 +5,10 @@
 #include "EyerThread/EyerThreadHeader.hpp"
 #include "EyerAV/EyerAV.hpp"
 
-#include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
-
 namespace Eyer
 {
+    class EyerDeocdeQueue;
+
     class QueueBox
     {
     public:
@@ -26,13 +26,16 @@ namespace Eyer
 
         EyerDeocdeQueue * GetDeocdeQueue(int streamIndex);
 
-        EyerObserverQueue<EyerAVFrame *> * GetOutputQueue();
+        EyerObserverQueue<EyerAVFrame *> * GetVideoOutputQueue();
+        EyerObserverQueue<EyerAVFrame *> * GetAudioOutputQueue();
+
         EyerConditionVariableBox cvBox;
 
     private:
         std::vector<EyerAVStream> streamList;
         std::vector<EyerDeocdeQueue *> decoderQueueList;
-        EyerObserverQueue<EyerAVFrame *> outputQueue;
+        EyerObserverQueue<EyerAVFrame *> videoOutputQueue;
+        EyerObserverQueue<EyerAVFrame *> audioOutputQueue;
 
         std::atomic<bool> isStart {false};
     };

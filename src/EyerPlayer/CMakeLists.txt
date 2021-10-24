@@ -22,6 +22,7 @@ ADD_LIBRARY (
 
 SET(HEAD_FILES
         EyerPlayer.hpp
+        QueueBox.hpp
         )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerPlayer)

@@ -11,7 +11,7 @@ fi
 mkdir player_core_build
 
 cd player_core_build
-cmake ../
+cmake ../ -DQT_GL=ON
 
 make clean
 make -j4
