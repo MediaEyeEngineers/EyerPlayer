@@ -13,6 +13,7 @@ namespace Eyer
     class EyerPlayerPrivate
     {
     public:
+        EyerString url;
         std::mutex mut;
         ThreadEventLoop * threadEventLoop = nullptr;
     };

@@ -67,11 +67,12 @@ namespace Eyer
     int ThreadEventLoop::ProcessEvent(Event * event)
     {
         if(event->type == EventType::PLAY_REQUEST){
+            EventRequest_Play * playEvent = (EventRequest_Play *)event;
             EyerLog("PLAY_REQUEST\n");
             if(readerThread != nullptr){
                 // 报错，请别瞎比启动
             }
-            readerThread = new ThreadReader(&queueBox, this);
+            readerThread = new ThreadReader(playEvent->url, &queueBox, this);
             readerThread->Start();
         }
         else if(event->type == EventType::PAUSE_REQUEST){

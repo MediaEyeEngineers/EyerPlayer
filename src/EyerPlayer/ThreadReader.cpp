@@ -7,9 +7,10 @@
 
 namespace Eyer
 {
-    ThreadReader::ThreadReader(QueueBox * _queueBox, ThreadEventLoop * _eventLoop)
+    ThreadReader::ThreadReader(const EyerString & _url, QueueBox * _queueBox, ThreadEventLoop * _eventLoop)
         : eventLoop(_eventLoop)
         , queueBox(_queueBox)
+        , url(_url)
     {
 
     }
@@ -27,10 +28,10 @@ namespace Eyer
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/1080_1920_HDR_Color_Card.mp4";
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
         // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
-        Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
+        // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
         // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/tututu.mp4";
 
-        Eyer::EyerAVReader reader(path);
+        Eyer::EyerAVReader reader(url);
         int ret = reader.Open();
         if(ret){
             // 打开失败

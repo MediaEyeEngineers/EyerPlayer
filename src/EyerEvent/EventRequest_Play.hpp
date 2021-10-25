@@ -2,6 +2,7 @@
 #define EYERCAMERA_EVENTREQUEST_PLAY_HPP
 
 #include "EventRequest.hpp"
+#include "EyerCore/EyerCore.hpp"
 
 namespace Eyer
 {
@@ -10,6 +11,8 @@ namespace Eyer
     public:
         EventRequest_Play();
         ~EventRequest_Play();
+
+        EyerString url;
     };
 }
 
