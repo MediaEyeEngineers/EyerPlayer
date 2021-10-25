@@ -26,10 +26,17 @@ namespace Eyer
         }
     }
 
+    int EyerPlayer::SetURL(const EyerString & _url)
+    {
+        piml->url = _url;
+        return 0;
+    }
+
     int EyerPlayer::Play()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
         EventRequest_Play * event = new EventRequest_Play();
+        event->url = piml->url;
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }

@@ -11,7 +11,7 @@ namespace Eyer
     class ThreadReader : public EyerThread
     {
     public:
-        ThreadReader(QueueBox * _queueBox, ThreadEventLoop * _eventLoop);
+        ThreadReader(const EyerString & url, QueueBox * _queueBox, ThreadEventLoop * _eventLoop);
         ~ThreadReader();
 
         virtual void Run() override;
@@ -21,6 +21,7 @@ namespace Eyer
     private:
         ThreadEventLoop * eventLoop = nullptr;
         QueueBox * queueBox = nullptr;
+        EyerString url;
     };
 }
 

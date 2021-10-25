@@ -13,6 +13,8 @@ namespace Eyer
         EyerPlayer();
         ~EyerPlayer();
 
+        int SetURL(const EyerString & url);
+
         int Play();
         int Pause();
         int Resume();
