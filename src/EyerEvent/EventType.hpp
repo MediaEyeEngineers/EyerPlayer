@@ -11,6 +11,9 @@ namespace Eyer
         PAUSE_REQUEST,
         PAUSE_RESPONSE,
 
+        RESUME_REQUEST,
+        RESUME_RESPONSE,
+
         STOP_REQUEST,
         STOP_RESPONSE,
 

@@ -78,6 +78,9 @@ namespace Eyer
         else if(event->type == EventType::PAUSE_REQUEST){
             EyerLog("PAUSE_REQUEST\n");
         }
+        else if(event->type == EventType::RESUME_REQUEST){
+            EyerLog("RESUME_REQUEST\n");
+        }
         else if(event->type == EventType::STOP_REQUEST){
             EyerLog("STOP_REQUEST\n");
             if(readerThread == nullptr){

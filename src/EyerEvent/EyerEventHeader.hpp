@@ -9,5 +9,6 @@
 #include "EventRequest_Play.hpp"
 #include "EventRequest_Pause.hpp"
 #include "EventRequest_Stop.hpp"
+#include "EventRequest_Resume.hpp"
 
 #endif //EYERPLAYER_EYEREVENTHEADER_HPP

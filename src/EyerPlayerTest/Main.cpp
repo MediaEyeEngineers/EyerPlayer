@@ -16,7 +16,7 @@ int main(int argc,char **argv)
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
 
     player.Pause();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 1);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
 
     player.Resume();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);

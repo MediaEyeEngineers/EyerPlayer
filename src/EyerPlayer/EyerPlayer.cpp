@@ -52,7 +52,7 @@ namespace Eyer
     int EyerPlayer::Resume()
     {
         std::lock_guard<std::mutex> lg(piml->mut);
-        EventRequest * event = new EventRequest();
+        EventRequest_Resume * event = new EventRequest_Resume();
         piml->threadEventLoop->PushEvent(event);
         return 0;
     }
