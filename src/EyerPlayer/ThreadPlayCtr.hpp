@@ -8,6 +8,12 @@ namespace Eyer
 {
     class ThreadEventLoop;
 
+    enum class PLAY_CTR_STATUS
+    {
+        PLAYING,
+        PAUSEING
+    };
+
     class ThreadPlayCtr : public EyerThread
     {
     public:
@@ -16,11 +22,21 @@ namespace Eyer
 
         virtual void Run() override;
         virtual int SetStopFlag() override;
+        virtual int SetStartEventLoopFlag() override;
+
+        int Pause();
+        int Resume();
     private:
         ThreadEventLoop * eventLoop = nullptr;
         QueueBox * queueBox = nullptr;
 
         EyerAVFrame * GetFrameFromDecodeQueue(int streamId);
+
+        PLAY_CTR_STATUS status = PLAY_CTR_STATUS::PLAYING;
+
+        long long startTime = -1;
+        double dTime = 0.0;
+        double pausedTime = 0.0;
     };
 }
 

@@ -56,17 +56,21 @@ namespace Eyer
         queueBox->StartDeocder();
 
         // 开始播放控制线程
-        ThreadPlayCtr playCtr(queueBox, eventLoop);
-        playCtr.Start();
+        playCtr = new ThreadPlayCtr(queueBox, eventLoop);
+        playCtr->Start();
 
         // 该线程用于读取视频流
         while(!stopFlag) {
             std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
             // 缓存 1MB
             int maxCahceSize = 1024 * 1024;
-            while(!stopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
+            while(!stopFlag && !eventLoopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
                 queueBox->cvBox.cv.wait(locker);
             }
+
+            locker.unlock();
+            EventLoop();
+            locker.lock();
 
             if(queueBox->GetPacketQueueCacheSize() >= maxCahceSize){
                 continue;
@@ -99,15 +103,72 @@ namespace Eyer
             locker.unlock();
         }
 
-        playCtr.Stop();
+        playCtr->Stop();
+        if(playCtr != nullptr){
+            delete playCtr;
+            playCtr = nullptr;
+        }
 
         queueBox->StopDecoder();
         EyerLog("ThreadReader End\n");
     }
 
+    int ThreadReader::Pause()
+    {
+        if(playCtr != nullptr){
+            class PauseEvent : public EyerRunnable {
+            public:
+                ThreadPlayCtr * pCtr = nullptr;
+                PauseEvent(ThreadPlayCtr * _pCtr){
+                    pCtr = _pCtr;
+                }
+                virtual void Run() {
+                    pCtr->Pause();
+                }
+            };
+            PauseEvent pauseEvent(playCtr);
+            playCtr->PushEvent(&pauseEvent);
+            playCtr->StartEventLoop();
+            playCtr->StopEventLoop();
+            playCtr->ClearAllEvent();
+        }
+        return 0;
+    }
+
+    int ThreadReader::Resume()
+    {
+        if(playCtr != nullptr){
+            class ResumeEvent : public EyerRunnable {
+            public:
+                ThreadPlayCtr * pCtr = nullptr;
+                ResumeEvent(ThreadPlayCtr * _pCtr){
+                    pCtr = _pCtr;
+                }
+                virtual void Run() {
+                    pCtr->Resume();
+                }
+            };
+            ResumeEvent resumeEvent(playCtr);
+            playCtr->PushEvent(&resumeEvent);
+            playCtr->StartEventLoop();
+            playCtr->StopEventLoop();
+            playCtr->ClearAllEvent();
+        }
+        return 0;
+    }
+
+
     int ThreadReader::SetStopFlag(){
         std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
         stopFlag = 1;
+        queueBox->cvBox.cv.notify_all();
+        return 0;
+    }
+
+    int ThreadReader::SetStartEventLoopFlag()
+    {
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        eventLoopFlag = 1;
         queueBox->cvBox.cv.notify_all();
         return 0;
     }

@@ -28,8 +28,11 @@ namespace Eyer
 
 
         int PushEvent(EyerRunnable * runnable);
+        int ClearAllEvent();
 
         int StartEventLoop();
+        virtual int SetStartEventLoopFlag();
+
         int StopEventLoop();
 
         int EventLoop();
@@ -37,22 +40,18 @@ namespace Eyer
     protected:
         std::atomic_int stopFlag {0};
 
+        std::vector<EyerRunnable *> eventList;
+        std::atomic_int eventLoopFlag {0};
+        std::promise<void> * startPromise = nullptr;
+        std::promise<void> * stopPromise = nullptr;
     private:
         std::thread * t = nullptr;
-
-        std::vector<EyerRunnable *> eventQueue;
-        std::atomic_bool eventLoopFlag {false};
-
-        std::promise<void> * eventLoopPromise = nullptr;
     };
 
     class EyerRunnable
     {
     public:
         virtual void Run() = 0;
-
-        std::promise<void> promise;
-        std::atomic_bool isOK {false};
     };
 }
 

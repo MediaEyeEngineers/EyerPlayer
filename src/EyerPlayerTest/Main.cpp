@@ -13,10 +13,10 @@ int main(int argc,char **argv)
     player.SetURL("/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4");
 
     player.Play();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
 
     player.Pause();
-    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 1);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);
 
     player.Resume();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
