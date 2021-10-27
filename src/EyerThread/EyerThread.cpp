@@ -11,12 +11,16 @@ namespace Eyer
 
     EyerThread::~EyerThread()
     {
-        if(eventLoopPromise != nullptr){
-            delete eventLoopPromise;
-            eventLoopPromise = nullptr;
-        }
-
         Stop();
+
+        if(startPromise != nullptr){
+            delete startPromise;
+            startPromise = nullptr;
+        }
+        if(stopPromise != nullptr){
+            delete stopPromise;
+            stopPromise = nullptr;
+        }
     }
 
     int EyerThread::Start()
@@ -58,62 +62,67 @@ namespace Eyer
 
     int EyerThread::EventLoop()
     {
-        if(!eventLoopFlag){
-            return 0;
-        }
-
-        while(eventLoopFlag){
-            for(int i=0;i<eventQueue.size();i++){
-                if(!eventQueue[i]->isOK){
-                    eventQueue[i]->Run();
-                    eventQueue[i]->isOK = true;
-                    eventQueue[i]->promise.set_value();
-                }
+        if(eventLoopFlag){
+            // printf("Start Event\n");
+            // Doing Event
+            for(int i=0;i<eventList.size();i++){
+                eventList[i]->Run();
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+            stopPromise = new std::promise<void>();
+
+            if(startPromise != nullptr){
+                startPromise->set_value();
+            }
+            // printf("End Event\n");
+
+            stopPromise->get_future().get();
+
+            if(stopPromise != nullptr){
+                delete stopPromise;
+                stopPromise = nullptr;
+            }
+            eventLoopFlag = 0;
         }
-
-        eventQueue.clear();
-
-        eventLoopPromise->set_value();
-
         return 0;
     }
 
     int EyerThread::StartEventLoop()
     {
-        if(eventLoopPromise != nullptr){
-            delete eventLoopPromise;
-            eventLoopPromise = nullptr;
+        startPromise = new std::promise<void>();
+        SetStartEventLoopFlag();
+        // 等待运行结束后的信号
+        startPromise->get_future().get();
+        if(startPromise != nullptr){
+            delete startPromise;
+            startPromise = nullptr;
         }
-        eventLoopPromise = new std::promise<void>();
+        return 0;
+    }
 
-        eventLoopFlag = true;
-
-        for(int i=0;i<eventQueue.size();i++){
-            eventQueue[i]->promise.get_future().get();
-        }
-
+    int EyerThread::SetStartEventLoopFlag()
+    {
+        eventLoopFlag = 1;
         return 0;
     }
 
     int EyerThread::StopEventLoop()
     {
-        eventLoopFlag = false;
-
-        if(eventLoopPromise != nullptr){
-            eventLoopPromise->get_future().get();
-
-            delete eventLoopPromise;
-            eventLoopPromise = nullptr;
+        if(stopPromise != nullptr){
+            stopPromise->set_value();
         }
-
         return 0;
     }
 
     int EyerThread::PushEvent(EyerRunnable * runnable)
     {
-        eventQueue.push_back(runnable);
+        eventList.push_back(runnable);
+        return 0;
+    }
+
+    int EyerThread::ClearAllEvent()
+    {
+        eventList.clear();
         return 0;
     }
 }

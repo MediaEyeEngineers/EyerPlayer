@@ -65,7 +65,6 @@ namespace Eyer
         return 0;
     }
 
-
     QueueBox * EyerPlayer::GetQueueBox()
     {
         return piml->threadEventLoop->GetQueueBox();

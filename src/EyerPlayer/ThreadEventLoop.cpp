@@ -77,9 +77,43 @@ namespace Eyer
         }
         else if(event->type == EventType::PAUSE_REQUEST){
             EyerLog("PAUSE_REQUEST\n");
+            if(readerThread != nullptr){
+                class PauseEvent : public EyerRunnable {
+                public:
+                    ThreadReader * pCtr = nullptr;
+                    PauseEvent(ThreadReader * _pCtr){
+                        pCtr = _pCtr;
+                    }
+                    virtual void Run() {
+                        pCtr->Pause();
+                    }
+                };
+                PauseEvent pauseEvent(readerThread);
+                readerThread->PushEvent(&pauseEvent);
+                readerThread->StartEventLoop();
+                readerThread->StopEventLoop();
+                readerThread->ClearAllEvent();
+            }
         }
         else if(event->type == EventType::RESUME_REQUEST){
             EyerLog("RESUME_REQUEST\n");
+            if(readerThread != nullptr){
+                class ResumeEvent : public EyerRunnable {
+                public:
+                    ThreadReader * pCtr = nullptr;
+                    ResumeEvent(ThreadReader * _pCtr){
+                        pCtr = _pCtr;
+                    }
+                    virtual void Run() {
+                        pCtr->Resume();
+                    }
+                };
+                ResumeEvent resumeEvent(readerThread);
+                readerThread->PushEvent(&resumeEvent);
+                readerThread->StartEventLoop();
+                readerThread->StopEventLoop();
+                readerThread->ClearAllEvent();
+            }
         }
         else if(event->type == EventType::STOP_REQUEST){
             EyerLog("STOP_REQUEST\n");

@@ -3,6 +3,7 @@
 
 #include "EyerThread/EyerThread.hpp"
 #include "QueueBox.hpp"
+#include "ThreadPlayCtr.hpp"
 
 namespace Eyer
 {
@@ -17,11 +18,17 @@ namespace Eyer
         virtual void Run() override;
 
         virtual int SetStopFlag() override;
+        virtual int SetStartEventLoopFlag() override;
+
+        int Pause();
+        int Resume();
 
     private:
         ThreadEventLoop * eventLoop = nullptr;
         QueueBox * queueBox = nullptr;
         EyerString url;
+
+        ThreadPlayCtr * playCtr = nullptr;
     };
 }
 

@@ -22,8 +22,6 @@ namespace Eyer
     {
         EyerLog("ThreadPlayCtr Start\n");
 
-        long long startTime = -1;
-
         int videoStreamIndex = 0;
         int audioStreamIndex = 1;
         EyerAVFrame * videoFrame = nullptr;
@@ -35,10 +33,24 @@ namespace Eyer
             while(!stopFlag) {
                 if(queueBox->IsStart()){
                     // 开始后才对 Frame 队列进行判断
-
-                    break;
+                    if(status == PLAY_CTR_STATUS::PLAYING){
+                        break;
+                    }
+                    else if(status == PLAY_CTR_STATUS::PAUSEING){
+                        if(eventLoopFlag){
+                            break;
+                        }
+                    }
                 }
                 queueBox->cvBox.cv.wait(locker);
+            }
+
+            locker.unlock();
+            EventLoop();
+            locker.lock();
+
+            if(status != PLAY_CTR_STATUS::PLAYING){
+                continue;
             }
 
             if(!queueBox->IsStart()){
@@ -52,7 +64,8 @@ namespace Eyer
                 startTime = Eyer::EyerTime::GetTime();
             }
             long long nowTime = Eyer::EyerTime::GetTime();
-            double dTime = (nowTime - startTime) / 1000.0;
+            dTime = (nowTime - startTime) / 1000.0;
+            dTime += pausedTime;
 
             if(videoFrame == nullptr){
                 locker.lock();
@@ -76,7 +89,7 @@ namespace Eyer
             if(videoFrame != nullptr){
                 double playTime = videoFrame->GetSecPTS();
                 if(dTime >= playTime){
-                    // EyerLog("Video PlayTime: %f\n", playTime);
+                    EyerLog("Video PlayTime: %f\n", playTime);
                     locker.lock();
                     EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetVideoOutputQueue();
                     outputQueue->Lock();
@@ -129,14 +142,6 @@ namespace Eyer
         EyerLog("ThreadPlayCtr End\n");
     }
 
-    int ThreadPlayCtr::SetStopFlag()
-    {
-        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
-        stopFlag = 1;
-        queueBox->cvBox.cv.notify_all();
-        return 0;
-    }
-
     EyerAVFrame * ThreadPlayCtr::GetFrameFromDecodeQueue(int streamId)
     {
         EyerAVFrame * frame = nullptr;
@@ -150,5 +155,41 @@ namespace Eyer
         decodeQueue->FrameQueueUnlock();
 
         return frame;
+    }
+
+    int ThreadPlayCtr::Pause()
+    {
+        EyerLog("ThreadPlayCtr Pause\n");
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        pausedTime = dTime;
+        status = PLAY_CTR_STATUS::PAUSEING;
+        queueBox->cvBox.cv.notify_all();
+        return 0;
+    }
+
+    int ThreadPlayCtr::Resume()
+    {
+        EyerLog("ThreadPlayCtr Resume\n");
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        startTime = Eyer::EyerTime::GetTime();
+        status = PLAY_CTR_STATUS::PLAYING;
+        queueBox->cvBox.cv.notify_all();
+        return 0;
+    }
+
+    int ThreadPlayCtr::SetStopFlag()
+    {
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        stopFlag = 1;
+        queueBox->cvBox.cv.notify_all();
+        return 0;
+    }
+
+    int ThreadPlayCtr::SetStartEventLoopFlag()
+    {
+        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        eventLoopFlag = 1;
+        queueBox->cvBox.cv.notify_all();
+        return 0;
     }
 }
