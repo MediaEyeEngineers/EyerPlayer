@@ -86,8 +86,10 @@ cd ../../
 
 !
 
+cd ${basepath}/Eyer3rdpart/
+chmod -R 777 ffmpeg-4.4
 
-cd ${basepath}/Eyer3rdpart/ffmpeg-4.3/
+cd ${basepath}/Eyer3rdpart/ffmpeg-4.4/
 ./configure \
 $COMMON_FF_CFG_FLAGS \
 --prefix=./ffmpeg_install \
@@ -170,7 +172,7 @@ cp ${basepath}/Eyer3rdpart/platform_external_libxml2/obj/local/armeabi-v7a/libxm
 
 
 cd ${basepath}
-cp -r Eyer3rdpart/ffmpeg-4.3/ffmpeg_install Lib/ffmpeg_install
+cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg_install
 # cp -r Eyer3rdpart/openssl-1.1.1g/openssl_install Lib/openssl_install
 # cp -r Eyer3rdpart/curl-7.72.0/curl_install Lib/curl_install
 
