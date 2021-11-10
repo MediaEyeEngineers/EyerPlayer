@@ -2,6 +2,7 @@
 #define EYERLIB_EYERGLSHADER_HPP
 
 #include "EyerCore/EyerCore.hpp"
+#include "OpenGLFunctionsContext.hpp"
 
 namespace Eyer
 {
@@ -13,7 +14,7 @@ namespace Eyer
 
     class EyerGLShader {
     public:
-        EyerGLShader(EyerGLShaderType _type, const EyerString & _src);
+        EyerGLShader(EyerGLShaderType _type, const EyerString & _src, OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLShader();
 
         int Compile();
@@ -25,6 +26,8 @@ namespace Eyer
     private:
         EyerGLShader(const EyerGLShader & shader) = delete;
         const EyerGLShader & operator = (const EyerGLShader & shader) = delete;
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 

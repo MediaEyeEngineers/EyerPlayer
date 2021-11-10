@@ -311,12 +311,12 @@ namespace Eyer
             return 0;
         }
 
-        int GetMatLen()
+        int GetMatLen() const
         {
             return this->col * this->row * sizeof(float);
         }
 
-        T * GetMat(T * matBuffer)
+        T * GetMat(T * matBuffer) const
         {
             if(matBuffer == NULL) {
                 matBuffer = (float *)malloc(GetMatLen());

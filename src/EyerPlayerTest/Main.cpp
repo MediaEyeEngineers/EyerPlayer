@@ -10,7 +10,9 @@ int main(int argc,char **argv)
 
 
     Eyer::EyerPlayer player;
-    player.SetURL("/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4");
+    Eyer::EyerString path = "https://www.zzsin.com/hdr/V/ysjf.m3u8";
+    // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
+    player.SetURL(path);
 
     player.Play();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 10);

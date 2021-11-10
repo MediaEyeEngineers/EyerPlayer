@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui multimedia opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,7 +12,7 @@ DEFINES += EYER_PLATFORM_QT
 
 INCLUDEPATH += $$PWD/../Lib/EyerPlayer_install/include
 
-LIBS += -L$$PWD/../Lib/EyerPlayer_install/lib -lEyerPlayer -lEyerGL -lEyerEvent -lEyerDeocdeQueue -lEyerAV -lEyerMath -lEyerCore -lEyerThread
+LIBS += -L$$PWD/../Lib/EyerPlayer_install/lib -lEyerPlayer -lEyerColorSpace -lEyerGL -lEyerEvent -lEyerDeocdeQueue -lEyerAV -lEyerMath -lEyerCore -lEyerThread
 LIBS += -L$$PWD/../Lib/ffmpeg_install/lib -lavformat -lavcodec -lswscale -lswresample -lavutil
 
 LIBS += -framework IOKit -framework AudioToolbox -framework CoreGraphics -framework CoreMedia -framework Cocoa -framework VideoToolbox -framework AVFoundation -framework Security -framework CoreFoundation -framework CoreVideo -framework OpenGL -framework AppKit -framework CoreImage -framework VideoDecodeAcceleration

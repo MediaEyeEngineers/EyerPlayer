@@ -3,12 +3,13 @@
 
 #include <vector>
 #include "EyerGLDrawType.hpp"
+#include "OpenGLFunctionsContext.hpp"
 
 namespace Eyer
 {
     class EyerGLVAO {
     public:
-        EyerGLVAO();
+        EyerGLVAO(OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLVAO();
 
         int AddVBO(float * VBOdata, int bufferSize, int layout, int size = 3, unsigned int stride = 0);
@@ -25,6 +26,8 @@ namespace Eyer
     private:
         EyerGLVAO(const EyerGLVAO & vao) = delete;
         const EyerGLVAO & operator = (const EyerGLVAO & vao) = delete;
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 

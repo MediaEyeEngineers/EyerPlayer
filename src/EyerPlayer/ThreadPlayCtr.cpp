@@ -89,7 +89,7 @@ namespace Eyer
             if(videoFrame != nullptr){
                 double playTime = videoFrame->GetSecPTS();
                 if(dTime >= playTime){
-                    EyerLog("Video PlayTime: %f\n", playTime);
+                    // EyerLog("Video PlayTime: %f\n", playTime);
                     locker.lock();
                     EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetVideoOutputQueue();
                     outputQueue->Lock();
