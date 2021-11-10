@@ -4,6 +4,7 @@
 #include "EyerGLTexture.hpp"
 #include "EyerGLComponent.hpp"
 #include "EyerGLFrameBufferParams.hpp"
+#include "OpenGLFunctionsContext.hpp"
 
 #include <vector>
 
@@ -18,13 +19,14 @@ namespace Eyer
     class EyerGLFrameBuffer
     {
     public:
-        EyerGLFrameBuffer(const EyerGLFrameBufferParams & params, EyerGLTexture * _texture = nullptr, unsigned int _defaultFBO = 0);
+        EyerGLFrameBuffer(const EyerGLFrameBufferParams & params, EyerGLTexture * _texture = nullptr, unsigned int _defaultFBO = 0,  OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLFrameBuffer();
 
         int SetParams(const EyerGLFrameBufferParams & params);
         int SetParams(int width, int height);
 
         int AddComponent(EyerGLComponent * component);
+        int RemoveAllComponent();
 
         int Render();
 
@@ -43,6 +45,8 @@ namespace Eyer
     private:
         EyerGLFrameBuffer(const EyerGLFrameBuffer & frameBuffer) = delete;
         const EyerGLFrameBuffer & operator = (const EyerGLFrameBuffer & frameBuffer) = delete;
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 

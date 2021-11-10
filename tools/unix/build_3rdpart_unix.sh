@@ -46,6 +46,6 @@ cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg_install
 cd ${basepath}/Lib
 mkdir QtLib
 cd QtLib
-QT_LIB_PATH=/Users/yuqiaomiao/Qt5.12.10/5.12.10/clang_64/lib/
+QT_LIB_PATH=/Users/yuqiaomiao/Qt/5.15.2/clang_64/lib/
 ln -s ${QT_LIB_PATH}/QtCore.framework/Versions/5/Headers/ QtCore
 ln -s ${QT_LIB_PATH}/QtGui.framework/Versions/5/Headers/ QtGui

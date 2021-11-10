@@ -1,15 +1,6 @@
 include_directories (../)
 include_directories (./)
 
-# include(/Users/yuqiaomiao/Qt5.12.10/5.12.10/clang_64/lib/cmake/Qt5OpenGL/Qt5OpenGLConfig.cmake)
-
-# set(CMAKE_PREFIX_PATH "/Users/yuqiaomiao/Qt5.12.10/5.12.10/clang_64")
-# find_package(Qt5 COMPONENTS Core Gui Qml Quick OpenGL REQUIRED)
-
-# include_directories (/Users/yuqiaomiao/Qt5.12.10/5.12.10/clang_64/lib/QtGui.framework/Headers/)
-
-# include_directories (/Users/yuqiaomiao/Qt5.12.10/5.12.10/clang_64/lib/QtGui.framework/Headers/)
-
 add_library(
         EyerGL
 
@@ -73,6 +64,7 @@ set(head_files
         EyerGLVAO.hpp
         EyerGLDrawType.hpp
         EyerGLFrameBufferParams.hpp
+        OpenGLFunctionsContext.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerGL)

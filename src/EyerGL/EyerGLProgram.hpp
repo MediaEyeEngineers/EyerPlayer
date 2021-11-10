@@ -9,7 +9,7 @@ namespace Eyer
 {
     class EyerGLProgram {
     public:
-        EyerGLProgram();
+        EyerGLProgram(OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLProgram();
 
         int AttachShader(EyerGLShader * shader);
@@ -31,6 +31,10 @@ namespace Eyer
 
         EatrixF4x4 m4;
         float m4data[16];
+
+        float m3data[9];
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 
