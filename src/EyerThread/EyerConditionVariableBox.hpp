@@ -2,6 +2,8 @@
 #define EYERLIB_EYERCONDITIONVARIABLEBOX_HPP
 
 #include <thread>
+#include <condition_variable>
+
 namespace Eyer
 {
     class EyerConditionVariableBox

@@ -55,16 +55,18 @@ namespace Eyer {
 
     int EyerAVReader::GetStream(EyerAVStream & stream, int index)
     {
-        stream.piml->stream_id = piml->formatCtx->streams[index]->index;
-        stream.piml->timebase = piml->formatCtx->streams[index]->time_base;
+        stream.piml->stream_id  = piml->formatCtx->streams[index]->index;
+        stream.piml->timebase   = piml->formatCtx->streams[index]->time_base;
+        stream.piml->duration   = piml->formatCtx->streams[index]->duration * 1.0 * stream.piml->timebase.num / stream.piml->timebase.den;
         return avcodec_parameters_copy(stream.piml->codecpar, piml->formatCtx->streams[index]->codecpar);
     }
 
     EyerAVStream EyerAVReader::GetStream(int index)
     {
         EyerAVStream stream;
-        stream.piml->stream_id = piml->formatCtx->streams[index]->index;
-        stream.piml->timebase = piml->formatCtx->streams[index]->time_base;
+        stream.piml->stream_id  = piml->formatCtx->streams[index]->index;
+        stream.piml->timebase   = piml->formatCtx->streams[index]->time_base;
+        stream.piml->duration   = piml->formatCtx->streams[index]->duration * 1.0 * stream.piml->timebase.num / stream.piml->timebase.den;
         avcodec_parameters_copy(stream.piml->codecpar, piml->formatCtx->streams[index]->codecpar);
         return stream;
     }

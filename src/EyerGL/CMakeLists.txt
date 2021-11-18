@@ -73,6 +73,7 @@ set(head_files
         EyerGLVAO.hpp
         EyerGLDrawType.hpp
         EyerGLFrameBufferParams.hpp
+        OpenGLFunctionsContext.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerGL)

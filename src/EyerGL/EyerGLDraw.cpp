@@ -4,15 +4,17 @@
 
 namespace Eyer
 {
-    EyerGLDraw::EyerGLDraw(const EyerString & vertexShaderStr, const EyerString & fragmentShaderStr)
+    EyerGLDraw::EyerGLDraw(const EyerString & vertexShaderStr, const EyerString & fragmentShaderStr, OpenGLFunctionsContext * _funcCtx)
     {
-        vertextShader   = new EyerGLShader(EyerGLShaderType::VERTEX_SHADER,     vertexShaderStr);
+        funcCtx = _funcCtx;
+
+        vertextShader   = new EyerGLShader(EyerGLShaderType::VERTEX_SHADER,     vertexShaderStr, funcCtx);
         vertextShader->Compile();
 
-        fragmentShader  = new EyerGLShader(EyerGLShaderType::FRAGMENT_SHADER,   fragmentShaderStr);
+        fragmentShader  = new EyerGLShader(EyerGLShaderType::FRAGMENT_SHADER,   fragmentShaderStr, funcCtx);
         fragmentShader->Compile();
 
-        program = new EyerGLProgram();
+        program = new EyerGLProgram(funcCtx);
         program->AttachShader(vertextShader);
         program->AttachShader(fragmentShader);
         program->LinkProgram();
@@ -85,9 +87,13 @@ namespace Eyer
     {
         program->UseProgram();
 
+#ifdef EYER_PLATFORM_QT
+        funcCtx->glActiveTexture(GL_TEXTURE0 + textureIndex);
+        funcCtx->glBindTexture(texture->type, texture->textureId);
+#else
         glActiveTexture(GL_TEXTURE0 + textureIndex);
         glBindTexture(texture->type, texture->textureId);
-
+#endif
         program->PutUniform1i(uniform.str, textureIndex);
 
         return 0;

@@ -40,6 +40,7 @@ namespace Eyer {
         static EyerString Number(uint32_t num, EyerString format = "%d");
 
         static EyerString Number(long num);
+        static EyerString Number(double pts);
         static EyerString Number(long long num);
         static EyerString Number(uint64_t num);
 

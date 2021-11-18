@@ -1,5 +1,5 @@
-#ifndef EYERLIB_EYERAVWRITER_HPP
-#define EYERLIB_EYERAVWRITER_HPP
+#ifndef EYERLIB_EYERAVWRITER_AVAV_HPP
+#define EYERLIB_EYERAVWRITER_AVAV_HPP
 
 #include "EyerCore/EyerCore.hpp"
 #include "EyerAVPacket.hpp"
@@ -20,6 +20,7 @@ namespace Eyer
         int AddStream(EyerAVEncoder & encoder);
 
         int GetTimebase(EyerAVRational & timebase, int streamIndex);
+        EyerAVRational GetTimebase(int streamIndex);
 
         int WriteHand();
         int WriteTrailer();

@@ -10,5 +10,6 @@
 #include "EyerGLComponent.hpp"
 #include "EyerTextureCache.hpp"
 #include "EyerGLFrameBufferParams.hpp"
+#include "OpenGLFunctionsContext.hpp"
 
 #endif //EYERLIB_EYERGL_HPP

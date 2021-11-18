@@ -21,5 +21,10 @@
 #include "EyerAVPixelFrame.hpp"
 #include "EyerAVDecoderBoxGroup.hpp"
 #include "EyerAVSnapshotTask.hpp"
+#include "EyerAVTranscode.hpp"
+#include "EyerMediaInfo.hpp"
+#include "EyerAVResample.hpp"
+#include "EyerMediaInfoParse.hpp"
+#include "EyerAVCodecType.hpp"
 
 #endif //EYERLIB_EYERAV_HPP

@@ -22,7 +22,7 @@ namespace Eyer
         int GetStreamIndex();
         int SetStreamIndex(int streamIndex);
 
-        int RescaleTs(EyerAVRational & _codecTimebase, EyerAVRational & _streamTimebase);
+        int RescaleTs(const EyerAVRational & _codecTimebase, const EyerAVRational & _streamTimebase);
 
         int GetSize();
         uint8_t * GetDatePtr();

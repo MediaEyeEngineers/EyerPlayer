@@ -63,6 +63,15 @@ namespace Eyer
         return 0;
     }
 
+    EyerAVRational EyerAVWriter::GetTimebase(int streamIndex)
+    {
+        EyerAVRational timebase;
+
+        GetTimebase(timebase, streamIndex);
+
+        return timebase;
+    }
+
     int EyerAVWriter::WriteHand()
     {
         int ret = avformat_write_header(piml->formatCtx, nullptr);

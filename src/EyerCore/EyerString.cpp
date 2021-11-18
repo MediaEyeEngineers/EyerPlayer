@@ -272,6 +272,15 @@ namespace Eyer {
         return str;
     }
 
+    EyerString EyerString::Number(double num)
+    {
+        char str[1024];
+
+        sprintf(str, "%f", num);
+
+        return str;
+    }
+
     EyerString EyerString::FormatSec(int sec)
     {
         int s = sec % 60;

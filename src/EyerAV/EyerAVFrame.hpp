@@ -27,14 +27,15 @@ namespace Eyer
 
         int SetVideoData420P(unsigned char * _y, unsigned char * _u, unsigned char * _v, int _width, int _height);
 
-        int SetAudioDataFLTP    (uint8_t * data);
+        int SetAudioDataFLTP    (uint8_t * data, int & offset);
 
         int SetAudioDataS16_44100_2_1024 (uint8_t * data);
 
 
         int InitAudioData(EyerAVSampleFormat sampleFormat, int sample_rate, int nb_samples, int channels);
 
-        int Resample(EyerAVFrame & frame, EyerAVSampleFormat sampleFormat, int sample_rate);
+        // int Resample(EyerAVFrame & frame, EyerAVSampleFormat sampleFormat, int sample_rate);
+        int Resample(EyerAVFrame & frame);
 
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format, const int dstW, const int dstH);
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format);

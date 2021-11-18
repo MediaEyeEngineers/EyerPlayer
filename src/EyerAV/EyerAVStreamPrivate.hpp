@@ -11,6 +11,7 @@ namespace Eyer
         AVCodecParameters * codecpar = nullptr;
         AVRational timebase;
         int stream_id = 0;
+        double duration = 0.0;
     };
 }
 

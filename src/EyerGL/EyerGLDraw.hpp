@@ -13,7 +13,7 @@ namespace Eyer
 {
     class EyerGLDraw {
     public:
-        EyerGLDraw(const EyerString & vertexShader, const EyerString & fragmentShader);
+        EyerGLDraw(const EyerString & vertexShader, const EyerString & fragmentShader, OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLDraw();
 
         int SetVAO(EyerGLVAO * _vao);
@@ -31,6 +31,8 @@ namespace Eyer
         EyerGLShader * vertextShader = nullptr;
         EyerGLShader * fragmentShader = nullptr;
         EyerGLVAO * vao = nullptr;
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 

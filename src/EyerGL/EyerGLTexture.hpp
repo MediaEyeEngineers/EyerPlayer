@@ -3,13 +3,14 @@
 
 #include "GLHeader.hpp"
 #include "EyerGLTextureType.hpp"
+#include "OpenGLFunctionsContext.hpp"
 
 namespace Eyer
 {
     class EyerGLTexture
     {
     public:
-        EyerGLTexture(EyerGLTextureType textureType = EyerGLTextureType::EYER_GL_TEXTURE_2D);
+        EyerGLTexture(EyerGLTextureType textureType = EyerGLTextureType::EYER_GL_TEXTURE_2D, OpenGLFunctionsContext * _funcCtx = nullptr);
         ~EyerGLTexture();
 
         int SetDataREDChannel(unsigned char * data, int width, int height);
@@ -24,6 +25,8 @@ namespace Eyer
     private:
         EyerGLTexture(const EyerGLTexture & texture) = delete;
         const EyerGLTexture & operator = (const EyerGLTexture & texture) = delete;
+
+        OpenGLFunctionsContext * funcCtx = nullptr;
     };
 }
 

@@ -10,6 +10,8 @@ namespace Eyer
     public:
         AVFrame * frame = nullptr;
         double secPTS = 0.0;
+
+        std::vector<uint8_t *> data;
     };
 }
 
