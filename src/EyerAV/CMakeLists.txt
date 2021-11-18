@@ -73,6 +73,30 @@ ADD_LIBRARY(
 
         EyerAVSnapshotTask.hpp
         EyerAVSnapshotTask.cpp
+
+        EyerAVTranscode.hpp
+        EyerAVTranscode.cpp
+
+        EyerAVTranscodeParams.hpp
+        EyerAVTranscodeParams.cpp
+
+        EyerAVResample.hpp
+        EyerAVResample.cpp
+
+        EyerAVChannelLayout.hpp
+        EyerAVChannelLayout.cpp
+
+        EyerMediaInfo.hpp
+        EyerMediaInfo.cpp
+
+        EyerMediaInfoParse.hpp
+        EyerMediaInfoParse.cpp
+
+        EyerAVCodecType.hpp
+        EyerAVCodecType.cpp
+
+        EyerAVCodecID.hpp
+        EyerAVCodecID.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -113,6 +137,14 @@ SET(HEAD_FILES
         EyerAVDecoderBoxGroup.hpp
         EyerAVDecoderLineParams.hpp
         EyerAVSnapshotTask.hpp
+        EyerAVTranscode.hpp
+        EyerAVTranscodeParams.hpp
+        EyerAVResample.hpp
+        EyerAVChannelLayout.hpp
+        EyerMediaInfo.hpp
+        EyerMediaInfoParse.hpp
+        EyerAVCodecType.hpp
+        EyerAVCodecID.hpp
 )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerAV)

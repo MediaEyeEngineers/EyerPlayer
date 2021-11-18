@@ -3,14 +3,16 @@ include_directories (./)
 
 add_library(
         EyerColorSpace
-        EyerColorSpace.cpp
-        EyerColorSpaceMat.cpp
+
+        EyerColorSpaceUtil.hpp
+        EyerColorSpaceUtil.cpp
 )
 
 target_link_libraries (EyerColorSpace EyerCore)
 
 set(head_files
-        EyerColorSpace.hpp
+        EyerColorSpaceHeader.hpp
+        EyerColorSpaceUtil.hpp
         )
 
 INSTALL(FILES ${head_files} DESTINATION include/EyerColorSpace)

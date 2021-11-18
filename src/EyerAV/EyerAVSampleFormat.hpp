@@ -18,11 +18,16 @@ namespace Eyer
         static EyerAVSampleFormat SAMPLE_FMT_FLTP;
         static EyerAVSampleFormat SAMPLE_FMT_DBLP;
 
-        EyerAVSampleFormat(int id);
+        EyerAVSampleFormat();
+        EyerAVSampleFormat(int id, int ffmpegId);
+
+        EyerAVSampleFormat(const EyerAVSampleFormat & sampleFormat);
+        EyerAVSampleFormat & operator = (const EyerAVSampleFormat & sampleFormat);
 
         bool operator == (const EyerAVSampleFormat & format);
 
         int id = 0;
+        int ffmpegId = 0;
     };
 }
 

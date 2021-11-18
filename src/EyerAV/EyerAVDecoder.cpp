@@ -28,7 +28,7 @@ namespace Eyer
         }
     }
 
-    int EyerAVDecoder::Init(EyerAVStream & stream)
+    int EyerAVDecoder::Init(const EyerAVStream & stream)
     {
         piml->streamTimebase = stream.piml->timebase;
 
@@ -86,5 +86,10 @@ namespace Eyer
         timebase.num = piml->codecContext->time_base.num;
         timebase.den = piml->codecContext->time_base.den;
         return 0;
+    }
+
+    int EyerAVDecoder::GetSampleRate()
+    {
+        return piml->codecContext->sample_rate;
     }
 }

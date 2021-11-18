@@ -9,6 +9,9 @@ namespace Eyer
         EyerAVRational(int _num, int _den);
         ~EyerAVRational();
 
+        EyerAVRational(const EyerAVRational & rational);
+        EyerAVRational & operator = (const EyerAVRational & rational);
+
     public:
         int num = 0;
         int den = 0;

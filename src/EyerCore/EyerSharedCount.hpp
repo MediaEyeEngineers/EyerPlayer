@@ -15,7 +15,8 @@ namespace Eyer
         long Reduce();
         long Get();
     private:
-        std::atomic<long> count {0};
+        long count = 0;
+        // std::atomic<long> count {0};
     };
 }
 

@@ -15,9 +15,10 @@ namespace Eyer
         EyerAVDecoder();
         ~EyerAVDecoder();
 
-        int Init(EyerAVStream & stream);
+        int Init(const EyerAVStream & stream);
 
         int GetTimebase(EyerAVRational & timebase);
+        int GetSampleRate();
 
         int SendPacket(EyerAVPacket * packet);
         int SendPacket(EyerAVPacket & packet);

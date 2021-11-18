@@ -13,6 +13,11 @@ namespace Eyer
 
         }
 
+        Eatrix3x3(T * data) : Eatrix<T>(3, 3)
+        {
+            Eatrix<T>::SetData(data, 9);
+        }
+
         Eatrix3x3(const Eatrix <T> &mat) : Eatrix3x3()
         {
             *this = mat;

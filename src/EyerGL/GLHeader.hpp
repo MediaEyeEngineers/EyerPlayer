@@ -37,6 +37,14 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
+#elif EYER_PLATFORM_EMSCRIPTEN
+
+#include <emscripten.h>
+#include <SDL.h>
+#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
+#define	EYER_GL_HEADER_SHADER(shader) "\#version 330\n" EYER_STRINGIZE(shader)
+
 #else
 
 #include "glad/glad.h"

@@ -2,6 +2,8 @@
 #define EYERLIB_EYERAVSTREAM_HPP
 
 #include <stdio.h>
+#include "EyerAVCodecType.hpp"
+#include "EyerAVCodecID.hpp"
 
 namespace Eyer
 {
@@ -18,6 +20,12 @@ namespace Eyer
         EyerAVStream & operator = (const EyerAVStream & stream);
 
         int GetStreamId();
+        double GetDuration() const;
+
+        EyerAVCodecType GetType();
+        int GetWidth();
+        int GetHeight();
+        EyerAVCodecID GetCodecID();
     public:
         EyerAVStreamPrivate * piml = nullptr;
     };

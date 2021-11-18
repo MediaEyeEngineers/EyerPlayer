@@ -248,23 +248,6 @@ namespace Eyer
             return res;
         }
 
-
-        /**
-         * 矩阵转置
-         * @param
-         * @return
-         */
-        int Transpose (Eatrix & m) const
-        {
-            m.Resize(row, col);
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < col; j++) {
-                    m.mat[i][j] = mat[j][i];
-                }
-            }
-            return 0;
-        }
-
         /**
          * 矩阵转置
          * @param
@@ -281,8 +264,24 @@ namespace Eyer
             return res;
         }
 
+        /**
+         * 矩阵转置
+         * @param
+         * @return
+         */
+        const int TransposeSelf ()
+        {
+            Eatrix res(row, col);
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    res.mat[i][j] = mat[j][i];
+                }
+            }
 
+            *this = res;
 
+            return 0;
+        }
 
         int SetData(T * arr, int len)
         {
@@ -359,7 +358,6 @@ namespace Eyer
 
         /**
         * float矩阵的逆矩阵
-         * 注意：目前只有3*3矩阵求逆测试通过
         * @param
         * @return
         */

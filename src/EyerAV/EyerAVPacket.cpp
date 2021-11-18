@@ -59,7 +59,7 @@ namespace Eyer
         return 0;
     }
 
-    int EyerAVPacket::RescaleTs(EyerAVRational & _codecTimebase, EyerAVRational & _streamTimebase)
+    int EyerAVPacket::RescaleTs(const EyerAVRational & _codecTimebase, const EyerAVRational & _streamTimebase)
     {
         AVRational codecTimebase;
         codecTimebase.num = _codecTimebase.num;

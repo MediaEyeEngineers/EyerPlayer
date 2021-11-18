@@ -17,4 +17,16 @@ namespace Eyer
     {
 
     }
+
+    EyerAVRational::EyerAVRational(const EyerAVRational & rational)
+    {
+        *this = rational;
+    }
+
+    EyerAVRational & EyerAVRational::operator = (const EyerAVRational & rational)
+    {
+        num = rational.num;
+        den = rational.den;
+        return *this;
+    }
 }

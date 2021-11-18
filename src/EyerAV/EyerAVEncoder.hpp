@@ -22,7 +22,10 @@ namespace Eyer
         int SendFrameNull();
         int RecvPacket(EyerAVPacket & packet);
 
+        int GetFrameSize();
+
         int GetTimebase(EyerAVRational & timebase);
+        EyerAVRational GetTimebase();
 
         EyerAVADTS GetADTS(int packetSize);
 

@@ -43,4 +43,20 @@ namespace Eyer
         }
         return true;
     }
+
+    int Eath::GetGreatestCommonDivisor(int a, int b)
+    {
+        int ret = 1;
+
+        int max = std::max(a, b);
+        for(int i=1; i<=max; i++){
+            if(a % i == 0){
+                if(b % i == 0){
+                    ret = i;
+                }
+            }
+        }
+
+        return ret;
+    }
 }

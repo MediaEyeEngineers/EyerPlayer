@@ -20,6 +20,8 @@ namespace Eyer
          * @return 相交返回true，不相交返回false
          */
         static bool IsLineCross(const Eatrix2x1<float> & a, const Eatrix2x1<float> & b, const Eatrix2x1<float> & c, const Eatrix2x1<float> & d);
+
+        static int GetGreatestCommonDivisor(int a, int b);
     };
 }
 #endif //EYERLIB_EATH_HPP
