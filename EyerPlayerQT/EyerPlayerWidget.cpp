@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <QDebug>
 
+#include "EyerMath/EyerMath.hpp"
+#include "EyerColorSpace/EyerColorSpace.hpp"
+
 EyerPlayerWidget::EyerPlayerWidget(QWidget * parent)
     : QOpenGLWidget(parent)
 {
+    player.SetURL("https://www.zzsin.com/hdr/V/ysjf.m3u8");
     player.Play();
     renderThread = new EyerPlayerRenderThread(&player);
 
@@ -57,11 +61,12 @@ void EyerPlayerWidget::initializeGL()
         layout (location = 1) in vec3 coor;
 
         out vec2 outCoor;
+        uniform mat4 cropMat;
 
         void main()
         {
             outCoor = vec2(coor.x, 1.0 - coor.y);
-            gl_Position = vec4(pos, 1.0);
+            gl_Position = cropMat * vec4(pos, 1.0);
         }
     );
 
@@ -73,29 +78,26 @@ void EyerPlayerWidget::initializeGL()
         uniform sampler2D textU;
         uniform sampler2D textV;
 
+        uniform mat3 colorTrans;
+
         void main()
         {
             float y = texture(textY, outCoor).r;
             float u = texture(textU, outCoor).r - 0.5;
             float v = texture(textV, outCoor).r - 0.5;
 
-            mat3 trans = mat3(
-                        1.0000, 0.0729, 2.7472,
-                        1.0000, -0.4042, -0.9835,
-                        1.0001, 2.0173, 0.0464
-                        );
             vec3 yuv = vec3(y, u, v);
-            vec3 rgb = yuv * trans;
+            vec3 rgb = colorTrans * yuv;
             color = vec4(rgb, 1.0);
         }
     );
 
-    yTexture = new Eyer::EyerGLTexture();
-    uTexture = new Eyer::EyerGLTexture();
-    vTexture = new Eyer::EyerGLTexture();
+    yTexture = new Eyer::EyerGLTexture(Eyer::EyerGLTextureType::EYER_GL_TEXTURE_2D, this);
+    uTexture = new Eyer::EyerGLTexture(Eyer::EyerGLTextureType::EYER_GL_TEXTURE_2D, this);
+    vTexture = new Eyer::EyerGLTexture(Eyer::EyerGLTextureType::EYER_GL_TEXTURE_2D, this);
 
-    yuvDraw = new Eyer::EyerGLDraw(VERTEX_SHADER, FRAGMENT_SHADER);
-    vao = new Eyer::EyerGLVAO();
+    yuvDraw = new Eyer::EyerGLDraw(VERTEX_SHADER, FRAGMENT_SHADER, this);
+    vao = new Eyer::EyerGLVAO(this);
 
     vao->AddVBO(vertex, sizeof(vertex), 0);
     vao->AddVBO(coor, sizeof(coor), 1);
@@ -134,9 +136,21 @@ void EyerPlayerWidget::paintGL()
         yuvDraw->PutTexture("textY", yTexture, 0);
         yuvDraw->PutTexture("textU", uTexture, 1);
         yuvDraw->PutTexture("textV", vTexture, 2);
-        yuvDraw->Draw();
 
-        // qDebug() << "PTS: " << videoFrame->GetSecPTS() << endl;
+        Eyer::Eyer2DCrop crop(screen_width, screen_height);
+        Eyer::Eatrix4x4<float> crapMat = crop.Crop(width, height, Eyer::EyerCropType::FIT_CENTER);
+        yuvDraw->PutMatrix4fv("cropMat", crapMat);
+
+
+        Eyer::EyerColorSpace colorSpace;
+        colorSpace.AddEatrix(Eyer::EyerColorSpaceMat::GetInstance()->yuv709_rgb709_255_mat);
+
+        Eyer::Eatrix4x4<float> colorTrans;
+        colorSpace.GetMat(colorTrans);
+
+        yuvDraw->PutMatrix3fv("colorTrans", colorTrans);
+
+        yuvDraw->Draw();
 
         if(yData != nullptr){
             free(yData);
@@ -158,7 +172,8 @@ void EyerPlayerWidget::paintGL()
 
 void EyerPlayerWidget::resizeGL(int w, int h)
 {
-
+    screen_width = w;
+    screen_height = h;
 }
 
 void EyerPlayerWidget::OnRenderFrame(void * avFrame)

@@ -40,6 +40,9 @@ private:
     Eyer::EyerGLTexture * vTexture = nullptr;
 
     Eyer::EyerAVFrame * videoFrame = nullptr;
+
+    int screen_width = 0;
+    int screen_height = 0;
 };
 
 #endif // EYERPLAYERWIDGET_H
