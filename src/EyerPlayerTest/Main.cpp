@@ -23,6 +23,9 @@ int main(int argc,char **argv)
     player.Resume();
     Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
 
+    player.Seek(10.0);
+    Eyer::EyerTime::EyerSleepMilliseconds(1000 * 20);
+
     player.Stop();
 
     delete blockTime;

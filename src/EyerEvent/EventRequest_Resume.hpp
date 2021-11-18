@@ -4,7 +4,7 @@
 #include "EventRequest.hpp"
 
 namespace Eyer {
-    class EventRequest_Resume  : public EventRequest
+    class EventRequest_Resume : public EventRequest
     {
     public:
         EventRequest_Resume();

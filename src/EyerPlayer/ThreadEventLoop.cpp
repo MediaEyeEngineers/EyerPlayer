@@ -126,6 +126,9 @@ namespace Eyer
                 readerThread = nullptr;
             }
         }
+        else if(event->type == EventType::SEEK_REQUEST) {
+            EyerLog("SEEK_REQUEST\n");
+        }
         else {
             EyerLog("UNKNOW\n");
         }
