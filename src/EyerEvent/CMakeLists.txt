@@ -26,6 +26,9 @@ ADD_LIBRARY (
 
         EventRequest_Resume.hpp
         EventRequest_Resume.cpp
+
+        EventRequest_Seek.hpp
+        EventRequest_Seek.cpp
 )
 
 SET(HEAD_FILES

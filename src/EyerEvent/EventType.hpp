@@ -17,6 +17,9 @@ namespace Eyer
         STOP_REQUEST,
         STOP_RESPONSE,
 
+        SEEK_REQUEST,
+        SEEK_RESPONSE,
+
         UNKNOW
     };
 }

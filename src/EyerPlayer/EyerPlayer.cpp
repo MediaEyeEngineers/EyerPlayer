@@ -65,6 +65,14 @@ namespace Eyer
         return 0;
     }
 
+    int EyerPlayer::Seek(double time)
+    {
+        std::lock_guard<std::mutex> lg(piml->mut);
+        EventRequest_Seek * event = new EventRequest_Seek();
+        piml->threadEventLoop->PushEvent(event);
+        return 0;
+    }
+
     QueueBox * EyerPlayer::GetQueueBox()
     {
         return piml->threadEventLoop->GetQueueBox();

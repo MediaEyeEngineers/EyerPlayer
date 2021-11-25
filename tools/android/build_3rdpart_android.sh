@@ -3,11 +3,28 @@ cd ../../
 basepath=$(cd `dirname $0`; pwd)
 echo ${basepath}
 
+# 下载代码
+
 if [ -d ./Eyer3rdpart ];then 
     rm -rf Eyer3rdpart
 fi
 
 git clone https://gitee.com/redknot/Eyer3rdpart
+
+cd ${basepath}/Eyer3rdpart/
+chmod -R 777 ffmpeg-4.4
+
+# 配置 NDK
+if [ -z $NDK ]; then
+    echo ""
+    echo ""
+    echo ""
+    echo "==========Please set NDK path first=========="
+    echo ""
+    echo ""
+    echo ""
+    exit 1;
+fi
 
 files=$(ls $NDK/toolchains/llvm/prebuilt/)
 HOST_TAG=$""
@@ -17,136 +34,86 @@ do
     HOST_TAG=$filename
 done
 
-# HOST_TAG=linux-x86_64
-# HOST_TAG=darwin-x86_64
-# HOST_TAG=windows-x86_64
-
 echo "HOST_TAG:"$HOST_TAG
 
-export ANDROID_NDK_HOME=$NDK
-export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
 
-# Only choose one of these, depending on your device...
-# export TARGET=aarch64-linux-android
-export TARGET=armv7a-linux-androideabi
-# export TARGET=i686-linux-android
-# export TARGET=x86_64-linux-android
+ffmpeg_compile() {
 
+    echo ""
+    echo ""
+    echo ""
+    echo "Lets build FFmpeg for Android $1 !!!!"
+    echo ""
+    echo ""
+    echo ""
 
-# Set this to your minSdkVersion.
-export API=18
+    cd ${basepath}/Eyer3rdpart/ffmpeg-4.4/
 
-export CC=$TOOLCHAIN/bin/$TARGET$API-clang
-export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
+    if [ -d ./ffmpeg_install ];then 
+        rm -rf ffmpeg_install
+    fi
 
-# export AR=$TOOLCHAIN/bin/$TARGET-ar
-export AR=$TOOLCHAIN/bin/arm-linux-androideabi-ar
-export AS=$TOOLCHAIN/bin/arm-linux-androideabi-as
-export LD=$TOOLCHAIN/bin/arm-linux-androideabi-ld
-export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
-export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
+    TARGET=$2
+    ARCH=$3
 
+    export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
 
+    # export TARGET=aarch64-linux-android
+    # export TARGET=armv7a-linux-androideabi
+    # export TARGET=i686-linux-android
+    # export TARGET=x86_64-linux-android
+    
 
-export COMMON_FF_CFG_FLAGS=
-. ${basepath}/tools/configs/module.sh
+    echo 'TARGET: '$TARGET
 
-# echo $COMMON_FF_CFG_FLAGS
+    export API=21
 
-:<<!
+    # export CC=$TOOLCHAIN/bin/$TARGET$API-clang
+    # export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
 
-cd ${basepath}/Eyer3rdpart/ffmpeg_3.2.14/
-./configure \
---enable-static \
---disable-shared \
---disable-ffmpeg \
---disable-ffplay \
---disable-ffprobe \
---disable-ffserver \
---disable-avdevice \
---disable-doc \
---disable-symver \
---prefix=./ffmpeg_install \
---enable-libx264 \
---enable-gpl \
---enable-pic \
---disable-neon \
---extra-cflags=-I${basepath}/Eyer3rdpart/x264/x264_install/include/ \
---extra-ldflags=-L${basepath}/Eyer3rdpart/x264/x264_install/lib/ \
---enable-cross-compile \
---target-os=android \
---arch=arm \
---nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
---cc=$TOOLCHAIN/bin/$TARGET$API-clang \
---cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi-
-make clean
-make -j4
-make install
-cd ../../
+    # export AR=$TOOLCHAIN/bin/$TARGET-ar
+    export AR=$TOOLCHAIN/bin/arm-linux-androideabi-ar
+    export AS=$TOOLCHAIN/bin/arm-linux-androideabi-as
+    export LD=$TOOLCHAIN/bin/arm-linux-androideabi-ld
+    export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
+    export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
 
-!
+    # 配置 FFmpeg 选项 
 
-cd ${basepath}/Eyer3rdpart/
-chmod -R 777 ffmpeg-4.4
+    export COMMON_FF_CFG_FLAGS=
+    . ${basepath}/tools/configs/module.sh
 
-cd ${basepath}/Eyer3rdpart/ffmpeg-4.4/
-./configure \
-$COMMON_FF_CFG_FLAGS \
---prefix=./ffmpeg_install \
---enable-cross-compile \
---target-os=android \
---arch=arm \
---nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
---cc=$TOOLCHAIN/bin/$TARGET$API-clang \
---cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi-
+    ## x86 的 asm 编译不过去，直接干掉
+    if [ $1 == "i686" ];then 
+        export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-asm"
+    fi
+    
+    if [ $1 == "x86_64" ];then 
+        export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-asm"
+    fi
 
-make clean
-make -j4
-make install
+    cd ${basepath}/Eyer3rdpart/ffmpeg-4.4/
 
+    make clean
+    make distclean
 
-:<<!
-export CC=$TARGET$API-clang
-export PATH=$TOOLCHAIN"/bin":$PATH
-cd ${basepath}/Eyer3rdpart/openssl-1.1.1g/
-./Configure \
-android-arm -D__ANDROID_API__=$API no-asm no-ssl2 no-ssl3 no-comp no-hw no-engine --prefix=${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install
+    ./configure \
+    $COMMON_FF_CFG_FLAGS \
+    --prefix=${basepath}/Eyer3rdpart/ffmpeg-4.4/ffmpeg_install \
+    --enable-cross-compile \
+    --arch=$ARCH \
+    --target-os=android \
+    --nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
+    --cc=$TOOLCHAIN/bin/$TARGET$API-clang \
+    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi-
 
-make clean
-make -j4
-make install
+    make clean
+    make -j8
+    make install
 
-cd ${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install/lib
-rm libcrypto.so
-rm libcrypto.so.1.1
-rm libssl.so
-rm libssl.so.1.1
-
-
-
-
-
-export CC=$TOOLCHAIN/bin/$TARGET$API-clang
-cd ${basepath}/Eyer3rdpart/curl-7.72.0/
-./configure \
---enable-static \
---disable-shared \
---prefix=${basepath}/Eyer3rdpart/curl-7.72.0/curl_install \
---host=arm-linux-androideabi \
---with-ssl=${basepath}/Eyer3rdpart/openssl-1.1.1g/openssl_install
-
-make clean
-make -j4
-make install
-
-
-
-
-
-
-cd ${basepath}/Eyer3rdpart/platform_external_libxml2/
-$NDK/ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk
-!
+    cd ${basepath}
+    cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg/$1
+}
 
 cd ${basepath}
 
@@ -156,26 +123,12 @@ fi
 
 mkdir Lib
 
-:<<!
-cd ${basepath}/Lib/
-mkdir libxml2_install
-cd libxml2_install
-mkdir include
-cd include
-mkdir libxml2
-cd ${basepath}/Lib/
-cp -r ${basepath}/Eyer3rdpart/platform_external_libxml2/include/libxml ${basepath}/Lib/libxml2_install/include/libxml2
-cd ${basepath}/Lib/libxml2_install
-mkdir lib
-cp ${basepath}/Eyer3rdpart/platform_external_libxml2/obj/local/armeabi-v7a/libxml2.a ${basepath}/Lib/libxml2_install/lib/libxml2.a
-!
-
+cd Lib
+mkdir ffmpeg
 
 cd ${basepath}
-cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg_install
-# cp -r Eyer3rdpart/openssl-1.1.1g/openssl_install Lib/openssl_install
-# cp -r Eyer3rdpart/curl-7.72.0/curl_install Lib/curl_install
 
-
-
-
+ffmpeg_compile armv7a armv7a-linux-androideabi arm
+ffmpeg_compile aarch64 aarch64-linux-android arm64
+ffmpeg_compile i686 i686-linux-android x86
+ffmpeg_compile x86_64 x86_64-linux-android x86_64

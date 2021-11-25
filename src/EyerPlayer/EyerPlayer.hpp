@@ -19,6 +19,7 @@ namespace Eyer
         int Pause();
         int Resume();
         int Stop();
+        int Seek(double time);
 
         // Output
         QueueBox * GetQueueBox();
