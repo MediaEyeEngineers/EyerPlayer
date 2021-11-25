@@ -31,12 +31,15 @@ namespace Eyer
         // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
         // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/tututu.mp4";
 
+        EyerLog("Reader Thread: %s\n", url.str);
         Eyer::EyerAVReader reader(url);
         int ret = reader.Open();
         if(ret){
             // 打开失败
             // eventLoop->PushEvent()
             EyerLog("Open Fail\n");
+            // 抛出错误，线程进入待命状态
+            return;
         }
 
         int streamCount = reader.GetStreamCount();

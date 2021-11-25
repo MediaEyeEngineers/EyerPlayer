@@ -21,6 +21,7 @@ TARGET_LINK_LIBRARIES(EyerAndroidInterface swscale)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avutil)
 
 TARGET_LINK_LIBRARIES(EyerAndroidInterface z)
+TARGET_LINK_LIBRARIES(EyerAndroidInterface log)
 
 INSTALL(
     TARGETS EyerAndroidInterface

@@ -41,6 +41,14 @@ JNIEXPORT jint JNICALL Java_com_zzsin_eyerplayer_jni_EyerPlayerJNI_eyer_1player_
 
 /*
  * Class:     com_zzsin_eyerplayer_jni_EyerPlayerJNI
+ * Method:    eyer_player_stop
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_zzsin_eyerplayer_jni_EyerPlayerJNI_eyer_1player_1stop
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_zzsin_eyerplayer_jni_EyerPlayerJNI
  * Method:    eyer_player_pause
  * Signature: (J)I
  */

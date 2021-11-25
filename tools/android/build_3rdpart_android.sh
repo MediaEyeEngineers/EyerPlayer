@@ -20,6 +20,7 @@ if [ -z $NDK ]; then
     echo ""
     echo ""
     echo "==========Please set NDK path first=========="
+    echo "export NDK=......"
     echo ""
     echo ""
     echo ""
@@ -36,6 +37,8 @@ done
 
 echo "HOST_TAG:"$HOST_TAG
 
+PATH=$NDK/toolchains/llvm/prebuilt/$HOST_TAG/bin:$PATH
+export ANDROID_NDK_HOME=$NDK
 
 ffmpeg_compile() {
 
@@ -84,7 +87,7 @@ ffmpeg_compile() {
     . ${basepath}/tools/configs/module.sh
 
     ## x86 的 asm 编译不过去，直接干掉
-    if [ $1 == "i686" ];then 
+    if [ $1 == "x86" ];then 
         export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-asm"
     fi
     
@@ -97,6 +100,9 @@ ffmpeg_compile() {
     make clean
     make distclean
 
+    echo "-I${basepath}/Lib/android/openssl_install/$1/include/"
+    echo "-L${basepath}/Lib/android/openssl_install/$1/lib/"
+
     ./configure \
     $COMMON_FF_CFG_FLAGS \
     --prefix=${basepath}/Eyer3rdpart/ffmpeg-4.4/ffmpeg_install \
@@ -105,14 +111,61 @@ ffmpeg_compile() {
     --target-os=android \
     --nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
     --cc=$TOOLCHAIN/bin/$TARGET$API-clang \
-    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi-
+    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
+    --extra-cflags="-I${basepath}/Lib/android/openssl_install/$1/include/" \
+    --extra-ldflags="-L${basepath}/Lib/android/openssl_install/$1/lib/"
 
     make clean
     make -j8
     make install
 
     cd ${basepath}
-    cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg/$1
+    cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/android/ffmpeg_install/$1
+}
+
+openssl_compile() {
+    echo ""
+    echo ""
+    echo ""
+    echo "Lets build OpenSSL for Android $1 !!!!"
+    echo ""
+    echo ""
+    echo ""
+
+    cd ${basepath}/Eyer3rdpart/openssl-1.1.1k/
+    make clean
+    make distclean
+
+    CC=clang
+
+    if [ $1 == "armeabi-v7a" ];then 
+        export OPENSSL_ARCH="android-arm"
+    fi
+
+    if [ $1 == "arm64-v8a" ];then 
+        export OPENSSL_ARCH="android-arm64"
+    fi
+
+    if [ $1 == "x86" ];then 
+        export OPENSSL_ARCH="android-x86 no-asm"
+    fi
+
+    if [ $1 == "x86_64" ];then 
+        export OPENSSL_ARCH="android-x86_64 no-asm"
+    fi
+
+    ./Configure \
+    no-shared \
+    --prefix=${basepath}/Eyer3rdpart/openssl-1.1.1k/openssl_install \
+    ${OPENSSL_ARCH} \
+    -D__ANDROID_API__=21
+
+    make clean
+    make -j1
+    make install
+
+    cd ${basepath}
+    cp -r Eyer3rdpart/openssl-1.1.1k/openssl_install Lib/android/openssl_install/$1
 }
 
 cd ${basepath}
@@ -124,11 +177,21 @@ fi
 mkdir Lib
 
 cd Lib
-mkdir ffmpeg
+mkdir android
+
+cd android
+mkdir ffmpeg_install
+mkdir openssl_install
 
 cd ${basepath}
 
-ffmpeg_compile armv7a armv7a-linux-androideabi arm
-ffmpeg_compile aarch64 aarch64-linux-android arm64
-ffmpeg_compile i686 i686-linux-android x86
+
+openssl_compile armeabi-v7a
+openssl_compile arm64-v8a
+openssl_compile x86
+openssl_compile x86_64
+
+ffmpeg_compile armeabi-v7a armv7a-linux-androideabi arm
+ffmpeg_compile arm64-v8a aarch64-linux-android arm64
+ffmpeg_compile x86 i686-linux-android x86
 ffmpeg_compile x86_64 x86_64-linux-android x86_64

@@ -16,7 +16,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         playerView = findViewById(R.id.eyer_player_view);
-
+        playerView.setUrl("https://www.zzsin.com/hdr/V/ysjf.m3u8");
         playerView.play();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(playerView != null){
+            playerView.stop();
+            playerView.destory();
+            playerView = null;
+        }
     }
 }

@@ -10,6 +10,7 @@ public class EyerPlayerJNI {
 
     public static native int    eyer_player_set_url     (long eyer_player, String url);
     public static native int    eyer_player_play        (long eyer_player);
+    public static native int    eyer_player_stop        (long eyer_player);
     public static native int    eyer_player_pause       (long eyer_player);
     public static native int    eyer_player_resume      (long eyer_player);
 }
