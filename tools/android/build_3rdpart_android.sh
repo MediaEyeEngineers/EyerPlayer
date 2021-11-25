@@ -112,7 +112,7 @@ ffmpeg_compile() {
     make install
 
     cd ${basepath}
-    cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg_$1
+    cp -r Eyer3rdpart/ffmpeg-4.4/ffmpeg_install Lib/ffmpeg/$1
 }
 
 cd ${basepath}
@@ -122,6 +122,11 @@ if [ -d ./Lib ];then
 fi
 
 mkdir Lib
+
+cd Lib
+mkdir ffmpeg
+
+cd ${basepath}
 
 ffmpeg_compile armv7a armv7a-linux-androideabi arm
 ffmpeg_compile aarch64 aarch64-linux-android arm64
