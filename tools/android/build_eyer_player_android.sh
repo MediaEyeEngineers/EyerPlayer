@@ -3,7 +3,7 @@ cd ../../
 basepath=$(cd `dirname $0`; pwd)
 echo ${basepath}
 
-cd ${basepath}/EyerPlayerCore
+cd ${basepath}/src
 
 if [ -d ./build ];then 
     rm -rf build

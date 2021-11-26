@@ -28,6 +28,7 @@ namespace Eyer
 
     int EyerPlayer::SetURL(const EyerString & _url)
     {
+        std::lock_guard<std::mutex> lg(piml->mut);
         piml->url = _url;
         return 0;
     }
