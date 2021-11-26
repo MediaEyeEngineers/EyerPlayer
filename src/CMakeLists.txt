@@ -31,7 +31,9 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Android")
     MESSAGE(STATUS "Android Build ${ANDROID_ABI}")
 
     INCLUDE_DIRECTORIES (${CMAKE_SOURCE_DIR}/../Lib/android/ffmpeg_install/${ANDROID_ABI}/include)
+    INCLUDE_DIRECTORIES (${CMAKE_SOURCE_DIR}/../Lib/android/openssl_install/${ANDROID_ABI}/include)
     LINK_DIRECTORIES (${CMAKE_SOURCE_DIR}/../Lib/android/ffmpeg_install/${ANDROID_ABI}/lib)
+    LINK_DIRECTORIES (${CMAKE_SOURCE_DIR}/../Lib/android/openssl_install/${ANDROID_ABI}/lib)
 
     ADD_SUBDIRECTORY(EyerAndroidInterface)
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
