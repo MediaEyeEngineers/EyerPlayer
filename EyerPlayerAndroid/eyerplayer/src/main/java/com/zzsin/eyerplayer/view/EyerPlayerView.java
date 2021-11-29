@@ -2,39 +2,43 @@ package com.zzsin.eyerplayer.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import androidx.annotation.NonNull;
 
 import com.zzsin.eyerplayer.jni.EyerPlayerJNI;
 
-public class EyerPlayerView extends SurfaceView {
+public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callback {
 
     private long playerJNI = 0L;
+    private EyerPlayerViewListener listener = null;
+    private Context context = null;
 
     public EyerPlayerView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public EyerPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public EyerPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
-    private int init() {
-        playerJNI = EyerPlayerJNI.eyer_player_init();
+    private int init(Context context) {
+        setKeepScreenOn(true);
+        this.context = context;
         return 0;
     }
 
-    public int destory() {
-        if(playerJNI != 0L){
-            EyerPlayerJNI.eyer_player_uninit(playerJNI);
-            playerJNI = 0L;
-        }
+    public int initPlayer(EyerPlayerViewListener listener){
+        this.listener = listener;
+        getHolder().addCallback(this);
         return 0;
     }
 
@@ -48,5 +52,30 @@ public class EyerPlayerView extends SurfaceView {
 
     public int stop(){
         return EyerPlayerJNI.eyer_player_stop(playerJNI);
+    }
+
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        playerJNI = EyerPlayerJNI.eyer_player_init();
+
+        if(this.listener != null){
+            this.listener.afterCreated();
+        }
+    }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
+        if(this.listener != null){
+            this.listener.beforeDestory();
+        }
+        if(playerJNI != 0L){
+            EyerPlayerJNI.eyer_player_uninit(playerJNI);
+            playerJNI = 0L;
+        }
     }
 }

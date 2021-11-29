@@ -110,7 +110,7 @@ namespace Eyer
             if(audioFrame != nullptr){
                 double playTime = audioFrame->GetSecPTS();
                 if(dTime >= playTime){
-                    // EyerLog("Audio PlayTime: %f\n", playTime);
+                    EyerLog("Audio PlayTime: %f\n", playTime);
                     locker.lock();
                     EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetAudioOutputQueue();
                     outputQueue->Lock();

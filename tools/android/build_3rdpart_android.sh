@@ -56,36 +56,66 @@ ffmpeg_compile() {
         rm -rf ffmpeg_install
     fi
 
-    TARGET=$2
-    ARCH=$3
-
-    export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
-
-    # export TARGET=aarch64-linux-android
-    # export TARGET=armv7a-linux-androideabi
-    # export TARGET=i686-linux-android
-    # export TARGET=x86_64-linux-android
-    
-
-    echo 'TARGET: '$TARGET
+    export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG    
 
     export API=21
 
     # export CC=$TOOLCHAIN/bin/$TARGET$API-clang
     # export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
 
-    # export AR=$TOOLCHAIN/bin/$TARGET-ar
-    export AR=$TOOLCHAIN/bin/arm-linux-androideabi-ar
-    export AS=$TOOLCHAIN/bin/arm-linux-androideabi-as
-    export LD=$TOOLCHAIN/bin/arm-linux-androideabi-ld
-    export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
-    export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
+    if [ $1 == "armeabi-v7a" ];then 
+        export ARCH="arm"
+        export CC=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang
+        export CXX=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang++
+        export AR=$TOOLCHAIN/bin/arm-linux-androideabi-ar
+        export AS=$TOOLCHAIN/bin/arm-linux-androideabi-as
+        export LD=$TOOLCHAIN/bin/arm-linux-androideabi-ld
+        export NM=$TOOLCHAIN/bin/arm-linux-androideabi-nm
+        export RANLIB=$TOOLCHAIN/bin/arm-linux-androideabi-ranlib
+        export STRIP=$TOOLCHAIN/bin/arm-linux-androideabi-strip
+    fi
+    
+    if [ $1 == "arm64-v8a" ];then 
+        export ARCH="arm64"
+        export CC=$TOOLCHAIN/bin/aarch64-linux-android$API-clang
+        export CXX=$TOOLCHAIN/bin/aarch64-linux-android$API-clang++
+        export AR=$TOOLCHAIN/bin/aarch64-linux-android-ar
+        export AS=$TOOLCHAIN/bin/aarch64-linux-android-as
+        export LD=$TOOLCHAIN/bin/aarch64-linux-android-ld
+        export NM=$TOOLCHAIN/bin/aarch64-linux-android-nm
+        export RANLIB=$TOOLCHAIN/bin/aarch64-linux-android-ranlib
+        export STRIP=$TOOLCHAIN/bin/aarch64-linux-android-strip
+    fi
+
+    if [ $1 == "x86" ];then 
+        export ARCH="x86"
+        export CC=$TOOLCHAIN/bin/i686-linux-android$API-clang
+        export CXX=$TOOLCHAIN/bin/i686-linux-android$API-clang++
+        export AR=$TOOLCHAIN/bin/i686-linux-android-ar
+        export AS=$TOOLCHAIN/bin/i686-linux-android-as
+        export LD=$TOOLCHAIN/bin/i686-linux-android-ld
+        export NM=$TOOLCHAIN/bin/i686-linux-android-nm
+        export RANLIB=$TOOLCHAIN/bin/i686-linux-android-ranlib
+        export STRIP=$TOOLCHAIN/bin/i686-linux-android-strip
+    fi
+    
+    if [ $1 == "x86_64" ];then 
+        export ARCH="x86_64" 
+        export CC=$TOOLCHAIN/bin/x86_64-linux-android$API-clang
+        export CXX=$TOOLCHAIN/bin/x86_64-linux-android$API-clang++
+        export AR=$TOOLCHAIN/bin/x86_64-linux-android-ar
+        export AS=$TOOLCHAIN/bin/x86_64-linux-android-as
+        export LD=$TOOLCHAIN/bin/x86_64-linux-android-ld
+        export NM=$TOOLCHAIN/bin/x86_64-linux-android-nm
+        export RANLIB=$TOOLCHAIN/bin/x86_64-linux-android-ranlib
+        export STRIP=$TOOLCHAIN/bin/x86_64-linux-android-strip
+    fi
 
     # 配置 FFmpeg 选项 
 
     export COMMON_FF_CFG_FLAGS=
     . ${basepath}/tools/configs/module.sh
-
+    
     ## x86 的 asm 编译不过去，直接干掉
     if [ $1 == "x86" ];then 
         export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-asm"
@@ -103,14 +133,28 @@ ffmpeg_compile() {
     echo "-I${basepath}/Lib/android/openssl_install/$1/include/"
     echo "-L${basepath}/Lib/android/openssl_install/$1/lib/"
 
+    echo $COMMON_FF_CFG_FLAGS
+
+    echo ""
+    echo ""
+    echo ""
+    echo "ARCH: $ARCH"
+    echo "NM: $NM"
+    echo "CC: $CC"
+    echo "STRIP: $STRIP"
+    echo ""
+    echo ""
+    echo ""
+
     ./configure \
     $COMMON_FF_CFG_FLAGS \
     --prefix=${basepath}/Eyer3rdpart/ffmpeg-4.4/ffmpeg_install \
     --enable-cross-compile \
     --arch=$ARCH \
     --target-os=android \
-    --nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
-    --cc=$TOOLCHAIN/bin/$TARGET$API-clang \
+    --nm=$NM \
+    --cc=$CC \
+    --strip=$STRIP \
     --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
     --extra-cflags="-I${basepath}/Lib/android/openssl_install/$1/include/" \
     --extra-ldflags="-L${basepath}/Lib/android/openssl_install/$1/lib/"
@@ -131,6 +175,15 @@ openssl_compile() {
     echo ""
     echo ""
     echo ""
+
+    export CC=""
+    export CXX=""
+    export AR=""
+    export AS=""
+    export LD=""
+    export NM=""
+    export RANLIB=""
+    export STRIP=""
 
     cd ${basepath}/Eyer3rdpart/openssl-1.1.1k/
     make clean
@@ -191,7 +244,7 @@ openssl_compile arm64-v8a
 openssl_compile x86
 openssl_compile x86_64
 
-ffmpeg_compile armeabi-v7a armv7a-linux-androideabi arm
-ffmpeg_compile arm64-v8a aarch64-linux-android arm64
-ffmpeg_compile x86 i686-linux-android x86
-ffmpeg_compile x86_64 x86_64-linux-android x86_64
+ffmpeg_compile armeabi-v7a
+ffmpeg_compile arm64-v8a
+ffmpeg_compile x86
+ffmpeg_compile x86_64
