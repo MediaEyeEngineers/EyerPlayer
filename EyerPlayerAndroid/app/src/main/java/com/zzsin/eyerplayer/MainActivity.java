@@ -3,8 +3,10 @@ package com.zzsin.eyerplayer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.zzsin.eyerplayer.view.EyerPlayerView;
+import com.zzsin.eyerplayer.view.EyerPlayerViewListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,17 +18,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         playerView = findViewById(R.id.eyer_player_view);
-        playerView.setUrl("https://www.zzsin.com/hdr/V/ysjf.m3u8");
-        playerView.play();
+        playerView.initPlayer(new MyEyerPlayerViewListener());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(playerView != null){
+    private class MyEyerPlayerViewListener implements EyerPlayerViewListener
+    {
+        @Override
+        public int afterCreated() {
+            Log.e("Eyer Player", "MyEyerPlayerViewListener afterCreated");
+            playerView.setUrl("");
+            playerView.play();
+            return 0;
+        }
+
+        @Override
+        public int beforeDestory() {
+            Log.e("Eyer Player", "MyEyerPlayerViewListener beforeDestory");
             playerView.stop();
-            playerView.destory();
-            playerView = null;
+            return 0;
         }
     }
 }

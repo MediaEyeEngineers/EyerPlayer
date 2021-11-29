@@ -11,7 +11,7 @@ export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-gpl"
 export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-nonfree"
 
 # Configuration options:
-# export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-static"
+# export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-static"
 # export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-shared"
 # export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-small"
 export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-runtime-cpudetect"
