@@ -114,7 +114,7 @@ ffmpeg_compile() {
     # 配置 FFmpeg 选项 
 
     export COMMON_FF_CFG_FLAGS=
-    . ${basepath}/tools/configs/module.sh
+    . ${basepath}/tools/configs/module-ll.sh
     
     ## x86 的 asm 编译不过去，直接干掉
     if [ $1 == "x86" ];then 
@@ -214,7 +214,7 @@ openssl_compile() {
     -D__ANDROID_API__=21
 
     make clean
-    make -j1
+    make -j8
     make install
 
     cd ${basepath}
@@ -239,12 +239,12 @@ mkdir openssl_install
 cd ${basepath}
 
 
-openssl_compile armeabi-v7a
-openssl_compile arm64-v8a
-openssl_compile x86
-openssl_compile x86_64
+# openssl_compile armeabi-v7a
+# openssl_compile arm64-v8a
+# openssl_compile x86
+# openssl_compile x86_64
 
 ffmpeg_compile armeabi-v7a
-ffmpeg_compile arm64-v8a
-ffmpeg_compile x86
-ffmpeg_compile x86_64
+# ffmpeg_compile arm64-v8a
+# ffmpeg_compile x86
+# ffmpeg_compile x86_64
