@@ -13,13 +13,17 @@ namespace Eyer
     {
         Stop();
 
-        if(startPromise != nullptr){
-            delete startPromise;
-            startPromise = nullptr;
+        if(onStartedPromise != nullptr){
+            delete onStartedPromise;
+            onStartedPromise = nullptr;
         }
-        if(stopPromise != nullptr){
-            delete stopPromise;
-            stopPromise = nullptr;
+        if(onEventFinishPromise != nullptr){
+            delete onEventFinishPromise;
+            onEventFinishPromise = nullptr;
+        }
+        if(onStopedPromise != nullptr){
+            delete onStopedPromise;
+            onStopedPromise = nullptr;
         }
     }
 
@@ -63,25 +67,22 @@ namespace Eyer
     int EyerThread::EventLoop()
     {
         if(eventLoopFlag){
+            if(onStartedPromise != nullptr){
+                onStartedPromise->set_value();
+            }
+
             // printf("Start Event\n");
             // Doing Event
             for(int i=0;i<eventList.size();i++){
                 eventList[i]->Run();
             }
 
-            stopPromise = new std::promise<void>();
-
-            if(startPromise != nullptr){
-                startPromise->set_value();
+            if(onEventFinishPromise != nullptr){
+                onEventFinishPromise->set_value();
             }
-            // printf("End Event\n");
 
-            stopPromise->get_future().get();
+            onStopedPromise->get_future().get();
 
-            if(stopPromise != nullptr){
-                delete stopPromise;
-                stopPromise = nullptr;
-            }
             eventLoopFlag = 0;
         }
         return 0;
@@ -89,14 +90,13 @@ namespace Eyer
 
     int EyerThread::StartEventLoop()
     {
-        startPromise = new std::promise<void>();
+        onStartedPromise        = new std::promise<void>();
+        onEventFinishPromise    = new std::promise<void>();
+        onStopedPromise         = new std::promise<void>();
+
         SetStartEventLoopFlag();
         // 等待运行结束后的信号
-        startPromise->get_future().get();
-        if(startPromise != nullptr){
-            delete startPromise;
-            startPromise = nullptr;
-        }
+        onStartedPromise->get_future().get();
         return 0;
     }
 
@@ -108,9 +108,25 @@ namespace Eyer
 
     int EyerThread::StopEventLoop()
     {
-        if(stopPromise != nullptr){
-            stopPromise->set_value();
+        onEventFinishPromise->get_future().get();
+
+        if(onStopedPromise != nullptr){
+            onStopedPromise->set_value();
         }
+
+        if(onStartedPromise != nullptr){
+            delete onStartedPromise;
+            onStartedPromise = nullptr;
+        }
+        if(onEventFinishPromise != nullptr){
+            delete onEventFinishPromise;
+            onEventFinishPromise = nullptr;
+        }
+        if(onStopedPromise != nullptr){
+            delete onStopedPromise;
+            onStopedPromise = nullptr;
+        }
+
         return 0;
     }
 

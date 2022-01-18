@@ -3,17 +3,6 @@ cd ../../
 basepath=$(cd `dirname $0`; pwd)
 echo ${basepath}
 
-# 下载代码
-
-if [ -d ./Eyer3rdpart ];then 
-    rm -rf Eyer3rdpart
-fi
-
-git clone https://gitee.com/redknot/Eyer3rdpart
-
-cd ${basepath}/Eyer3rdpart/
-chmod -R 777 ffmpeg-4.4
-
 # 配置 NDK
 if [ -z $NDK ]; then
     echo ""
@@ -40,6 +29,23 @@ echo "HOST_TAG:"$HOST_TAG
 PATH=$NDK/toolchains/llvm/prebuilt/$HOST_TAG/bin:$PATH
 export ANDROID_NDK_HOME=$NDK
 
+
+
+
+# 下载代码
+
+if [ -d ./Eyer3rdpart ];then 
+    rm -rf Eyer3rdpart
+fi
+
+git clone https://gitee.com/redknot/Eyer3rdpart
+
+cd ${basepath}/Eyer3rdpart/
+chmod -R 777 ffmpeg-4.4
+
+
+
+
 ffmpeg_compile() {
 
     echo ""
@@ -64,6 +70,7 @@ ffmpeg_compile() {
     # export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
 
     if [ $1 == "armeabi-v7a" ];then 
+        export CROSS_PREFIX="arm-linux-androideabi-"
         export ARCH="arm"
         export CC=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang
         export CXX=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang++
@@ -76,6 +83,7 @@ ffmpeg_compile() {
     fi
     
     if [ $1 == "arm64-v8a" ];then 
+        export CROSS_PREFIX="aarch64-linux-android-"
         export ARCH="arm64"
         export CC=$TOOLCHAIN/bin/aarch64-linux-android$API-clang
         export CXX=$TOOLCHAIN/bin/aarch64-linux-android$API-clang++
@@ -88,6 +96,7 @@ ffmpeg_compile() {
     fi
 
     if [ $1 == "x86" ];then 
+        export CROSS_PREFIX="i686-linux-android-"
         export ARCH="x86"
         export CC=$TOOLCHAIN/bin/i686-linux-android$API-clang
         export CXX=$TOOLCHAIN/bin/i686-linux-android$API-clang++
@@ -100,6 +109,7 @@ ffmpeg_compile() {
     fi
     
     if [ $1 == "x86_64" ];then 
+        export CROSS_PREFIX="x86_64-linux-android-"
         export ARCH="x86_64" 
         export CC=$TOOLCHAIN/bin/x86_64-linux-android$API-clang
         export CXX=$TOOLCHAIN/bin/x86_64-linux-android$API-clang++
@@ -155,7 +165,7 @@ ffmpeg_compile() {
     --nm=$NM \
     --cc=$CC \
     --strip=$STRIP \
-    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
+    --cross-prefix=$TOOLCHAIN/bin/$CROSS_PREFIX \
     --extra-cflags="-I${basepath}/Lib/android/openssl_install/$1/include/" \
     --extra-ldflags="-L${basepath}/Lib/android/openssl_install/$1/lib/"
 
@@ -239,12 +249,12 @@ mkdir openssl_install
 cd ${basepath}
 
 
-# openssl_compile armeabi-v7a
-# openssl_compile arm64-v8a
-# openssl_compile x86
-# openssl_compile x86_64
+openssl_compile armeabi-v7a
+openssl_compile arm64-v8a
+openssl_compile x86
+openssl_compile x86_64
 
 ffmpeg_compile armeabi-v7a
-# ffmpeg_compile arm64-v8a
-# ffmpeg_compile x86
-# ffmpeg_compile x86_64
+ffmpeg_compile arm64-v8a
+ffmpeg_compile x86
+ffmpeg_compile x86_64
