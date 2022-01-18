@@ -16,8 +16,8 @@ TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerThread)
 
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avformat)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avcodec)
-TARGET_LINK_LIBRARIES(EyerAndroidInterface swresample)
-TARGET_LINK_LIBRARIES(EyerAndroidInterface swscale)
+# TARGET_LINK_LIBRARIES(EyerAndroidInterface swresample)
+# TARGET_LINK_LIBRARIES(EyerAndroidInterface swscale)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avutil)
 
 # TARGET_LINK_LIBRARIES(EyerAndroidInterface ssl)

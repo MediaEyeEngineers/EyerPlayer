@@ -41,7 +41,7 @@ namespace Eyer
         EyerAVDecoder decoder;
         int ret = decoder.Init(stream);
         if(ret){
-
+            EyerLog("OpenDecoder Fail\n");
         }
 
         while(!stopFlag){
@@ -99,7 +99,7 @@ namespace Eyer
                     break;
                 }
 
-                // EyerLog("Frame PTS: %f\n", frame->GetSecPTS());
+                // EyerLog("%d Frame PTS: %f\n", stream.GetStreamId(), frame->GetSecPTS());
 
                 locker.lock();
                 frameQueue.PushLock(frame);

@@ -66,11 +66,12 @@ namespace Eyer
         while(!stopFlag) {
             std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
             // 缓存 1MB
-            int maxCahceSize = 1024 * 1024;
+            int maxCahceSize = 1024 * 1024 * 1;
             while(!stopFlag && !eventLoopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
                 queueBox->cvBox.cv.wait(locker);
             }
 
+            // 此部分需要解锁，让其他部分可以工作
             locker.unlock();
             EventLoop();
             locker.lock();
@@ -79,6 +80,7 @@ namespace Eyer
                 continue;
             }
 
+            // 读取操作为耗时操作，需要解锁
             locker.unlock();
 
             EyerAVPacket * packet = new EyerAVPacket();
@@ -91,7 +93,9 @@ namespace Eyer
                 }
                 continue;
             }
+            // EyerLog("Packet Stream Index: %d\n", packet->GetStreamIndex());
 
+            // 通知别的线程，需要上锁后通知
             locker.lock();
             ret = queueBox->PutPacket(packet);
             if(ret == 0){
