@@ -42,8 +42,10 @@ namespace Eyer
 
         std::vector<EyerRunnable *> eventList;
         std::atomic_int eventLoopFlag {0};
-        std::promise<void> * startPromise = nullptr;
-        std::promise<void> * stopPromise = nullptr;
+
+        std::promise<void> * onStartedPromise = nullptr;
+        std::promise<void> * onEventFinishPromise = nullptr;
+        std::promise<void> * onStopedPromise = nullptr;
     private:
         std::thread * t = nullptr;
     };

@@ -21,6 +21,51 @@ namespace Eyer
     void ThreadPlayCtr::Run()
     {
         EyerLog("ThreadPlayCtr Start\n");
+        // 该线程用于控制视频流
+
+        int videoStreamIndex = 0;
+        int audioStreamIndex = 1;
+        EyerAVFrame * videoFrame = nullptr;
+        EyerAVFrame * audioFrame = nullptr;
+
+        while(!stopFlag) {
+            std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+            queueBox->cvBox.cv.wait(locker);
+
+            if(videoFrame == nullptr){
+                videoFrame = GetFrameFromDecodeQueue(videoStreamIndex);
+                if(videoFrame != nullptr){
+                    queueBox->cvBox.cv.notify_all();
+                }
+            }
+            if(audioFrame == nullptr){
+                audioFrame = GetFrameFromDecodeQueue(audioStreamIndex);
+                if(audioFrame != nullptr){
+                    queueBox->cvBox.cv.notify_all();
+                }
+            }
+
+            if(videoFrame != nullptr){
+                double playTime = videoFrame->GetSecPTS();
+                // EyerLog("Video PlayTime: %f\n", playTime);
+
+                delete videoFrame;
+                videoFrame = nullptr;
+            }
+            if(audioFrame != nullptr){
+                double playTime = audioFrame->GetSecPTS();
+                // EyerLog("Audio PlayTime: %f\n", playTime);
+
+                delete audioFrame;
+                audioFrame = nullptr;
+            }
+        }
+        EyerLog("ThreadPlayCtr End\n");
+    }
+
+    void ThreadPlayCtr::Run_()
+    {
+        EyerLog("ThreadPlayCtr Start\n");
 
         int videoStreamIndex = 0;
         int audioStreamIndex = 1;
@@ -89,7 +134,8 @@ namespace Eyer
             if(videoFrame != nullptr){
                 double playTime = videoFrame->GetSecPTS();
                 if(dTime >= playTime){
-                    // EyerLog("Video PlayTime: %f\n", playTime);
+                    EyerLog("Video PlayTime: %f\n", playTime);
+
                     locker.lock();
                     EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetVideoOutputQueue();
                     outputQueue->Lock();
@@ -104,6 +150,7 @@ namespace Eyer
                     queueBox->cvBox.cv.notify_all();
                     locker.unlock();
 
+                    delete videoFrame;
                     videoFrame = nullptr;
                 }
             }
@@ -111,6 +158,7 @@ namespace Eyer
                 double playTime = audioFrame->GetSecPTS();
                 if(dTime >= playTime){
                     EyerLog("Audio PlayTime: %f\n", playTime);
+
                     locker.lock();
                     EyerObserverQueue<EyerAVFrame *> * outputQueue = queueBox->GetAudioOutputQueue();
                     outputQueue->Lock();
@@ -125,6 +173,7 @@ namespace Eyer
                     queueBox->cvBox.cv.notify_all();
                     locker.unlock();
 
+                    delete audioFrame;
                     audioFrame = nullptr;
                 }
             }
@@ -147,12 +196,14 @@ namespace Eyer
         EyerAVFrame * frame = nullptr;
 
         EyerDeocdeQueue * decodeQueue = queueBox->GetDeocdeQueue(streamId);
-        decodeQueue->FrameQueueLock();
-        int size = decodeQueue->FrameQueueGetSize();
-        if(size > 0){
-            frame = decodeQueue->FrameQueueFrontPop();
+        if(decodeQueue != nullptr){
+            decodeQueue->FrameQueueLock();
+            int size = decodeQueue->FrameQueueGetSize();
+            if(size > 0){
+                frame = decodeQueue->FrameQueueFrontPop();
+            }
+            decodeQueue->FrameQueueUnlock();
         }
-        decodeQueue->FrameQueueUnlock();
 
         return frame;
     }

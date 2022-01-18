@@ -161,6 +161,7 @@ namespace Eyer
 
     int EyerAVFrame::Resample(EyerAVFrame & dstFrame)
     {
+        /*
         av_frame_copy_props(dstFrame.piml->frame, piml->frame);
 
         dstFrame.piml->frame->channel_layout = AV_CH_LAYOUT_STEREO;
@@ -194,7 +195,11 @@ namespace Eyer
 
         swr_free(&swrCtx);
 
+
         return ret;
+         */
+
+        return 0;
     }
 
     int EyerAVFrame::Scale(EyerAVFrame & frame, const EyerAVPixelFormat format)
@@ -204,6 +209,7 @@ namespace Eyer
 
     int EyerAVFrame::Scale(EyerAVFrame & dstFrame, const EyerAVPixelFormat format, const int dstW, const int dstH)
     {
+        /*
         AVPixelFormat distFormat = (AVPixelFormat)format.ffmpegId;
 
         av_frame_copy_props(dstFrame.piml->frame, piml->frame);
@@ -242,6 +248,7 @@ namespace Eyer
         );
 
         sws_freeContext(swsContext);
+        */
 
         return 0;
     }

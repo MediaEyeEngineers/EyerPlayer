@@ -20,6 +20,7 @@ namespace Eyer
         ThreadPlayCtr(QueueBox * _queueBox, ThreadEventLoop * _eventLoop);
         ~ThreadPlayCtr();
 
+        void Run_();
         virtual void Run() override;
         virtual int SetStopFlag() override;
         virtual int SetStartEventLoopFlag() override;
