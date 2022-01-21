@@ -7,9 +7,8 @@
 
 namespace Eyer
 {
-    ThreadReader::ThreadReader(const EyerString & _url, QueueBox * _queueBox, ThreadEventLoop * _eventLoop)
+    ThreadReader::ThreadReader(const EyerString & _url, ThreadEventLoop * _eventLoop)
         : eventLoop(_eventLoop)
-        , queueBox(_queueBox)
         , url(_url)
     {
 
@@ -23,160 +22,108 @@ namespace Eyer
     void ThreadReader::Run()
     {
         EyerLog("ThreadReader Start\n");
+        EyerLog("ThreadReader Open Url: %s\n", url.str);
 
-        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/color_card_hevc_3840x2160_yuv420p10le_hlg_bt2020_rotate_270.MOV";
-        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/1080_1920_HDR_Color_Card.mp4";
-        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ZhongLi.mp4";
-        // Eyer::EyerString path = "/Users/miaoyuqiao/Desktop/HDR/ip13.mp4";
-        // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/demo.mp4";
-        // Eyer::EyerString path = "/Users/yuqiaomiao/Downloads/tututu.mp4";
-
-        EyerLog("Reader Thread: %s\n", url.str);
-        Eyer::EyerAVReader reader(url);
-        int ret = reader.Open();
+        decoderBox = new DecoderBox();
+        reader = new EyerAVReader(url);
+        int ret = reader->Open();
         if(ret){
             // 打开失败
-            // eventLoop->PushEvent()
-            EyerLog("Open Fail\n");
             // 抛出错误，线程进入待命状态
+            EyerLog("Open Fail\n");
             return;
         }
+        else {
+            int streamCount = reader->GetStreamCount();
+            int videoStreamIndex = reader->GetVideoStreamIndex();
+            int audioStreamIndex = reader->GetAudioStreamIndex();
 
-        int streamCount = reader.GetStreamCount();
-        EyerLog("Stream Count: %d\n", streamCount);
+            EyerLog("Stream Count: %d\n", streamCount);
+            EyerLog("Duration: %f\n", reader->GetDuration());
+            EyerLog("Video Stream Index: %d\n", videoStreamIndex);
+            EyerLog("Audio Stream Index: %d\n", audioStreamIndex);
 
-        int videoStreamIndex = reader.GetVideoStreamIndex();
-        EyerLog("Video Stream Index: %d\n", videoStreamIndex);
-
-        int audioStreamIndex = reader.GetAudioStreamIndex();
-        EyerLog("Audio Stream Index: %d\n", audioStreamIndex);
-
-        const EyerAVStream & videoStream = reader.GetStream(videoStreamIndex);
-        const EyerAVStream & audioStream = reader.GetStream(audioStreamIndex);
-
-        queueBox->AddStream(audioStream);
-        queueBox->AddStream(videoStream);
-        queueBox->StartDeocder();
-
-        // 开始播放控制线程
-        playCtr = new ThreadPlayCtr(queueBox, eventLoop);
-        playCtr->Start();
-
-        // 该线程用于读取视频流
-        while(!stopFlag) {
-            std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
-            // 缓存 1MB
-            int maxCahceSize = 1024 * 1024 * 1;
-            while(!stopFlag && !eventLoopFlag && queueBox->GetPacketQueueCacheSize() >= maxCahceSize) {
-                queueBox->cvBox.cv.wait(locker);
+            if(videoStreamIndex >= 0){
+                const EyerAVStream & videoStream = reader->GetStream(videoStreamIndex);
+                decoderBox->AddStream(videoStream);
             }
-
-            // 此部分需要解锁，让其他部分可以工作
-            locker.unlock();
-            EventLoop();
-            locker.lock();
-
-            if(queueBox->GetPacketQueueCacheSize() >= maxCahceSize){
-                continue;
+            if(audioStreamIndex >= 0){
+                const EyerAVStream & audioStream = reader->GetStream(audioStreamIndex);
+                decoderBox->AddStream(audioStream);
             }
+            decoderBox->StartDeocder();
 
-            // 读取操作为耗时操作，需要解锁
-            locker.unlock();
-
-            EyerAVPacket * packet = new EyerAVPacket();
-            int ret = reader.Read(packet);
-            if(ret){
-                // 读取出错
-                if(packet != nullptr) {
-                    delete packet;
-                    packet = nullptr;
-                }
-                continue;
-            }
-            // EyerLog("Packet Stream Index: %d\n", packet->GetStreamIndex());
-
-            // 通知别的线程，需要上锁后通知
-            locker.lock();
-            ret = queueBox->PutPacket(packet);
-            if(ret == 0){
-                queueBox->cvBox.cv.notify_all();
-            } else {
-                // 插入失败
-                if(packet != nullptr) {
-                    delete packet;
-                    packet = nullptr;
-                }
-            }
-            locker.unlock();
+            playCtr = new ThreadPlayCtr(decoderBox, eventLoop);
+            playCtr->Start();
         }
 
-        playCtr->Stop();
+        while(!stopFlag) {
+            int maxCacheSize = 1024 * 1024 * 5;
+
+            std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
+            while(!stopFlag && (decoderBox->GetPacketCacheSize() >= maxCacheSize)){
+                decoderBox->cvBox.cv.wait(locker);
+            }
+
+            // EyerLog("Size: %d\n", decoderBox->GetPacketCacheSize());
+
+            EyerAVPacket * packet = new EyerAVPacket();
+
+            locker.unlock();
+            ret = reader->Read(packet);
+            locker.lock();
+            if(ret){
+                // 出错
+                if(packet != nullptr){
+                    delete packet;
+                    packet = nullptr;
+                }
+                continue;
+            }
+            ret = decoderBox->PutPacket(packet);
+            if(ret){
+                // 插入失败，删除 packet
+                if(packet != nullptr){
+                    delete packet;
+                    packet = nullptr;
+                }
+            }
+            else {
+                // 插入成功，通知
+                decoderBox->cvBox.cv.notify_all();
+            }
+        }
+
         if(playCtr != nullptr){
+            playCtr->Stop();
             delete playCtr;
             playCtr = nullptr;
         }
+        if(reader != nullptr){
+            delete reader;
+            reader = nullptr;
+        }
+        if(decoderBox != nullptr){
+            decoderBox->StopDecoder();
+            delete decoderBox;
+            decoderBox = nullptr;
+        }
 
-        queueBox->StopDecoder();
         EyerLog("ThreadReader End\n");
     }
 
-    int ThreadReader::Pause()
-    {
-        if(playCtr != nullptr){
-            class PauseEvent : public EyerRunnable {
-            public:
-                ThreadPlayCtr * pCtr = nullptr;
-                PauseEvent(ThreadPlayCtr * _pCtr){
-                    pCtr = _pCtr;
-                }
-                virtual void Run() {
-                    pCtr->Pause();
-                }
-            };
-            PauseEvent pauseEvent(playCtr);
-            playCtr->PushEvent(&pauseEvent);
-            playCtr->StartEventLoop();
-            playCtr->StopEventLoop();
-            playCtr->ClearAllEvent();
-        }
-        return 0;
-    }
-
-    int ThreadReader::Resume()
-    {
-        if(playCtr != nullptr){
-            class ResumeEvent : public EyerRunnable {
-            public:
-                ThreadPlayCtr * pCtr = nullptr;
-                ResumeEvent(ThreadPlayCtr * _pCtr){
-                    pCtr = _pCtr;
-                }
-                virtual void Run() {
-                    pCtr->Resume();
-                }
-            };
-            ResumeEvent resumeEvent(playCtr);
-            playCtr->PushEvent(&resumeEvent);
-            playCtr->StartEventLoop();
-            playCtr->StopEventLoop();
-            playCtr->ClearAllEvent();
-        }
-        return 0;
-    }
-
-
     int ThreadReader::SetStopFlag(){
-        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
         stopFlag = 1;
-        queueBox->cvBox.cv.notify_all();
+        decoderBox->cvBox.cv.notify_all();
         return 0;
     }
 
     int ThreadReader::SetStartEventLoopFlag()
     {
-        std::unique_lock<std::mutex> locker(queueBox->cvBox.mtx);
+        std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
         eventLoopFlag = 1;
-        queueBox->cvBox.cv.notify_all();
+        decoderBox->cvBox.cv.notify_all();
         return 0;
     }
 }

@@ -59,7 +59,7 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
         playerJNI = EyerPlayerJNI.eyer_player_init();
 
         if(this.listener != null){
-            this.listener.afterCreated();
+            this.listener.onPlayerCreate();
         }
     }
 
@@ -70,9 +70,6 @@ public class EyerPlayerView extends SurfaceView implements SurfaceHolder.Callbac
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-        if(this.listener != null){
-            this.listener.beforeDestory();
-        }
         if(playerJNI != 0L){
             EyerPlayerJNI.eyer_player_uninit(playerJNI);
             playerJNI = 0L;
