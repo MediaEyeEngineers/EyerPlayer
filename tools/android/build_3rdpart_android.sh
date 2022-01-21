@@ -124,7 +124,7 @@ ffmpeg_compile() {
     # 配置 FFmpeg 选项 
 
     export COMMON_FF_CFG_FLAGS=
-    . ${basepath}/tools/configs/module-ll.sh
+    . ${basepath}/tools/configs/module.sh
     
     ## x86 的 asm 编译不过去，直接干掉
     if [ $1 == "x86" ];then 

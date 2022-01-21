@@ -18,6 +18,9 @@ ADD_LIBRARY (
 
         QueueBox.hpp
         QueueBox.cpp
+
+        DecoderBox.hpp
+        DecoderBox.cpp
 )
 
 SET(HEAD_FILES

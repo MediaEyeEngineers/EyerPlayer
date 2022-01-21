@@ -66,59 +66,21 @@ namespace Eyer
 
     int ThreadEventLoop::ProcessEvent(Event * event)
     {
-        if(event->type == EventType::PLAY_REQUEST){
-            EventRequest_Play * playEvent = (EventRequest_Play *)event;
+        if(event->type == EventType::PLAY_REQUEST) {
+            EventRequest_Play *playEvent = (EventRequest_Play *) event;
             EyerLog("PLAY_REQUEST\n");
-            if(readerThread != nullptr){
+            if (readerThread != nullptr) {
                 // 报错，请别瞎比启动
+                return -1;
             }
-            readerThread = new ThreadReader(playEvent->url, &queueBox, this);
+            readerThread = new ThreadReader(playEvent->url, this);
             readerThread->Start();
-        }
-        else if(event->type == EventType::PAUSE_REQUEST){
-            EyerLog("PAUSE_REQUEST\n");
-            if(readerThread != nullptr){
-                class PauseEvent : public EyerRunnable {
-                public:
-                    ThreadReader * pCtr = nullptr;
-                    PauseEvent(ThreadReader * _pCtr){
-                        pCtr = _pCtr;
-                    }
-                    virtual void Run() {
-                        pCtr->Pause();
-                    }
-                };
-                PauseEvent pauseEvent(readerThread);
-                readerThread->PushEvent(&pauseEvent);
-                readerThread->StartEventLoop();
-                readerThread->StopEventLoop();
-                readerThread->ClearAllEvent();
-            }
-        }
-        else if(event->type == EventType::RESUME_REQUEST){
-            EyerLog("RESUME_REQUEST\n");
-            if(readerThread != nullptr){
-                class ResumeEvent : public EyerRunnable {
-                public:
-                    ThreadReader * pCtr = nullptr;
-                    ResumeEvent(ThreadReader * _pCtr){
-                        pCtr = _pCtr;
-                    }
-                    virtual void Run() {
-                        pCtr->Resume();
-                    }
-                };
-                ResumeEvent resumeEvent(readerThread);
-                readerThread->PushEvent(&resumeEvent);
-                readerThread->StartEventLoop();
-                readerThread->StopEventLoop();
-                readerThread->ClearAllEvent();
-            }
         }
         else if(event->type == EventType::STOP_REQUEST){
             EyerLog("STOP_REQUEST\n");
             if(readerThread == nullptr){
                 // 还没开始
+                return -1;
             }
             if(readerThread != nullptr){
                 readerThread->Stop();
@@ -134,10 +96,5 @@ namespace Eyer
         }
 
         return 0;
-    }
-
-    QueueBox * ThreadEventLoop::GetQueueBox()
-    {
-        return &queueBox;
     }
 }

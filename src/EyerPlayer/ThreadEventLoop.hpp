@@ -18,7 +18,6 @@ namespace Eyer
         ~ThreadEventLoop();
 
         int PushEvent(Event * event);
-        QueueBox * GetQueueBox();
 
         virtual void Run() override;
         virtual int SetStopFlag() override;
@@ -30,7 +29,6 @@ namespace Eyer
         std::condition_variable cv;
         EyerObserverQueue<Event *> eventQueue;
 
-        QueueBox queueBox;
         // 线程
         ThreadReader * readerThread = nullptr;
     };
