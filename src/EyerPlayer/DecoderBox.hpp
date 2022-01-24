@@ -19,8 +19,10 @@ namespace Eyer
         int StopDecoder();
 
         int PutPacket(EyerAVPacket * packet);
-
         int GetPacketCacheSize();
+
+        int GetVideoStreamIndex();
+        int GetAudioStreamIndex();
 
         EyerConditionVariableBox cvBox;
 

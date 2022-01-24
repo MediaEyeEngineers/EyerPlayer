@@ -54,4 +54,20 @@ namespace Eyer
     {
         return stream.GetStreamId();
     }
+
+    int EyerDeocderQueue::GetFrameCount()
+    {
+        return frameQueue.SizeLock();
+    }
+
+    EyerAVFrame * EyerDeocderQueue::GetFrame()
+    {
+        EyerAVFrame * frame = nullptr;
+        frameQueue.Lock();
+        if(frameQueue.Size() > 0){
+            frame = frameQueue.FrontPop();
+        }
+        frameQueue.Unlock();
+        return frame;
+    }
 }
