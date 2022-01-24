@@ -20,8 +20,10 @@ namespace Eyer
 
         int PutPacket(EyerAVPacket * packet);
         int GetPacketCacheSize();
-
         EyerAVPacket * GetPacket();
+
+        int GetFrameCount();
+        EyerAVFrame * GetFrame();
 
     protected:
         EyerAVStream stream;
@@ -29,6 +31,7 @@ namespace Eyer
 
         std::atomic<int> packetQueueSize {0};
         Eyer::EyerObserverQueue<EyerAVPacket *> packetQueue;
+        Eyer::EyerObserverQueue<EyerAVFrame *> frameQueue;
     };
 }
 

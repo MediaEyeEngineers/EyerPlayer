@@ -44,8 +44,13 @@ namespace Eyer
 
         while(!stopFlag){
             std::unique_lock<std::mutex> locker(cvBox->mtx);
-            while(!stopFlag && packetQueue.Size() <= 0){
-                cvBox->cv.wait(locker);
+            while (!stopFlag) {
+                if(frameQueue.SizeLock() >= 5 || packetQueue.SizeLock() <= 0){
+                    cvBox->cv.wait(locker);
+                }
+                else {
+                    break;
+                }
             }
 
             if(packet == nullptr) {
@@ -75,10 +80,17 @@ namespace Eyer
                 }
 
                 // EyerLog("PTS: %f\n", frame->GetSecPTS());
+
+                frameQueue.Lock();
+                frameQueue.Push(frame);
+                frameQueue.Unlock();
+                cvBox->cv.notify_all();
+                /*
                 if(frame != nullptr){
                     delete frame;
                     frame = nullptr;
                 }
+                */
             }
 
             locker.lock();

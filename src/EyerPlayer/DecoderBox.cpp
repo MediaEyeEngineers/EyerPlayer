@@ -63,4 +63,26 @@ namespace Eyer
         }
         return size;
     }
+
+    int DecoderBox::GetVideoStreamIndex()
+    {
+        int streamIndex = -1;
+        for(int i=0;i<streamList.size();i++) {
+            if(streamList[i].GetType() == EyerAVCodecType::MEDIA_TYPE_VIDEO) {
+                streamIndex = streamList[i].GetStreamId();
+            }
+        }
+        return streamIndex;
+    }
+
+    int DecoderBox::GetAudioStreamIndex()
+    {
+        int streamIndex = -1;
+        for(int i=0;i<streamList.size();i++) {
+            if(streamList[i].GetType() == EyerAVCodecType::MEDIA_TYPE_AUDIO) {
+                streamIndex = streamList[i].GetStreamId();
+            }
+        }
+        return streamIndex;
+    }
 }
