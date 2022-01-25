@@ -1,8 +1,11 @@
 #include "ThreadPlayCtr.hpp"
 
 #include "EyerCore/EyerCore.hpp"
-#include "ThreadEventLoop.hpp"
+
 #include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
+
+#include "ThreadEventLoop.hpp"
+#include "ThreadAudioPlay.hpp"
 
 namespace Eyer
 {
@@ -32,20 +35,30 @@ namespace Eyer
         if(videoStreamIndex < 0 && audioStreamIndex < 0){
             EyerLog("No Video, No Audio\n");
         }
+
+        if(audioStreamIndex < 0){
+            EyerLog("No Audio\n");
+            // 应当采用外部时钟同步
+        }
+
         if(videoStreamIndex < 0){
             EyerLog("No Video\n");
         }
-        if(audioStreamIndex < 0){
-            EyerLog("No Audio\n");
-        }
+
+        ThreadAudioPlay * audioPlayThread = new ThreadAudioPlay();
+        audioPlayThread->Start();
 
         while(!stopFlag) {
             std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
             decoderBox->cvBox.cv.wait(locker);
-
-
-
         }
+
+        if(audioPlayThread != nullptr){
+            audioPlayThread->Stop();
+            delete audioPlayThread;
+            audioPlayThread = nullptr;
+        }
+
         EyerLog("ThreadPlayCtr End\n");
     }
 

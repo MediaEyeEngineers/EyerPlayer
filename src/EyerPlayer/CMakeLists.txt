@@ -16,6 +16,9 @@ ADD_LIBRARY (
         ThreadEventLoop.hpp
         ThreadEventLoop.cpp
 
+        ThreadAudioPlay.hpp
+        ThreadAudioPlay.cpp
+
         QueueBox.hpp
         QueueBox.cpp
 

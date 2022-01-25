@@ -25,6 +25,7 @@ TARGET_LINK_LIBRARIES(EyerAndroidInterface crypto)
 
 TARGET_LINK_LIBRARIES(EyerAndroidInterface z)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface log)
+TARGET_LINK_LIBRARIES(EyerAndroidInterface OpenSLES)
 
 INSTALL(
     TARGETS EyerAndroidInterface
