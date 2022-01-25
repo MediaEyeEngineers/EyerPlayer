@@ -4,6 +4,7 @@
 #include "EyerThread/EyerThread.hpp"
 #include "QueueBox.hpp"
 #include "DecoderBox.hpp"
+#include "ThreadAndroidAudioPlay.hpp"
 
 namespace Eyer
 {

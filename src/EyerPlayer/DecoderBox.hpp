@@ -24,6 +24,9 @@ namespace Eyer
         int GetVideoStreamIndex();
         int GetAudioStreamIndex();
 
+        int GetFrameCount(int streamIndex);
+        EyerAVFrame * GetFrame(int streamIndex);
+
         EyerConditionVariableBox cvBox;
 
     private:

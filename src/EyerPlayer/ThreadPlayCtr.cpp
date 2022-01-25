@@ -45,12 +45,35 @@ namespace Eyer
             EyerLog("No Video\n");
         }
 
-        ThreadAudioPlay * audioPlayThread = new ThreadAudioPlay();
+        ThreadAudioPlay * audioPlayThread = new ThreadAndroidAudioPlay();
         audioPlayThread->Start();
 
+        EyerAVFrame * videoFrame = nullptr;
+        EyerAVFrame * audioFrame = nullptr;
+
+        double currentTime = 0.0;
+
         while(!stopFlag) {
-            std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
-            decoderBox->cvBox.cv.wait(locker);
+            Eyer::EyerTime::EyerSleepMilliseconds(1);
+            // std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
+            // decoderBox->cvBox.cv.wait(locker);
+
+            if(audioStreamIndex >= 0){
+                // 获取一个音频帧数据
+                if(audioFrame == nullptr){
+                    audioFrame = decoderBox->GetFrame(audioStreamIndex);
+                }
+            }
+
+            if(audioFrame != nullptr){
+                if(audioPlayThread->GetAudioFrameQueueSize() <= 3){
+                    audioPlayThread->PutAudioFrame(audioFrame);
+                    currentTime = audioFrame->GetSecPTS();
+                    audioFrame = nullptr;
+                }
+            }
+
+            EyerLog("Current Time: %f\n", currentTime);
         }
 
         if(audioPlayThread != nullptr){
@@ -64,17 +87,17 @@ namespace Eyer
 
     int ThreadPlayCtr::SetStopFlag()
     {
-        std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
+        // std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
         stopFlag = 1;
-        decoderBox->cvBox.cv.notify_all();
+        // decoderBox->cvBox.cv.notify_all();
         return 0;
     }
 
     int ThreadPlayCtr::SetStartEventLoopFlag()
     {
-        std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
+        // std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
         eventLoopFlag = 1;
-        decoderBox->cvBox.cv.notify_all();
+        // decoderBox->cvBox.cv.notify_all();
         return 0;
     }
 }

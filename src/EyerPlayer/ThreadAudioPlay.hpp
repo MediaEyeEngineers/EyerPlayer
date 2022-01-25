@@ -1,7 +1,9 @@
 #ifndef EYERPLAYERANDROID_THREADAUDIOPLAY_HPP
 #define EYERPLAYERANDROID_THREADAUDIOPLAY_HPP
 
-#include "EyerThread/EyerThread.hpp"
+#include "EyerCore/EyerCore.hpp"
+#include "EyerAV/EyerAV.hpp"
+#include "EyerThread/EyerThreadHeader.hpp"
 
 namespace Eyer
 {
@@ -9,10 +11,14 @@ namespace Eyer
     {
     public:
         ThreadAudioPlay();
-        ~ThreadAudioPlay();
+        virtual ~ThreadAudioPlay();
 
-        virtual void Run() override;
-        virtual int SetStopFlag() override;
+        int GetAudioFrameQueueSize();
+        int PutAudioFrame(EyerAVFrame *);
+        EyerAVFrame * GetAudioFrame();
+
+    private:
+        Eyer::EyerObserverQueue<EyerAVFrame *> audioFrameQueue;
     };
 }
 
