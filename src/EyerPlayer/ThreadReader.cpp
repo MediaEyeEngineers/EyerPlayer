@@ -64,13 +64,13 @@ namespace Eyer
             while(!stopFlag && (decoderBox->GetPacketCacheSize() >= maxCacheSize)){
                 decoderBox->cvBox.cv.wait(locker);
             }
-
             // EyerLog("Size: %d\n", decoderBox->GetPacketCacheSize());
 
             EyerAVPacket * packet = new EyerAVPacket();
 
             locker.unlock();
             ret = reader->Read(packet);
+            // EyerTime::EyerSleepMilliseconds(1000);
             locker.lock();
             if(ret){
                 // 出错

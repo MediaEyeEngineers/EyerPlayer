@@ -60,6 +60,8 @@ namespace Eyer
         int size = 0;
         for(int i=0;i<decoderList.size();i++){
             size += decoderList[i]->GetPacketCacheSize();
+
+            // EyerLog("packetQueueSize: %d====%d\n", i, decoderList[i]->GetPacketCacheSize());
         }
         return size;
     }
@@ -84,5 +86,25 @@ namespace Eyer
             }
         }
         return streamIndex;
+    }
+
+    int DecoderBox::GetFrameCount(int streamIndex)
+    {
+        for(int i=0;i<decoderList.size();i++){
+            if(decoderList[i]->GetStreamId() == streamIndex){
+                return decoderList[i]->GetFrameCount();
+            }
+        }
+        return -1;
+    }
+
+    EyerAVFrame * DecoderBox::GetFrame(int streamIndex)
+    {
+        for(int i=0;i<decoderList.size();i++){
+            if(decoderList[i]->GetStreamId() == streamIndex){
+                return decoderList[i]->GetFrame();
+            }
+        }
+        return nullptr;
     }
 }

@@ -16,6 +16,12 @@ ADD_LIBRARY (
         ThreadEventLoop.hpp
         ThreadEventLoop.cpp
 
+        ThreadAudioPlay.hpp
+        ThreadAudioPlay.cpp
+
+        ThreadAndroidAudioPlay.hpp
+        ThreadAndroidAudioPlay.cpp
+
         QueueBox.hpp
         QueueBox.cpp
 
@@ -26,6 +32,7 @@ ADD_LIBRARY (
 SET(HEAD_FILES
         EyerPlayer.hpp
         QueueBox.hpp
+        ThreadAndroidAudioPlay.hpp
         )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerPlayer)
