@@ -30,6 +30,7 @@ namespace Eyer
         EyerConditionVariableBox * cvBox = nullptr;
 
         std::atomic<int> packetQueueSize {0};
+        // int packetQueueSize;
         Eyer::EyerObserverQueue<EyerAVPacket *> packetQueue;
         Eyer::EyerObserverQueue<EyerAVFrame *> frameQueue;
     };

@@ -61,7 +61,9 @@ namespace Eyer
             if(audioStreamIndex >= 0){
                 // 获取一个音频帧数据
                 if(audioFrame == nullptr){
+                    std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
                     audioFrame = decoderBox->GetFrame(audioStreamIndex);
+                    decoderBox->cvBox.cv.notify_all();
                 }
             }
 
@@ -73,6 +75,20 @@ namespace Eyer
                 }
             }
 
+            if(videoStreamIndex >= 0){
+                if(videoFrame == nullptr){
+                    std::unique_lock<std::mutex> locker(decoderBox->cvBox.mtx);
+                    videoFrame = decoderBox->GetFrame(videoStreamIndex);
+                    decoderBox->cvBox.cv.notify_all();
+                }
+            }
+
+            if(videoFrame != nullptr){
+                if(videoFrame->GetSecPTS() <= currentTime){
+                    delete videoFrame;
+                    videoFrame = nullptr;
+                }
+            }
             EyerLog("Current Time: %f\n", currentTime);
         }
 

@@ -60,6 +60,8 @@ namespace Eyer
         int size = 0;
         for(int i=0;i<decoderList.size();i++){
             size += decoderList[i]->GetPacketCacheSize();
+
+            // EyerLog("packetQueueSize: %d====%d\n", i, decoderList[i]->GetPacketCacheSize());
         }
         return size;
     }

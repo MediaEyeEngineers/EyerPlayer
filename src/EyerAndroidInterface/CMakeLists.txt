@@ -13,6 +13,7 @@ TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerDeocdeQueue)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerAV)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerCore)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerThread)
+TARGET_LINK_LIBRARIES(EyerAndroidInterface EyerJNI)
 
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avformat)
 TARGET_LINK_LIBRARIES(EyerAndroidInterface avcodec)

@@ -1,6 +1,22 @@
 #include "com_zzsin_eyerplayer_jni_EyerPlayerJNI.h"
 
 #include "EyerPlayer/EyerPlayer.hpp"
+#include "EyerJNI/EyerJNIHeader.hpp"
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM * vm, void * reserved)
+{
+    EyerLog("JavaVM GetEnv Success\n");
+
+    JNIEnv * env = nullptr;
+    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        EyerLog("JavaVM GetEnv Fail\n");
+        return -1;
+    }
+
+    Eyer::EyerJNIEnvManager::Init(vm, env, "com/zzsin/eyerplayer/jni/EyerClazzLoader");
+
+    return JNI_VERSION_1_6;
+}
 
 JNIEXPORT jlong JNICALL Java_com_zzsin_eyerplayer_jni_EyerPlayerJNI_eyer_1player_1init
 (JNIEnv *, jclass)
