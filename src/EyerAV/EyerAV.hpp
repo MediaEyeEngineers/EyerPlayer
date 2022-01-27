@@ -26,5 +26,8 @@
 #include "EyerAVResample.hpp"
 #include "EyerMediaInfoParse.hpp"
 #include "EyerAVCodecType.hpp"
+#include "EyerImageUtil.hpp"
+#include "EyerAVSEIUtil.hpp"
+#include "EyerAVDecoderLineAudio.hpp"
 
 #endif //EYERLIB_EYERAV_HPP

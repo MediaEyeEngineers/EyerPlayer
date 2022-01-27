@@ -10,7 +10,7 @@ namespace Eyer {
 
         piml->path = _path;
 
-        av_register_all();
+        // av_register_all();
         avformat_network_init();
 
         piml->formatCtx = avformat_alloc_context();

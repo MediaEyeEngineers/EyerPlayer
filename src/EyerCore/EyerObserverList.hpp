@@ -41,6 +41,27 @@ namespace Eyer
             return 0;
         }
 
+        int PushBack(const T & t)
+        {
+            vector.push_back(t);
+            NotifyObserver();
+            return 0;
+        }
+
+        int PushFront(const T & t)
+        {
+            vector.insert(vector.begin(), t);
+            NotifyObserver();
+            return 0;
+        }
+
+        int Insert(const T & t, int index)
+        {
+            vector.insert(vector.begin() + index, t);
+            NotifyObserver();
+            return 0;
+        }
+        
         int Get(T & t, int index)
         {
             if(index < 0) {

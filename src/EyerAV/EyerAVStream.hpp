@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "EyerAVCodecType.hpp"
 #include "EyerAVCodecID.hpp"
+#include "EyerAVRational.hpp"
 
 namespace Eyer
 {
@@ -26,6 +27,8 @@ namespace Eyer
         int GetWidth();
         int GetHeight();
         EyerAVCodecID GetCodecID();
+
+        EyerAVRational GetTimebase();
     public:
         EyerAVStreamPrivate * piml = nullptr;
     };

@@ -1,11 +1,9 @@
-//
-// Created by yao on 2021/6/6.
-//
-
 #ifndef EYERLIB_RECTUTIL_HPP
 #define EYERLIB_RECTUTIL_HPP
 
-#include "EyerMath.hpp"
+#include "Eect.hpp"
+#include "Eatrix3x1.hpp"
+#include "Eatrix4x1.hpp"
 
 namespace Eyer
 {
@@ -17,7 +15,7 @@ namespace Eyer
          * @param rectB 同上
          * @return 返回EectorF4，x代表左上角x， y代表左上角y，z代表矩形的宽，w代表矩形的高
          */
-        Eatrix4x1<float> OverlapRect(Eatrix4x1<float> rectA, Eatrix4x1<float> rectB);
+        Eect OverlapRect(const Eect & rectA, const Eect & rectB);
 
         /**
          * 判断点是否在矩形中

@@ -1,5 +1,9 @@
 #include "EyerAVEncoderParam.hpp"
 
+#include "EyerAVStream.hpp"
+#include "EyerAVStreamPrivate.hpp"
+#include "EyerCore/EyerCore.hpp"
+
 namespace Eyer
 {
     EyerAVEncoderParam::EyerAVEncoderParam()
@@ -44,10 +48,79 @@ namespace Eyer
         return 0;
     }
 
-    int EyerAVEncoderParam::InitMP3(int _sample_rate)
+    int EyerAVEncoderParam::InitMP3(EyerAVChannelLayout _channelLayout, EyerAVSampleFormat _sampleFormat, int _sample_rate)
     {
         codecId         = CodecId::CODEC_ID_MP3;
+        channelLayout   = _channelLayout;
         sample_rate     = _sample_rate;
+        sampleFormat    = _sampleFormat;
+        return 0;
+    }
+
+    int EyerAVEncoderParam::InitJPEG(int _width, int _height)
+    {
+        codecId         = CodecId::CODEC_ID_JPEG;
+        width           = _width;
+        height          = _height;
+        EyerAVRational _timebase;
+        _timebase.den = 25;
+        _timebase.num = 1;
+        timebase        = _timebase;
+
+        return 0;
+    }
+
+    int EyerAVEncoderParam::InitPNG(int _width, int _height)
+    {
+        codecId         = CodecId::CODEC_ID_PNG;
+        width           = _width;
+        height          = _height;
+        EyerAVRational _timebase;
+        _timebase.den = 25;
+        _timebase.num = 1;
+        timebase        = _timebase;
+
+        return 0;
+    }
+
+    int EyerAVEncoderParam::InitFromStream(const EyerAVStream & _straem)
+    {
+        // 264 和 264 都变成 264
+        if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_H264){
+            codecId = CodecId::CODEC_ID_H264;
+        }
+        else if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_H265){
+            codecId = CodecId::CODEC_ID_H264;
+        }
+        else if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_MJPEG){
+            codecId = CodecId::CODEC_ID_JPEG;
+        }
+        else if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_PNG){
+            codecId = CodecId::CODEC_ID_PNG;
+            pixel_fmt = _straem.piml->codecpar->format;
+        }
+        else if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_MP3){
+            codecId = CodecId::CODEC_ID_MP3;
+        }
+        else if(_straem.piml->codecpar->codec_id == AV_CODEC_ID_AAC){
+            codecId = CodecId::CODEC_ID_MP3;
+        }
+        else {
+            EyerLog("Codec ID: %d\n", _straem.piml->codecpar->codec_id);
+        }
+        return 0;
+    }
+
+    int EyerAVEncoderParam::SetTimebase(const EyerAVRational & _timebase)
+    {
+        timebase = _timebase;
+        return 0;
+    }
+
+    int EyerAVEncoderParam::SetWH(int _width, int _height)
+    {
+        width = _width;
+        height = _height;
         return 0;
     }
 }

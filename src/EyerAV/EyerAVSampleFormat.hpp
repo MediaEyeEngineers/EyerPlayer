@@ -6,6 +6,7 @@ namespace Eyer
     class EyerAVSampleFormat
     {
     public:
+        static EyerAVSampleFormat UNKNOW;
         static EyerAVSampleFormat SAMPLE_FMT_U8;
         static EyerAVSampleFormat SAMPLE_FMT_S16;
         static EyerAVSampleFormat SAMPLE_FMT_S32;
@@ -25,6 +26,8 @@ namespace Eyer
         EyerAVSampleFormat & operator = (const EyerAVSampleFormat & sampleFormat);
 
         bool operator == (const EyerAVSampleFormat & format);
+
+        static EyerAVSampleFormat GetByFFmpegId(int ffmpegId);
 
         int id = 0;
         int ffmpegId = 0;

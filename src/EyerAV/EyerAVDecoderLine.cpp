@@ -43,7 +43,12 @@ namespace Eyer
             return;
         }
 
-        reader->Seek(startSeekTime);
+        if(startSeekTime > 0.0){
+            ret = reader->Seek(startSeekTime);
+            if(ret){
+                ret = reader->Seek(0);
+            }
+        }
     }
     EyerAVDecoderLine::EyerAVDecoderLine(const EyerString & path, double _startSeekTime)
         : EyerAVDecoderLine(path, _startSeekTime, EyerAVDecoderLineParams())
@@ -66,10 +71,18 @@ namespace Eyer
             delete frameCache[i];
         }
         frameCache.clear();
+
+        if(lastFrame != nullptr){
+            delete lastFrame;
+            lastFrame = nullptr;
+        }
     }
 
     int EyerAVDecoderLine::GetFrame(EyerAVFrame & frame, double pts)
     {
+        if(currentStreamIndex < 0){
+            return -1;
+        }
         // EyerLog("frameCache size(): %d\n", frameCache.size());
         // EyerLog("GetFrame() pts: %f\n", pts);
         if(pts < GetStartTime()){
@@ -89,7 +102,7 @@ namespace Eyer
                 return EYER_AV_DECODER_LINE_NOT_FIND;
             }
             else if(ret == EYER_AV_DECODER_LINE_NEED_MORE_DATA){
-                // 需要更多的数据，要进行解码了
+                // 需要更多的数据，要进行解码了x
                 // 记录当前缓存有多少帧，
                 int canDropFrames = frameCache.size() - 1;
                 if(canDropFrames <= 0){
@@ -108,6 +121,10 @@ namespace Eyer
                         return EYER_AV_DECODER_LINE_NOT_FIND;
                     }
                     else if(ret == EYER_AV_DECODER_LINE_NEED_MORE_DATA){
+                        if(frameCache.size() > 0){
+                            frame = *frameCache[frameCache.size() - 1];
+                            return EYER_AV_OK;
+                        }
                         return EYER_AV_DECODER_LINE_NOT_FIND;
                     }
                     else {
@@ -189,6 +206,8 @@ namespace Eyer
                         break;
                     }
 
+                    // EyerLog("Frame.... %lld\n", frame->GetPTS());
+
                     if(params.isScale) {
                         EyerAVFrame * outframe = new EyerAVFrame();
                         frame->Scale(*outframe, params.pixelFormat, params.scaleWidth, params.scaleHeight);
@@ -219,6 +238,8 @@ namespace Eyer
                     delete frame;
                     break;
                 }
+
+                // EyerLog("Frame.... %lld\n", frame->GetPTS());
 
                 if(params.isScale) {
                     EyerAVFrame * outframe = new EyerAVFrame();

@@ -41,6 +41,9 @@ namespace Eyer
         int ClearCache(int maxDropFrames);
 
         EyerAVDecoderLineParams params;
+
+        EyerAVFrame * lastFrame = nullptr;
+        int PutFrame(EyerAVFrame * _lastFrame);
     };
 }
 

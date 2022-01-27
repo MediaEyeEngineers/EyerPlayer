@@ -69,8 +69,8 @@ namespace Eyer
 
             if(audioFrame != nullptr){
                 if(audioPlayThread->GetAudioFrameQueueSize() <= 3){
-                    audioPlayThread->PutAudioFrame(audioFrame);
                     currentTime = audioFrame->GetSecPTS();
+                    audioPlayThread->PutAudioFrame(audioFrame);
                     audioFrame = nullptr;
                 }
             }

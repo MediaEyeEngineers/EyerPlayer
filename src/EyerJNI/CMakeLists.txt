@@ -14,6 +14,9 @@ ADD_LIBRARY(
 
         EyerJNIEnvManager.hpp
         EyerJNIEnvManager.cpp
+
+        EyerJNIByteArray.hpp
+        EyerJNIByteArray.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
