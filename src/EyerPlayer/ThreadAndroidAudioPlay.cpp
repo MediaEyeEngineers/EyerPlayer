@@ -32,6 +32,23 @@ namespace Eyer
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
             audioFrame = GetAudioFrame();
+            if(audioFrame != nullptr){
+                resample.PutAVFrame(*audioFrame);
+
+                while(1){
+                    EyerAVFrame outFrame;
+                    int size = 128;
+                    int ret = resample.GetFrame(outFrame, size);
+                    if(ret){
+                        break;
+                    }
+
+                    EyerJNIByteArray bdcxxjniByteArray(&jniEnv, outFrame.GetLinesize());
+                    bdcxxjniByteArray.SetData(outFrame.GetData());
+
+                    ret = audioTrack->CallInt("write", "([B)I", bdcxxjniByteArray.GetJObject());
+                }
+            }
 
             // 上传数据
             EyerJNIByteArray pcmJavaData(&jniEnv, 10);
