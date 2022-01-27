@@ -70,9 +70,15 @@ namespace Eyer
         channels = av_get_channel_layout_nb_channels(piml->outputChannelLayout.ffmpegId);
         piml->outputFifo = av_audio_fifo_alloc((AVSampleFormat)piml->outputSampleFormat.ffmpegId, channels, piml->outputSamplerate);
 
-        int commonDivisor = Eyer::Eath::GetGreatestCommonDivisor(piml->inputSamplerate, piml->outputSamplerate);
-        piml->inputBlockSize = piml->inputSamplerate / commonDivisor;
-        piml->outputBlockSize = piml->outputSamplerate / commonDivisor;
+        if(piml->inputSamplerate != piml->outputSamplerate){
+            int commonDivisor = Eyer::Eath::GetGreatestCommonDivisor(piml->inputSamplerate, piml->outputSamplerate);
+            piml->inputBlockSize = piml->inputSamplerate / commonDivisor;
+            piml->outputBlockSize = piml->outputSamplerate / commonDivisor;
+        }
+        else {
+            piml->inputBlockSize = 128;
+            piml->outputBlockSize = 128;
+        }
 
         EyerLog("Input: %d\n", piml->inputBlockSize);
         EyerLog("Output: %d\n", piml->outputBlockSize);

@@ -11,6 +11,7 @@
 #include "EnterPolation.hpp"
 #include "Eyer2DCrop.hpp"
 #include "Eect.hpp"
+#include "RectUtil.hpp"
 
 namespace Eyer
 {

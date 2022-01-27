@@ -6,8 +6,13 @@ namespace Eyer
     class EyerAVCodecID
     {
     public:
+        static EyerAVCodecID CODEC_ID_UNKNOW;
+
         static EyerAVCodecID CODEC_ID_H264;
         static EyerAVCodecID CODEC_ID_H265;
+        static EyerAVCodecID CODEC_ID_PNG;
+        static EyerAVCodecID CODEC_ID_MJPEG;
+
         static EyerAVCodecID CODEC_ID_MP3;
         static EyerAVCodecID CODEC_ID_AAC;
 

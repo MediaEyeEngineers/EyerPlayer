@@ -14,7 +14,7 @@ namespace Eyer
         piml = new EyerAVWriterPrivate();
         piml->path = _path;
 
-        av_register_all();
+        /// av_register_all();
         avformat_network_init();
 
         avformat_alloc_output_context2(&piml->formatCtx, NULL, NULL, piml->path.str);
@@ -74,7 +74,10 @@ namespace Eyer
 
     int EyerAVWriter::WriteHand()
     {
-        int ret = avformat_write_header(piml->formatCtx, nullptr);
+        AVDictionary *dict = NULL;
+        av_dict_set( &dict, "movflags", "faststart", 0 );
+        int ret = avformat_write_header(piml->formatCtx, &dict);
+        av_dict_free(&dict);
         return ret;
     }
 

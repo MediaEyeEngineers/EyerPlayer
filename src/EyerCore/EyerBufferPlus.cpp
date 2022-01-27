@@ -15,6 +15,18 @@ namespace Eyer
 
     }
 
+    EyerBufferPlus::EyerBufferPlus(const EyerBufferPlus & bufferPlus)
+    {
+        *this = bufferPlus;
+    }
+
+    EyerBufferPlus & EyerBufferPlus::operator = (const EyerBufferPlus & bufferPlus)
+    {
+        buffer = bufferPlus.buffer;
+        callback = bufferPlus.callback;
+        len = bufferPlus.len;
+        return *this;
+    }
 
 
 
@@ -213,6 +225,17 @@ namespace Eyer
         return ret;
     }
 
+    int EyerBufferPlus::WriteBuffer(EyerBufferPlus & bufferPlus)
+    {
+        int ret = buffer.Append(bufferPlus.buffer);
+        WriteData();
+        return ret;
+    }
+
+    int EyerBufferPlus::GetBufferLen()
+    {
+        return buffer.GetLen();
+    }
 
     uint64_t EyerBufferPlus::GetLen()
     {

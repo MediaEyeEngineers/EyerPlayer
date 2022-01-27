@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "EyerAVSampleFormat.hpp"
 #include "EyerAVPixelFormat.hpp"
+#include "EyerAVChannelLayout.hpp"
 
 namespace Eyer
 {
@@ -31,17 +32,24 @@ namespace Eyer
 
         int SetAudioDataS16_44100_2_1024 (uint8_t * data);
 
+        int InitVideoData(EyerAVPixelFormat pixelFormat, int width, int height);
+        int InitAudioData(EyerAVChannelLayout channelLayout, EyerAVSampleFormat sampleFormat, int sample_rate, int nb_samples);
 
-        int InitAudioData(EyerAVSampleFormat sampleFormat, int sample_rate, int nb_samples, int channels);
-
-        // int Resample(EyerAVFrame & frame, EyerAVSampleFormat sampleFormat, int sample_rate);
-        int Resample(EyerAVFrame & frame);
+        int Resample(EyerAVFrame & frame, EyerAVChannelLayout channelLayout, EyerAVSampleFormat sampleFormat, int sample_rate);
 
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format, const int dstW, const int dstH);
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format);
+        int Scale(EyerAVFrame & frame, const int dstW, const int dstH);
 
         uint8_t * GetData(int index = 0);
         int GetLinesize(int index = 0);
+
+        EyerAVPixelFormat GetPixelFormat();
+
+        int GetSampleRate();
+        EyerAVChannelLayout GetChannelLayout();
+        EyerAVSampleFormat GetSampleFormat();
+        int GetSampleNB();
 
     public:
         EyerAVFramePrivate * piml = nullptr;

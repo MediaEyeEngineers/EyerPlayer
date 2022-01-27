@@ -10,7 +10,7 @@ namespace Eyer
         piml = new EyerAVPacketPrivate();
 
         piml->packet = av_packet_alloc();
-        av_init_packet(piml->packet);
+        // av_init_packet(piml->packet);
     }
 
     EyerAVPacket::EyerAVPacket(const EyerAVPacket & packet) : EyerAVPacket()

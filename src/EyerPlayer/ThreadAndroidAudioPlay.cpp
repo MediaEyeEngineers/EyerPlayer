@@ -8,6 +8,18 @@ namespace Eyer
     {
         EyerLog("ThreadAndroidAudioPlay Start\n");
 
+        // 初始化重采样
+        EyerAVResample resample;
+        resample.Init(
+                EyerAVChannelLayout::EYER_AV_CH_LAYOUT_MONO,
+                EyerAVSampleFormat::SAMPLE_FMT_S16,
+                48000,
+
+                EyerAVChannelLayout::EYER_AV_CH_LAYOUT_MONO,
+                EyerAVSampleFormat::SAMPLE_FMT_FLTP,
+                48000
+        );
+
         // 初始化音频播放
         EyerJNIEnv jniEnv = EyerJNIEnvManager::AttachCurrentThread();
 
@@ -20,7 +32,9 @@ namespace Eyer
         while(!stopFlag){
             Eyer::EyerTime::EyerSleepMilliseconds(1);
             audioFrame = GetAudioFrame();
-            // EyerLog("Render Audio\n");
+
+            // 上传数据
+            EyerJNIByteArray pcmJavaData(&jniEnv, 10);
 
             if(audioFrame != nullptr){
                 // EyerLog("Render Audio OK\n");

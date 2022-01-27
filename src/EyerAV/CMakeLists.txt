@@ -97,6 +97,15 @@ ADD_LIBRARY(
 
         EyerAVCodecID.hpp
         EyerAVCodecID.cpp
+
+        EyerImageUtil.hpp
+        EyerImageUtil.cpp
+
+        EyerAVSEIUtil.hpp
+        EyerAVSEIUtil.cpp
+
+        EyerAVDecoderLineAudio.hpp
+        EyerAVDecoderLineAudio.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -145,6 +154,9 @@ SET(HEAD_FILES
         EyerMediaInfoParse.hpp
         EyerAVCodecType.hpp
         EyerAVCodecID.hpp
+        EyerImageUtil.hpp
+        EyerAVSEIUtil.hpp
+        EyerAVDecoderLineAudio.hpp
 )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerAV)

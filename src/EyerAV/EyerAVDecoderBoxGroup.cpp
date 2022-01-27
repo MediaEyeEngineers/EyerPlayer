@@ -11,13 +11,12 @@ namespace Eyer
 
     EyerAVDecoderBoxGroup::~EyerAVDecoderBoxGroup()
     {
-        /* TODO Add Fucking Free Code
+        /* TODO Add Fucking Free Code */
         std::map<EyerString, EyerAVDecoderBox *>::iterator it;
-        for(it = decoderBoxCache.begin(); it!=decoderBoxCache.end(); ++it){
+        for(it = decoderBoxCache.begin(); it != decoderBoxCache.end(); ) {
             delete it->second;
-            decoderBoxCache.erase(it);
+            decoderBoxCache.erase(it++);
         }
-        */
     }
 
     int EyerAVDecoderBoxGroup::GetFrame(EyerAVFrame & frame, const EyerString & path, double pts)

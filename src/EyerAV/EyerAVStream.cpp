@@ -79,6 +79,14 @@ namespace Eyer
         return piml->codecpar->height;
     }
 
+    EyerAVRational EyerAVStream::GetTimebase()
+    {
+        EyerAVRational timebase;
+        timebase.den = piml->timebase.den;
+        timebase.num = piml->timebase.num;
+        return timebase;
+    }
+
     EyerAVCodecID EyerAVStream::GetCodecID()
     {
         if(piml->codecpar->codec_id == AV_CODEC_ID_H264){
@@ -93,6 +101,13 @@ namespace Eyer
         else if(piml->codecpar->codec_id == AV_CODEC_ID_H265){
             return EyerAVCodecID::CODEC_ID_H265;
         }
-        return EyerAVCodecID::CODEC_ID_MP3;
+        else if(piml->codecpar->codec_id == AV_CODEC_ID_PNG){
+            return EyerAVCodecID::CODEC_ID_PNG;
+        }
+        else if(piml->codecpar->codec_id == AV_CODEC_ID_MJPEG){
+            return EyerAVCodecID::CODEC_ID_MJPEG;
+        }
+
+        return EyerAVCodecID::CODEC_ID_UNKNOW;
     }
 }

@@ -16,6 +16,9 @@ namespace Eyer
         EyerBufferPlus(EyerBufferPlusCallback * callback = nullptr);
         ~EyerBufferPlus();
 
+        EyerBufferPlus(const EyerBufferPlus & bufferPlus);
+        EyerBufferPlus & operator = (const EyerBufferPlus & bufferPlus);
+
         uint64_t ReadBigEndian_uint64(int & offset);
         uint32_t ReadBigEndian_uint32(int & offset);
         uint16_t ReadBigEndian_uint16(int & offset);
@@ -40,10 +43,14 @@ namespace Eyer
 
         int Write(uint32_t val);
 
+
+
+        int GetBufferLen();
         uint64_t GetLen();
 
         int ReadBuffer(EyerBuffer & buffer, int size);
         int WriteBuffer(EyerBuffer & buffer);
+        int WriteBuffer(EyerBufferPlus & bufferPlus);
 
     private:
         EyerBuffer buffer;

@@ -56,6 +56,33 @@ namespace Eyer
         return wh.y();
     }
 
+
+
+
+
+    float Eect::x() const
+    {
+        return pos.x();
+    }
+
+    float Eect::y() const
+    {
+        return pos.y();
+    }
+
+    float Eect::w() const
+    {
+        return wh.w();
+    }
+
+    float Eect::h() const
+    {
+        return wh.h();
+    }
+
+
+
+
     int Eect::SetXY(float x, float y)
     {
         pos.SetX(x);

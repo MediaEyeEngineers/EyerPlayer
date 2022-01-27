@@ -146,31 +146,43 @@ namespace Eyer
         return 0;
     }
 
-    int EyerAVFrame::InitAudioData(EyerAVSampleFormat sampleFormat, int sample_rate, int nb_samples, int channels)
+    int EyerAVFrame::InitVideoData(EyerAVPixelFormat pixelFormat, int width, int height)
     {
-        piml->frame->format         = (AVSampleFormat)sampleFormat.id;
-        piml->frame->sample_rate    = sample_rate;
-        piml->frame->channels       = channels;
-        piml->frame->nb_samples     = nb_samples;
-        piml->frame->channel_layout = av_get_default_channel_layout(piml->frame->channels);
-
-        av_frame_get_buffer(piml->frame, 16);
+        piml->frame->format         = (AVPixelFormat)pixelFormat.ffmpegId;
+        piml->frame->width          = width;
+        piml->frame->height         = height;
+        av_frame_get_buffer(piml->frame, 1);
 
         return 0;
     }
 
-    int EyerAVFrame::Resample(EyerAVFrame & dstFrame)
+    int EyerAVFrame::InitAudioData(EyerAVChannelLayout channelLayout, EyerAVSampleFormat sampleFormat, int sample_rate, int nb_samples)
     {
-        /*
+        piml->frame->format         = (AVSampleFormat)sampleFormat.ffmpegId;
+        piml->frame->sample_rate    = sample_rate;
+        piml->frame->channel_layout = channelLayout.ffmpegId;
+        piml->frame->channels       = av_get_channel_layout_nb_channels(piml->frame->channel_layout);
+        piml->frame->nb_samples     = nb_samples;
+
+        av_frame_get_buffer(piml->frame, 16);
+
+        for(int i=0;i<8;i++){
+            memset(piml->frame->data[i], 0, piml->frame->linesize[i]);
+        }
+
+        return 0;
+    }
+
+    int EyerAVFrame::Resample(EyerAVFrame & dstFrame, EyerAVChannelLayout channelLayout, EyerAVSampleFormat sampleFormat, int sample_rate)
+    {
         av_frame_copy_props(dstFrame.piml->frame, piml->frame);
 
-        dstFrame.piml->frame->channel_layout = AV_CH_LAYOUT_STEREO;
-        dstFrame.piml->frame->channels = av_get_channel_layout_nb_channels(dstFrame.piml->frame->channel_layout);
-        dstFrame.piml->frame->sample_rate = 44100;
-        dstFrame.piml->frame->format = AVSampleFormat::AV_SAMPLE_FMT_FLTP;
+        dstFrame.piml->frame->channel_layout    = channelLayout.ffmpegId;
+        dstFrame.piml->frame->channels          = av_get_channel_layout_nb_channels(dstFrame.piml->frame->channel_layout);
+        dstFrame.piml->frame->sample_rate       = sample_rate;
+        dstFrame.piml->frame->format            = sampleFormat.ffmpegId;
 
-        EyerLog("Sample A: %d\n", dstFrame.piml->frame->sample_rate);
-        EyerLog("Sample B: %d\n", piml->frame->sample_rate);
+        av_frame_get_buffer(dstFrame.piml->frame, 1);
 
         SwrContext * swrCtx = swr_alloc_set_opts(
                 NULL,
@@ -186,20 +198,13 @@ namespace Eyer
                 NULL
         );
 
-        int dst_nb_samples = av_rescale_rnd(swr_get_delay(swrCtx, piml->frame->sample_rate) + piml->frame->nb_samples, piml->frame->sample_rate, piml->frame->sample_rate, AVRounding(1));
-        EyerLog("dst_nb_samples: %d\n", dst_nb_samples);
-
         swr_init(swrCtx);
 
         int ret = swr_convert_frame(swrCtx, dstFrame.piml->frame, piml->frame);
 
         swr_free(&swrCtx);
 
-
         return ret;
-         */
-
-        return 0;
     }
 
     int EyerAVFrame::Scale(EyerAVFrame & frame, const EyerAVPixelFormat format)
@@ -207,9 +212,52 @@ namespace Eyer
         return Scale(frame, format, GetWidth(), GetHeight());
     }
 
+    int EyerAVFrame::Scale(EyerAVFrame & dstFrame, const int dstW, const int dstH)
+    {
+        AVPixelFormat distFormat = (AVPixelFormat)piml->frame->format;
+
+        av_frame_copy_props(dstFrame.piml->frame, piml->frame);
+
+        dstFrame.piml->frame->pict_type = AVPictureType::AV_PICTURE_TYPE_NONE;
+
+        dstFrame.piml->frame->format    = distFormat;
+        dstFrame.piml->frame->width     = dstW;
+        dstFrame.piml->frame->height    = dstH;
+
+        dstFrame.piml->secPTS           = piml->secPTS;
+
+        // uint8_t
+        av_frame_get_buffer(dstFrame.piml->frame, 1);
+
+        int srcW = GetWidth();
+        int srcH = GetHeight();
+        AVPixelFormat srcFormat = (AVPixelFormat)(piml->frame->format);
+
+        SwsContext * swsContext = sws_getContext(srcW, srcH, srcFormat, dstW, dstH, distFormat, SWS_POINT, NULL, NULL, NULL);
+
+        if(swsContext == nullptr){
+            return -1;
+        }
+
+
+        sws_scale(
+                swsContext,
+                piml->frame->data,
+                piml->frame->linesize,
+                0,
+                srcH,
+
+                dstFrame.piml->frame->data,
+                dstFrame.piml->frame->linesize
+        );
+
+        sws_freeContext(swsContext);
+
+        return 0;
+    }
+
     int EyerAVFrame::Scale(EyerAVFrame & dstFrame, const EyerAVPixelFormat format, const int dstW, const int dstH)
     {
-        /*
         AVPixelFormat distFormat = (AVPixelFormat)format.ffmpegId;
 
         av_frame_copy_props(dstFrame.piml->frame, piml->frame);
@@ -248,7 +296,6 @@ namespace Eyer
         );
 
         sws_freeContext(swsContext);
-        */
 
         return 0;
     }
@@ -261,5 +308,32 @@ namespace Eyer
     int EyerAVFrame::GetLinesize(int index)
     {
         return piml->frame->linesize[index];
+    }
+
+    int EyerAVFrame::GetSampleRate()
+    {
+        return piml->frame->sample_rate;
+    }
+
+    EyerAVPixelFormat EyerAVFrame::GetPixelFormat()
+    {
+        // EyerLog("GetPixelFormat format: %d\n", piml->frame->format);
+        return EyerAVPixelFormat::GetByFFmpegId(piml->frame->format);
+    }
+
+    EyerAVChannelLayout EyerAVFrame::GetChannelLayout()
+    {
+        return EyerAVChannelLayout::GetByFFmpegId(piml->frame->channel_layout);
+    }
+
+    EyerAVSampleFormat EyerAVFrame::GetSampleFormat()
+    {
+        // EyerLog("GetSampleFormat format: %d\n", piml->frame->format);
+        return EyerAVSampleFormat::GetByFFmpegId(piml->frame->format);
+    }
+
+    int EyerAVFrame::GetSampleNB()
+    {
+        return piml->frame->nb_samples;
     }
 }

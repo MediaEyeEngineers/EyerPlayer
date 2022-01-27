@@ -2,6 +2,9 @@
 #define EYERLIB_EYERAVENCODERPARAM_HPP
 
 #include "EyerAVRational.hpp"
+#include "EyerAVStream.hpp"
+#include "EyerAVChannelLayout.hpp"
+#include "EyerAVSampleFormat.hpp"
 
 namespace Eyer
 {
@@ -11,7 +14,9 @@ namespace Eyer
         CODEC_ID_H264 = 1,
         CODEC_ID_AAC = 2,
         CODEC_ID_GIF = 3,
-        CODEC_ID_MP3 = 4
+        CODEC_ID_MP3 = 4,
+        CODEC_ID_JPEG = 5,
+        CODEC_ID_PNG = 6,
     };
 
     class EyerAVEncoderParam {
@@ -24,7 +29,13 @@ namespace Eyer
 
         int InitH264(int width, int height, const EyerAVRational & _timebase);
         int InitAAC(int sample_rate);
-        int InitMP3(int sample_rate);
+        int InitMP3(EyerAVChannelLayout _channelLayout, EyerAVSampleFormat _sampleFormat, int sample_rate);
+        int InitJPEG(int width, int height);
+        int InitPNG(int width, int height);
+
+        int InitFromStream(const EyerAVStream & straem);
+        int SetTimebase(const EyerAVRational & timebase);
+        int SetWH(int width, int height);
 
     public:
         CodecId codecId = CodecId::CODEC_ID_UNKNOW;
@@ -32,6 +43,10 @@ namespace Eyer
         int height = 0;
 
         int sample_rate = 44100;
+        EyerAVChannelLayout channelLayout;
+        EyerAVSampleFormat sampleFormat;
+
+        int pixel_fmt = 0;
 
         EyerAVRational timebase;
     };

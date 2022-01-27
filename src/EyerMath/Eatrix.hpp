@@ -367,10 +367,12 @@ namespace Eyer
             return mat.invert();
         }
 
-        Eatrix & invert(Eatrix * tempMap = nullptr)
+        Eatrix invert(Eatrix * tempMap = nullptr)
         {
             // https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/matrix-inverse
-            T ** m = mat;
+            Eatrix tempMat = *this;
+
+            T ** m = tempMat.mat;
 
             Eatrix mat(row, row);
             int N = mat.row;
@@ -412,8 +414,7 @@ namespace Eyer
                 }
             }
 
-            *this = mat;
-            return *this;
+            return mat;
         }
 
     public:

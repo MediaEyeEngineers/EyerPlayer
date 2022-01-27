@@ -28,6 +28,7 @@ namespace Eyer
         writer.Open();
 
         InitEncoder(writer);
+
         writer.WriteHand();
 
         InitDeocder();
@@ -35,19 +36,22 @@ namespace Eyer
         // 如果有音频
         if(decoderAudioStreamIndex >= 0){
             resample.Init(
-                    EyerAVChannelLayout::CH_LAYOUT_STEREO,
+                    EyerAVChannelLayout::EYER_AV_CH_LAYOUT_STEREO,
                     EyerAVSampleFormat::SAMPLE_FMT_FLTP,
                     44100,
 
-                    EyerAVChannelLayout::CH_LAYOUT_STEREO,
+                    EyerAVChannelLayout::EYER_AV_CH_LAYOUT_STEREO,
                     EyerAVSampleFormat::SAMPLE_FMT_FLTP,
                     audioDecoder.GetSampleRate()
             );
         }
 
-
-        frameCount = videoDuration * params.fps;
-        EyerLog("FrameCount: %lld\n", frameCount);
+        if(decoderVideoStreamIndex >= 0){
+            frameCount = videoDuration * params.fps;
+            if(frameCount <= 0){
+                frameCount = 1;
+            }
+        }
 
         // 进行间隔编码，音视频交错
         long frameOffset = 0;
@@ -72,54 +76,59 @@ namespace Eyer
             // EyerLog("Time: %f\n", limitTime);
         }
 
+
         // 清空视频编码器
         if(params.careVideo){
-            videoEncoder.SendFrameNull();
-            while(1){
-                EyerAVPacket packet;
-                int ret = videoEncoder.RecvPacket(packet);
-                if(ret){
-                    break;
+            if(encoderVideoStreamIndex >= 0){
+                videoEncoder.SendFrameNull();
+                while(1){
+                    EyerAVPacket packet;
+                    int ret = videoEncoder.RecvPacket(packet);
+                    if(ret){
+                        break;
+                    }
+                    packet.SetStreamIndex(encoderVideoStreamIndex);
+                    packet.RescaleTs(videoEncoder.GetTimebase(), writer.GetTimebase(encoderVideoStreamIndex));
+                    writer.WritePacket(packet);
                 }
-                packet.SetStreamIndex(encoderVideoStreamIndex);
-                packet.RescaleTs(videoEncoder.GetTimebase(), writer.GetTimebase(encoderVideoStreamIndex));
-                writer.WritePacket(packet);
             }
         }
 
 
         // 清空重采样器
         if(params.careAudio) {
-            resample.PutAVFrameNULL();
-            while (1) {
+            if(encoderAudioStreamIndex >= 0) {
+                resample.PutAVFrameNULL();
+                while (1) {
+                    EyerAVFrame frame;
+                    int ret = resample.GetFrame(frame, audioEncoder.GetFrameSize());
+                    if (ret) {
+                        break;
+                    }
+                    // audioEncoder.SendFrame(frame);
+                    EyerLog("....Clear Sample\n");
+                }
                 EyerAVFrame frame;
-                int ret = resample.GetFrame(frame, audioEncoder.GetFrameSize());
-                if (ret) {
-                    break;
+                int ret = resample.GetLastFrame(frame, audioEncoder.GetFrameSize());
+                if (!ret) {
+                    frame.SetPTS(audioOffset);
+                    audioOffset += audioEncoder.GetFrameSize();
+                    // audioEncoder.SendFrame(frame);
+                    EyerLog("....Clear Sample WWW\n");
                 }
-                // audioEncoder.SendFrame(frame);
-                EyerLog("....Clear Sample\n");
-            }
-            EyerAVFrame frame;
-            int ret = resample.GetLastFrame(frame, audioEncoder.GetFrameSize());
-            if (!ret) {
-                frame.SetPTS(audioOffset);
-                audioOffset += audioEncoder.GetFrameSize();
-                // audioEncoder.SendFrame(frame);
-                EyerLog("....Clear Sample WWW\n");
-            }
 
-            // 清空音频编码器
-            audioEncoder.SendFrameNull();
-            while (1) {
-                EyerAVPacket packet;
-                int ret = audioEncoder.RecvPacket(packet);
-                if (ret) {
-                    break;
+                // 清空音频编码器
+                audioEncoder.SendFrameNull();
+                while (1) {
+                    EyerAVPacket packet;
+                    int ret = audioEncoder.RecvPacket(packet);
+                    if (ret) {
+                        break;
+                    }
+                    packet.SetStreamIndex(encoderAudioStreamIndex);
+                    packet.RescaleTs(audioEncoder.GetTimebase(), writer.GetTimebase(encoderAudioStreamIndex));
+                    writer.WritePacket(packet);
                 }
-                packet.SetStreamIndex(encoderAudioStreamIndex);
-                packet.RescaleTs(audioEncoder.GetTimebase(), writer.GetTimebase(encoderAudioStreamIndex));
-                writer.WritePacket(packet);
             }
         }
 
@@ -139,6 +148,9 @@ namespace Eyer
             if(decoderVideoStreamIndex >= 0){
                 EyerAVStream stream = videoReader.GetStream(decoderVideoStreamIndex);
                 videoDuration = stream.GetDuration();
+                if(videoDuration <= 0){
+                    videoDuration = 0;
+                }
                 videoDeocder.Init(stream);
                 // TODO 判断创建失败
             }
@@ -225,12 +237,14 @@ namespace Eyer
 
             EyerAVFrame frame;
             int ret = decoderBox.GetFrame(frame, pts);
+            // EyerLog("PTS: %f, Ret: %d\n", pts, ret);
             if(ret){
                 return -1;
             }
 
             EyerAVFrame distFrame;
-            frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
+            // frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
+            frame.Scale(distFrame, params.targetWidth, params.targetHeight);
 
             distFrame.SetPTS(pts * 1000);
 
@@ -282,14 +296,21 @@ namespace Eyer
         EyerAVReader reader(srcPath);
         reader.Open();
         int videoIndex = reader.GetVideoStreamIndex();
+        EyerLog("Video Index: %d\n", videoIndex);
         if(videoIndex >= 0){
             // 初始化编码器
             if(params.careVideo){
+                EyerAVStream stream = reader.GetStream(videoIndex);
                 EyerAVEncoderParam videoEncoderParams;
+                videoEncoderParams.InitFromStream(stream);
+
                 EyerAVRational encodeTimebase;
                 encodeTimebase.num = 1;
                 encodeTimebase.den = 1000;
-                videoEncoderParams.InitH264(params.targetWidth, params.targetHeight, encodeTimebase);
+
+                videoEncoderParams.SetTimebase(encodeTimebase);
+                videoEncoderParams.SetWH(params.targetWidth, params.targetHeight);
+
                 ret = videoEncoder.Init(videoEncoderParams);
                 if(ret){
                     EyerLog("Video Encoder Init Fail\n");
@@ -299,11 +320,12 @@ namespace Eyer
         }
 
         int audioIndex = reader.GetAudioStreamIndex();
+        EyerLog("Audio Index: %d\n", audioIndex);
         if(audioIndex >= 0){
             // 初始化编码器
             if(params.careAudio) {
                 EyerAVEncoderParam audioEncoderParams;
-                audioEncoderParams.InitMP3(44100);
+                audioEncoderParams.InitMP3(EyerAVChannelLayout::EYER_AV_CH_LAYOUT_STEREO, EyerAVSampleFormat::SAMPLE_FMT_FLTP, 44100);
                 ret = audioEncoder.Init(audioEncoderParams);
                 if (ret) {
                     EyerLog("Audio Encoder Init Fail\n");

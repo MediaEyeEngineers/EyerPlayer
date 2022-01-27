@@ -4,8 +4,12 @@
 
 namespace Eyer
 {
+    EyerAVCodecID EyerAVCodecID::CODEC_ID_UNKNOW(-1, AV_CODEC_ID_NONE);
+
     EyerAVCodecID EyerAVCodecID::CODEC_ID_H264  (101, AV_CODEC_ID_H264);
     EyerAVCodecID EyerAVCodecID::CODEC_ID_H265  (102, AV_CODEC_ID_H265);
+    EyerAVCodecID EyerAVCodecID::CODEC_ID_PNG   (103, AV_CODEC_ID_PNG);
+    EyerAVCodecID EyerAVCodecID::CODEC_ID_MJPEG (104, AV_CODEC_ID_MJPEG);
 
     EyerAVCodecID EyerAVCodecID::CODEC_ID_AAC   (201, AV_CODEC_ID_AAC);
     EyerAVCodecID EyerAVCodecID::CODEC_ID_MP3   (202, AV_CODEC_ID_MP3);

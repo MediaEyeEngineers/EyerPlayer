@@ -4,7 +4,6 @@
 #include "Eatrix4x1.hpp"
 #include "Eatrix2x1.hpp"
 #include "Eath.hpp"
-#include "RectUtil.hpp"
 
 namespace Eyer
 {
@@ -24,6 +23,12 @@ namespace Eyer
 
         float GetW();
         float GetH();
+
+        float x() const;
+        float y() const;
+
+        float w() const;
+        float h() const;
 
         int SetXY(float x = 0.0f, float y = 0.0f);
         int SetWH(float w, float h);
