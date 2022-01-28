@@ -27,6 +27,9 @@ ADD_LIBRARY (
 
         DecoderBox.hpp
         DecoderBox.cpp
+
+        ThreadVideoPlay.hpp
+        ThreadVideoPlay.cpp
 )
 
 SET(HEAD_FILES
