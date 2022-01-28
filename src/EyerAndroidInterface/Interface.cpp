@@ -37,7 +37,8 @@ JNIEXPORT jint JNICALL Java_com_zzsin_eyerplayer_jni_EyerPlayerJNI_eyer_1player_
 (JNIEnv *, jclass, jlong playerJNI, jstring urlJNI)
 {
     Eyer::EyerPlayer * player = (Eyer::EyerPlayer *)playerJNI;
-    return player->SetURL("https://www.zzsin.com/hdr/V/ysjf.m3u8");
+    // return player->SetURL("https://www.zzsin.com/hdr/V/ysjf.m3u8");
+    return player->SetURL("https://www.zzsin.com/hdr/ZhongLi.mp4");
     // return player->SetURL("rtmp://av.zzsin.com/abc/abc/abcdefg.flv");
     // return player->SetURL("rtmp://124.237.177.17:8222/myapp/sdkplay");
     // return player->SetURL("rtmp://playrtmp-xiaodu.superkd.cn/xiaodu/obs.flv ");
