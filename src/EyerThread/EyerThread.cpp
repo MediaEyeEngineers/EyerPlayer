@@ -2,6 +2,11 @@
 
 #include <functional>
 
+#include <time.h>
+#include <stdio.h>
+#include <chrono>
+#include <thread>
+
 namespace Eyer
 {
     EyerThread::EyerThread()
@@ -17,13 +22,13 @@ namespace Eyer
             delete onStartedPromise;
             onStartedPromise = nullptr;
         }
-        if(onEventFinishPromise != nullptr){
-            delete onEventFinishPromise;
-            onEventFinishPromise = nullptr;
+        if(onStopPromise != nullptr){
+            delete onStopPromise;
+            onStopPromise = nullptr;
         }
-        if(onStopedPromise != nullptr){
-            delete onStopedPromise;
-            onStopedPromise = nullptr;
+        if(onStopFinishPromise != nullptr){
+            delete onStopFinishPromise;
+            onStopFinishPromise = nullptr;
         }
     }
 
@@ -77,13 +82,14 @@ namespace Eyer
                 eventList[i]->Run();
             }
 
-            if(onEventFinishPromise != nullptr){
-                onEventFinishPromise->set_value();
-            }
-
-            onStopedPromise->get_future().get();
+            // 等待结束的命令
+            onStopPromise->get_future().get();
 
             eventLoopFlag = 0;
+
+            if(onStopFinishPromise != nullptr){
+                onStopFinishPromise->set_value();
+            }
         }
         return 0;
     }
@@ -91,11 +97,11 @@ namespace Eyer
     int EyerThread::StartEventLoop()
     {
         onStartedPromise        = new std::promise<void>();
-        onEventFinishPromise    = new std::promise<void>();
-        onStopedPromise         = new std::promise<void>();
+        onStopPromise           = new std::promise<void>();
+        onStopFinishPromise     = new std::promise<void>();
 
         SetStartEventLoopFlag();
-        // 等待运行结束后的信号
+        // 等待运行开始后的信号
         onStartedPromise->get_future().get();
         return 0;
     }
@@ -108,25 +114,28 @@ namespace Eyer
 
     int EyerThread::StopEventLoop()
     {
-        onEventFinishPromise->get_future().get();
-
-        if(onStopedPromise != nullptr){
-            onStopedPromise->set_value();
+        if(onStopPromise != nullptr){
+            onStopPromise->set_value();
         }
+
+        if(onStopFinishPromise != nullptr){
+            // 等待重制状态
+            onStopFinishPromise->get_future().get();
+        }
+
 
         if(onStartedPromise != nullptr){
             delete onStartedPromise;
             onStartedPromise = nullptr;
         }
-        if(onEventFinishPromise != nullptr){
-            delete onEventFinishPromise;
-            onEventFinishPromise = nullptr;
+        if(onStopPromise != nullptr){
+            delete onStopPromise;
+            onStopPromise = nullptr;
         }
-        if(onStopedPromise != nullptr){
-            delete onStopedPromise;
-            onStopedPromise = nullptr;
+        if(onStopFinishPromise != nullptr){
+            delete onStopFinishPromise;
+            onStopFinishPromise = nullptr;
         }
-
         return 0;
     }
 

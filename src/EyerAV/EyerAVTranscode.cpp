@@ -66,6 +66,8 @@ namespace Eyer
                 retVideo = TranscodeVideo(limitTime, frameOffset);
             }
 
+            EyerTime::EyerSleepMilliseconds(5);
+
             if(params.careAudio){
                 retAudio = TranscodeAudio(limitTime);
             }
@@ -73,7 +75,6 @@ namespace Eyer
             if(retAudio != 0 && retVideo != 0){
                 break;
             }
-            // EyerLog("Time: %f\n", limitTime);
         }
 
 
@@ -131,6 +132,7 @@ namespace Eyer
                 }
             }
         }
+
 
         UninitDeocder();
 
@@ -237,14 +239,20 @@ namespace Eyer
 
             EyerAVFrame frame;
             int ret = decoderBox.GetFrame(frame, pts);
-            // EyerLog("PTS: %f, Ret: %d\n", pts, ret);
             if(ret){
                 return -1;
             }
+            /*
+            EyerAVFrame frameRGBA;
+            frame.Scale(frameRGBA, EyerAVPixelFormat::RGBA);
+
+            EyerAVFrame frameRGBAMirror;
+            frameRGBA.Mirror(frameRGBAMirror, 2);
+            */
 
             EyerAVFrame distFrame;
             // frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
-            frame.Scale(distFrame, params.targetWidth, params.targetHeight);
+            frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
 
             distFrame.SetPTS(pts * 1000);
 

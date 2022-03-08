@@ -45,7 +45,6 @@ namespace Eyer
         av_frame_copy_props(piml->frame, frame.piml->frame);
         av_frame_copy(piml->frame, frame.piml->frame);
         av_frame_ref(piml->frame, frame.piml->frame);
-
         return *this;
     }
 
@@ -75,6 +74,18 @@ namespace Eyer
         return piml->frame->height;
     }
 
+    int EyerAVFrame::SetWidth(int width)
+    {
+        piml->frame->width = width;
+        return 0;
+    }
+
+    int EyerAVFrame::SetHeight(int height)
+    {
+        piml->frame->height = height;
+        return 0;
+    }
+
     int EyerAVFrame::SetVideoData420P(unsigned char * _y, unsigned char * _u, unsigned char * _v, int _width, int _height)
     {
         piml->frame->format = AVPixelFormat::AV_PIX_FMT_YUV420P;
@@ -92,6 +103,48 @@ namespace Eyer
             memcpy(piml->frame->data[2] + piml->frame->linesize[2] * i, _v + _width / 2 * i, _width / 2);
         }
 
+        return 0;
+    }
+
+    int EyerAVFrame::Mirror(EyerAVFrame & frame, int type)
+    {
+        if(GetPixelFormat() != EyerAVPixelFormat::RGBA){
+            frame = *this;
+            return -1;
+        }
+        frame.piml->frame->width    = piml->frame->width;
+        frame.piml->frame->height   = piml->frame->height;
+        frame.piml->frame->format   = piml->frame->format;
+        av_frame_get_buffer(frame.piml->frame, 1);
+
+        int height = piml->frame->height;
+        int width = piml->frame->width;
+
+        if(type == 1){
+            // 横向
+            for(int i=0;i<height;i++){
+                uint8_t * dist = frame.piml->frame->data[0] + frame.piml->frame->linesize[0] * i;
+                uint8_t * src  = piml->frame->data[0] + piml->frame->linesize[0] * i;
+
+                for(int j=0;j<width;j++){
+                    memcpy(dist + (width - j) * 4, src + j * 4, 4);
+                }
+            }
+        }
+        else if(type == 2){
+            for(int i=0;i<height;i++){
+                uint8_t * dist = frame.piml->frame->data[0] + frame.piml->frame->linesize[0] * i;
+                uint8_t * src  = piml->frame->data[0] + piml->frame->linesize[0] * (height - i);
+                memcpy(dist, src, width * 4);
+            }
+        }
+        else {
+            for(int i=0;i<height;i++){
+                uint8_t * dist = frame.piml->frame->data[0] + frame.piml->frame->linesize[0] * i;
+                uint8_t * src  = piml->frame->data[0] + piml->frame->linesize[0] * i;
+                memcpy(dist, src, width * 4);
+            }
+        }
         return 0;
     }
 

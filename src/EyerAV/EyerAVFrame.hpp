@@ -23,6 +23,8 @@ namespace Eyer
         int64_t GetPTS();
         double GetSecPTS();
 
+        int SetWidth(int width);
+        int SetHeight(int height);
         int GetWidth();
         int GetHeight();
 
@@ -40,6 +42,8 @@ namespace Eyer
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format, const int dstW, const int dstH);
         int Scale(EyerAVFrame & frame, const EyerAVPixelFormat format);
         int Scale(EyerAVFrame & frame, const int dstW, const int dstH);
+
+        int Mirror(EyerAVFrame & frame, int type);
 
         uint8_t * GetData(int index = 0);
         int GetLinesize(int index = 0);

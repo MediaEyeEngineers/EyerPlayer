@@ -16,7 +16,7 @@ namespace Eyer
     EyerAVPixelFormat::EyerAVPixelFormat()
         : EyerAVPixelFormat(3, AV_PIX_FMT_RGB24)
     {
-
+        
     }
 
     EyerAVPixelFormat::EyerAVPixelFormat(int _id, int _ffmpegId)
@@ -28,6 +28,11 @@ namespace Eyer
     bool EyerAVPixelFormat::operator == (const EyerAVPixelFormat & format)
     {
         return id == format.id;
+    }
+
+    bool EyerAVPixelFormat::operator != (const EyerAVPixelFormat & format)
+    {
+        return id != format.id;
     }
 
     EyerAVPixelFormat::EyerAVPixelFormat(const EyerAVPixelFormat & pixelFormat)

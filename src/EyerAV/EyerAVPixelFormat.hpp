@@ -12,7 +12,6 @@ namespace Eyer
         static EyerAVPixelFormat NV12;
         static EyerAVPixelFormat NV21;
 
-
         static EyerAVPixelFormat RGB24;
         static EyerAVPixelFormat RGBA;
         static EyerAVPixelFormat UNKNOW;
@@ -24,6 +23,7 @@ namespace Eyer
         EyerAVPixelFormat & operator = (const EyerAVPixelFormat & pixelFormat);
 
         bool operator == (const EyerAVPixelFormat & format);
+        bool operator != (const EyerAVPixelFormat & format);
 
         static EyerAVPixelFormat GetByFFmpegId(int ffmpegId);
 

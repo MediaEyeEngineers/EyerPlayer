@@ -83,4 +83,10 @@ namespace Eyer
     {
         return piml->packet->data;
     }
+
+    double EyerAVPacket::GetSecPTS()
+    {
+        return piml->secPTS;
+    }
+
 }

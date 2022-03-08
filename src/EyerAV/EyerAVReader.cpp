@@ -106,12 +106,22 @@ namespace Eyer {
     int EyerAVReader::Read(EyerAVPacket * packet)
     {
         int ret = av_read_frame(piml->formatCtx, packet->piml->packet);
+        if(!ret){
+            int64_t pts = packet->GetPTS();
+            int streamIndex = packet->GetStreamIndex();
+            packet->piml->secPTS = pts * av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
+        }
         return ret;
     }
 
     int EyerAVReader::Read(EyerAVPacket & packet)
     {
         int ret = av_read_frame(piml->formatCtx, packet.piml->packet);
+        if(!ret){
+            int64_t pts = packet.GetPTS();
+            int streamIndex = packet.GetStreamIndex();
+            packet.piml->secPTS = pts * av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
+        }
         return ret;
     }
 

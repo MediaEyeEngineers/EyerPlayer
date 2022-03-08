@@ -107,6 +107,12 @@ namespace Eyer
         }
         else {
             EyerLog("Codec ID: %d\n", _straem.piml->codecpar->codec_id);
+            if(_straem.piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_VIDEO){
+                codecId = CodecId::CODEC_ID_H264;
+            }
+            if(_straem.piml->codecpar->codec_type == AVMediaType::AVMEDIA_TYPE_AUDIO){
+                codecId = CodecId::CODEC_ID_MP3;
+            }
         }
         return 0;
     }
