@@ -206,8 +206,6 @@ namespace Eyer
                         break;
                     }
 
-                    // EyerLog("Frame.... %lld\n", frame->GetPTS());
-
                     if(params.isScale) {
                         EyerAVFrame * outframe = new EyerAVFrame();
                         frame->Scale(*outframe, params.pixelFormat, params.scaleWidth, params.scaleHeight);

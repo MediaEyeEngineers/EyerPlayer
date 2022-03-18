@@ -8,9 +8,7 @@ namespace Eyer
     EyerAVPacket::EyerAVPacket()
     {
         piml = new EyerAVPacketPrivate();
-
         piml->packet = av_packet_alloc();
-        // av_init_packet(piml->packet);
     }
 
     EyerAVPacket::EyerAVPacket(const EyerAVPacket & packet) : EyerAVPacket()
@@ -39,6 +37,7 @@ namespace Eyer
         }
 
         piml->packet = av_packet_clone(packet.piml->packet);
+        piml->secPTS = packet.piml->secPTS;
 
         return *this;
     }
@@ -82,5 +81,10 @@ namespace Eyer
     uint8_t * EyerAVPacket::GetDatePtr()
     {
         return piml->packet->data;
+    }
+
+    double EyerAVPacket::GetSecPTS()
+    {
+        return piml->secPTS;
     }
 }

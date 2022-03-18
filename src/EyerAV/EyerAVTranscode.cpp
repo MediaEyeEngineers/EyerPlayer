@@ -33,15 +33,17 @@ namespace Eyer
 
         InitDeocder();
 
+
         // 如果有音频
+        EyerLog("decoderAudioStreamIndex: %d\n", decoderAudioStreamIndex);
         if(decoderAudioStreamIndex >= 0){
             resample.Init(
                     EyerAVChannelLayout::EYER_AV_CH_LAYOUT_STEREO,
                     EyerAVSampleFormat::SAMPLE_FMT_FLTP,
                     44100,
 
-                    EyerAVChannelLayout::EYER_AV_CH_LAYOUT_STEREO,
-                    EyerAVSampleFormat::SAMPLE_FMT_FLTP,
+                    audioDecoder.GetAVChannelLayout(),
+                    audioDecoder.GetAVSampleFormat(),
                     audioDecoder.GetSampleRate()
             );
         }
@@ -52,6 +54,7 @@ namespace Eyer
                 frameCount = 1;
             }
         }
+
 
         // 进行间隔编码，音视频交错
         long frameOffset = 0;
@@ -66,6 +69,8 @@ namespace Eyer
                 retVideo = TranscodeVideo(limitTime, frameOffset);
             }
 
+            EyerTime::EyerSleepMilliseconds(5);
+
             if(params.careAudio){
                 retAudio = TranscodeAudio(limitTime);
             }
@@ -73,9 +78,7 @@ namespace Eyer
             if(retAudio != 0 && retVideo != 0){
                 break;
             }
-            // EyerLog("Time: %f\n", limitTime);
         }
-
 
         // 清空视频编码器
         if(params.careVideo){
@@ -114,7 +117,7 @@ namespace Eyer
                     frame.SetPTS(audioOffset);
                     audioOffset += audioEncoder.GetFrameSize();
                     // audioEncoder.SendFrame(frame);
-                    EyerLog("....Clear Sample WWW\n");
+                    // EyerLog("....Clear Sample WWW\n");
                 }
 
                 // 清空音频编码器
@@ -192,12 +195,16 @@ namespace Eyer
                 }
                 return -1;
             }
+
             if(packet.GetStreamIndex() != decoderAudioStreamIndex){
                 continue;
             }
 
-            audioDecoder.SendPacket(packet);
+            // EyerLog("packet: %lld\n", packet.GetPTS());
+            // EyerLog("packet sec: %f\n", packet.GetSecPTS());
+
             double lastFrameTime = 0.0;
+            audioDecoder.SendPacket(packet);
             while(1){
                 EyerAVFrame frame;
                 ret = audioDecoder.RecvFrame(frame);
@@ -217,7 +224,8 @@ namespace Eyer
                     audioOffset += audioEncoder.GetFrameSize();
                     EncodeAudio(frameOut);
                 }
-                lastFrameTime = frame.GetSecPTS();
+
+                lastFrameTime = audioOffset * 1.0 / 44100;
             }
             if(lastFrameTime > limitTime){
                 return 0;
@@ -237,14 +245,21 @@ namespace Eyer
 
             EyerAVFrame frame;
             int ret = decoderBox.GetFrame(frame, pts);
-            // EyerLog("PTS: %f, Ret: %d\n", pts, ret);
             if(ret){
+                EyerLog("ret: %d\n", ret);
                 return -1;
             }
+            /*
+            EyerAVFrame frameRGBA;
+            frame.Scale(frameRGBA, EyerAVPixelFormat::RGBA);
+
+            EyerAVFrame frameRGBAMirror;
+            frameRGBA.Mirror(frameRGBAMirror, 2);
+            */
 
             EyerAVFrame distFrame;
             // frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
-            frame.Scale(distFrame, params.targetWidth, params.targetHeight);
+            frame.Scale(distFrame, EyerAVPixelFormat::YUV420P, params.targetWidth, params.targetHeight);
 
             distFrame.SetPTS(pts * 1000);
 

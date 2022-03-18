@@ -19,6 +19,8 @@ namespace Eyer
 
         int GetTimebase(EyerAVRational & timebase);
         int GetSampleRate();
+        EyerAVChannelLayout GetAVChannelLayout();
+        EyerAVSampleFormat GetAVSampleFormat();
 
         int SendPacket(EyerAVPacket * packet);
         int SendPacket(EyerAVPacket & packet);

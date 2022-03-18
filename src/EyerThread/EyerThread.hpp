@@ -22,20 +22,27 @@ namespace Eyer
         int Start();
         int Stop();
 
-        virtual int SetStopFlag();
-
         virtual void Run() = 0;
-
 
         int PushEvent(EyerRunnable * runnable);
         int ClearAllEvent();
 
-        int StartEventLoop();
-        virtual int SetStartEventLoopFlag();
+        // 进入悬空状态
+        int StartAndWaitEventLoop();
+        // 进入循环状态
+        int EnterEventLoop();
+        // 退出循环状态，进入悬空状态
+        int WaitForFinishEventLoop();
+        // 退出悬空状态
+        int QuitEventLoop();
 
+        int StartEventLoop();
         int StopEventLoop();
 
         int EventLoop();
+
+        virtual int SetStopFlag();
+        virtual int SetStartEventLoopFlag();
 
     protected:
         std::atomic_int stopFlag {0};
@@ -43,9 +50,11 @@ namespace Eyer
         std::vector<EyerRunnable *> eventList;
         std::atomic_int eventLoopFlag {0};
 
-        std::promise<void> * onStartedPromise = nullptr;
-        std::promise<void> * onEventFinishPromise = nullptr;
-        std::promise<void> * onStopedPromise = nullptr;
+        std::promise<void> * startAndWaitEventLoopPromise = nullptr;
+        std::promise<void> * waitForStartEventLoopPromise = nullptr;
+        std::promise<void> * waitForFinishEventLoopPromise = nullptr;
+        std::promise<void> * stopAndWaitEventLoopPromise = nullptr;
+        std::promise<void> * stopOkAndWaitEventLoopPromise = nullptr;
     private:
         std::thread * t = nullptr;
     };

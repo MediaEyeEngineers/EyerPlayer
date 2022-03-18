@@ -92,4 +92,14 @@ namespace Eyer
     {
         return piml->codecContext->sample_rate;
     }
+
+    EyerAVChannelLayout EyerAVDecoder::GetAVChannelLayout()
+    {
+        return EyerAVChannelLayout::GetByFFmpegId(piml->codecContext->channel_layout);
+    }
+
+    EyerAVSampleFormat EyerAVDecoder::GetAVSampleFormat()
+    {
+        return EyerAVSampleFormat::GetByFFmpegId(piml->codecContext->sample_fmt);
+    }
 }

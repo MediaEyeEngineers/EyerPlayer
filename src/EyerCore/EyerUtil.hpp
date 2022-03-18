@@ -16,6 +16,24 @@ namespace Eyer
         static uint32_t EndianHtonl         (uint32_t val);
         static uint16_t EndianHtons         (uint16_t val);
 
+        template<typename T>
+        static int PrintBin(T & n)
+        {
+            int l = sizeof(n) * 8;//总位数。
+            int i;
+            for(i = l-1; i >= 0; i --){
+                if(n & (1 << i)) {
+                    break;
+                }
+            }
+            EyerString str = "";
+            for(;i>=0; i --) {
+                str += EyerString::Number((n & (1 << i)) != 0);
+            }
+            EyerLog("%s\n", str.str);
+            return 0;
+        }
+
         static bool CheckCPU();
 
         static EyerString Md5(const EyerString & messgae);

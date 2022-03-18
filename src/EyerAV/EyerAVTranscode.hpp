@@ -21,8 +21,6 @@ namespace Eyer
 
         int Transcode();
 
-        int Transcode_(const EyerString & targetPath);
-
     private:
         double GetDuration(int index);
 

@@ -30,6 +30,11 @@ namespace Eyer
         return id == format.id;
     }
 
+    bool EyerAVPixelFormat::operator != (const EyerAVPixelFormat & format)
+    {
+        return id != format.id;
+    }
+
     EyerAVPixelFormat::EyerAVPixelFormat(const EyerAVPixelFormat & pixelFormat)
     {
         *this = pixelFormat;
