@@ -308,4 +308,9 @@ namespace Eyer {
 
         return logStr;
     }
+
+    char * EyerString::c_str()
+    {
+        return str;
+    }
 }

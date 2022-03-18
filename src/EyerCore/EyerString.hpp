@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 namespace Eyer {
     class EyerString
     {
@@ -47,6 +48,8 @@ namespace Eyer {
         static EyerString FormatSec(int sec);
 
         EyerString ReplaceAll(const EyerString & substr, const EyerString & replacement);
+
+        char * c_str();
 
     private:
         std::vector<EyerString> splitVec;

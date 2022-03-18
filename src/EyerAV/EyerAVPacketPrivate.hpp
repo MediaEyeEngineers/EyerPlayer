@@ -10,6 +10,7 @@ namespace Eyer
     {
     public:
         AVPacket * packet = nullptr;
+        double secPTS = 0.0;
     };
 }
 

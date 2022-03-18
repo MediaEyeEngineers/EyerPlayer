@@ -6,54 +6,65 @@ add_library(
         # SHARED
 
         EyerCore.hpp
+
         EyerString.hpp
+        EyerString.cpp
+
         EyerLog.hpp
         EyerLog.cpp
-        EyerMath.hpp
-        EyerString.cpp
-        EyerMat.cpp
-        EyerMat4x4.cpp
-        EyerMat4x1.cpp
-        EyerMat3x1.cpp
-        EyerMat2x1.cpp
+
         EyerRand.cpp
         EyerTime.cpp
+
         EyerLRUMap.hpp
         EyerLockQueue.hpp
+
         EyerTime.hpp
+
         EyerBuffer.cpp
         EyerBuffer.hpp
+
         string_ext.cpp
         string_ext.h
+
         EyerURLUtil.cpp
         EyerURLUtil.hpp
+
         EyerUtil.cpp
         EyerUtil.hpp
+
         EyerBufferMut.cpp
         EyerBufferMut.hpp
+
         EyerMD5.cpp
         EyerMD5.hpp
+
         EyerSockaddr.cpp
         EyerSockaddr.hpp
+
         BLOCK_TIME.cpp
         BLOCK_TIME.hpp
+
         EyerTable.cpp
         EyerTable.hpp
+
         EyerRand.hpp
         EyerObserverQueue.hpp
+
         EyerObserver.cpp
         EyerObserver.hpp
+
         EyerSubject.cpp
         EyerSubject.hpp
+
         EyerObserverQueue.h
         EyerObserverQueue_C.cpp
+
         EyerBuffer.h
         EyerBuffer_C.cpp
+
         EyerBufferPlus.cpp
         EyerBufferPlus.hpp
-
-        EndianUtil.cpp
-        EndianUtil.hpp
 
         EyerBufferPlusCallback.hpp
         EyerBufferPlusCallback.cpp
@@ -78,7 +89,6 @@ set(head_files
         EyerString.hpp
         EyerCore.hpp
         EyerLog.hpp
-        EyerMath.hpp
         EyerTime.hpp
         EyerLinkedList.hpp
         EyerLinkedEle.hpp
@@ -102,11 +112,8 @@ set(head_files
         EyerSubject.hpp
         EyerObserver.hpp
         EyerBufferPlus.hpp
-        EndianUtil.hpp
         EyerBufferPlusCallback.hpp
-
         EyerBitStream.hpp
-
         EyerSmartPtr.hpp
         EyerSharedCount.hpp
         EyerFileReader.hpp

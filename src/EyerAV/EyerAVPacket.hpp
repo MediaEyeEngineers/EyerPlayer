@@ -26,6 +26,7 @@ namespace Eyer
 
         int GetSize();
         uint8_t * GetDatePtr();
+        double GetSecPTS();
 
     public:
         EyerAVPacketPrivate * piml = nullptr;

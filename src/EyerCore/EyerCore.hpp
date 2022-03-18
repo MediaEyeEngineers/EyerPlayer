@@ -3,7 +3,6 @@
 
 #include "EyerString.hpp"
 #include "EyerLog.hpp"
-#include "EyerMath.hpp"
 #include "EyerTime.hpp"
 #include "EyerLinkedList.hpp"
 #include "EyerQueue.hpp"
