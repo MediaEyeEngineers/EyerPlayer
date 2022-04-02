@@ -1,0 +1,33 @@
+INCLUDE_DIRECTORIES(../)
+INCLUDE_DIRECTORIES(./)
+
+ADD_EXECUTABLE(
+    EyerPlayerTest
+    Main.cpp
+)
+
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerPlayer)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerEvent)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerDeocdeQueue)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerAV)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerCore)
+TARGET_LINK_LIBRARIES(EyerPlayerTest EyerThread)
+
+TARGET_LINK_LIBRARIES(EyerPlayerTest avformat)
+TARGET_LINK_LIBRARIES(EyerPlayerTest avcodec)
+TARGET_LINK_LIBRARIES(EyerPlayerTest swresample)
+TARGET_LINK_LIBRARIES(EyerPlayerTest swscale)
+TARGET_LINK_LIBRARIES(EyerPlayerTest avutil)
+
+TARGET_LINK_LIBRARIES(EyerPlayerTest crypto)
+TARGET_LINK_LIBRARIES(EyerPlayerTest ssl)
+
+TARGET_LINK_LIBRARIES(EyerPlayerTest z)
+TARGET_LINK_LIBRARIES(EyerPlayerTest bz2)
+
+INSTALL(
+    TARGETS EyerPlayerTest
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
