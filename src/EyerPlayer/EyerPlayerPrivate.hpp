@@ -6,7 +6,7 @@
 
 #include "ThreadReader.hpp"
 #include "ThreadPlayCtr.hpp"
-#include "ThreadEventLoop.hpp"
+#include "EventControlThread.hpp"
 
 namespace Eyer
 {
@@ -15,7 +15,7 @@ namespace Eyer
     public:
         EyerString url;
         std::mutex mut;
-        ThreadEventLoop * threadEventLoop = nullptr;
+        EventControlThread * threadEventLoop = nullptr;
     };
 }
 

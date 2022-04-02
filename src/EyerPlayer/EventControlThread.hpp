@@ -4,18 +4,20 @@
 #include "EyerThread/EyerThread.hpp"
 #include "EyerAV/EyerAV.hpp"
 #include "EyerCore/EyerCore.hpp"
+
 #include "EyerEvent/EyerEventHeader.hpp"
 #include "ThreadReader.hpp"
 #include "ThreadPlayCtr.hpp"
 #include "QueueBox.hpp"
+#include "EyerPlayerContext.hpp"
 
 namespace Eyer
 {
-    class ThreadEventLoop : public EyerThread
+    class EventControlThread : public EyerThread
     {
     public:
-        ThreadEventLoop();
-        ~ThreadEventLoop();
+        EventControlThread();
+        ~EventControlThread();
 
         int PushEvent(Event * event);
 
@@ -29,8 +31,8 @@ namespace Eyer
         std::condition_variable cv;
         EyerObserverQueue<Event *> eventQueue;
 
-        // 线程
-        ThreadReader * readerThread = nullptr;
+        EyerPlayerContext playerContext;
+        ThreadReader * threadReader = nullptr;
     };
 }
 

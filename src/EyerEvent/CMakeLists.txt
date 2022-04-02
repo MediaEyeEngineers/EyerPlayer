@@ -6,6 +6,9 @@ ADD_LIBRARY (
 
         EyerEventHeader.hpp
 
+        EventType.hpp
+        EventType.cpp
+
         Event.hpp
         Event.cpp
 

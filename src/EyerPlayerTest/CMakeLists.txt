@@ -19,6 +19,9 @@ TARGET_LINK_LIBRARIES(EyerPlayerTest swresample)
 TARGET_LINK_LIBRARIES(EyerPlayerTest swscale)
 TARGET_LINK_LIBRARIES(EyerPlayerTest avutil)
 
+TARGET_LINK_LIBRARIES(EyerPlayerTest crypto)
+TARGET_LINK_LIBRARIES(EyerPlayerTest ssl)
+
 TARGET_LINK_LIBRARIES(EyerPlayerTest z)
 TARGET_LINK_LIBRARIES(EyerPlayerTest bz2)
 

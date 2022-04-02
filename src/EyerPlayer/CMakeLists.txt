@@ -13,8 +13,8 @@ ADD_LIBRARY (
         ThreadPlayCtr.hpp
         ThreadPlayCtr.cpp
 
-        ThreadEventLoop.hpp
-        ThreadEventLoop.cpp
+        EventControlThread.hpp
+        EventControlThread.cpp
 
         ThreadAudioPlay.hpp
         ThreadAudioPlay.cpp
@@ -30,6 +30,9 @@ ADD_LIBRARY (
 
         ThreadVideoPlay.hpp
         ThreadVideoPlay.cpp
+
+        EyerPlayerContext.hpp
+        EyerPlayerContext.cpp
 )
 
 SET(HEAD_FILES

@@ -4,12 +4,12 @@
 
 #include "EyerDecodeQueue/EyerDecodeQueueHeader.hpp"
 
-#include "ThreadEventLoop.hpp"
+#include "EventControlThread.hpp"
 #include "ThreadAudioPlay.hpp"
 
 namespace Eyer
 {
-    ThreadPlayCtr::ThreadPlayCtr(DecoderBox * _decoderBox, ThreadEventLoop * _eventLoop)
+    ThreadPlayCtr::ThreadPlayCtr(DecoderBox * _decoderBox, EventControlThread * _eventLoop)
         : eventLoop(_eventLoop)
         , decoderBox(_decoderBox)
     {

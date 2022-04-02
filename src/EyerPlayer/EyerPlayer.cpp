@@ -9,7 +9,7 @@ namespace Eyer
     EyerPlayer::EyerPlayer()
     {
         piml = new EyerPlayerPrivate();
-        piml->threadEventLoop = new ThreadEventLoop();
+        piml->threadEventLoop = new EventControlThread();
         piml->threadEventLoop->Start();
     }
 

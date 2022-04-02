@@ -5,31 +5,26 @@
 #include "QueueBox.hpp"
 #include "ThreadPlayCtr.hpp"
 #include "DecoderBox.hpp"
+#include "EyerPlayerContext.hpp"
 
 namespace Eyer
 {
-    class ThreadEventLoop;
+    class EventControlThread;
 
     class ThreadReader : public EyerThread
     {
     public:
-        ThreadReader(const EyerString & url, ThreadEventLoop * _eventLoop);
+        ThreadReader(EyerPlayerContext * _playerContext);
         ~ThreadReader();
 
-        void _Run();
         virtual void Run() override;
 
         virtual int SetStopFlag() override;
         virtual int SetStartEventLoopFlag() override;
 
     private:
-        ThreadEventLoop * eventLoop = nullptr;
-        EyerString url = "";
-
-        DecoderBox * decoderBox = nullptr;
         EyerAVReader * reader = nullptr;
-
-        ThreadPlayCtr * playCtr = nullptr;
+        EyerPlayerContext * playerContext = nullptr;
     };
 }
 

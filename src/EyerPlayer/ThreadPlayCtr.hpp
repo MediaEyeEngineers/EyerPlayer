@@ -8,19 +8,19 @@
 
 namespace Eyer
 {
-    class ThreadEventLoop;
+    class EventControlThread;
 
     class ThreadPlayCtr : public EyerThread
     {
     public:
-        ThreadPlayCtr(DecoderBox * _decoderBox, ThreadEventLoop * _eventLoop);
+        ThreadPlayCtr(DecoderBox * _decoderBox, EventControlThread * _eventLoop);
         ~ThreadPlayCtr();
 
         virtual void Run() override;
         virtual int SetStopFlag() override;
         virtual int SetStartEventLoopFlag() override;
     private:
-        ThreadEventLoop * eventLoop = nullptr;
+        EventControlThread * eventLoop = nullptr;
         DecoderBox * decoderBox = nullptr;
     };
 }
