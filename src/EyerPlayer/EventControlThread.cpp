@@ -1,5 +1,7 @@
 #include "EventControlThread.hpp"
 
+#include "EyerEvent/EyerEventHeader.hpp"
+
 namespace Eyer
 {
     EventControlThread::EventControlThread()
@@ -11,7 +13,7 @@ namespace Eyer
     {
         eventQueue.Lock();
         while(eventQueue.Size() > 0){
-            Event * event = eventQueue.FrontPop();
+            EyerPlayerEvent * event = eventQueue.FrontPop();
             if(event != nullptr){
                 delete event;
                 event = nullptr;
@@ -20,7 +22,7 @@ namespace Eyer
         eventQueue.Unlock();
     }
 
-    int EventControlThread::PushEvent(Event * event)
+    int EventControlThread::PushEvent(EyerPlayerEvent * event)
     {
         std::unique_lock<std::mutex> locker(mtx);
         eventQueue.Push(event);
@@ -33,7 +35,7 @@ namespace Eyer
         EyerLog("ThreadEventLoop Start\n");
         std::unique_lock<std::mutex> locker(mtx);
         while(1){
-            cv.wait_for(locker, std::chrono::milliseconds(100));
+            cv.wait_for(locker, std::chrono::milliseconds(1000));
             if(stopFlag){
                 break;
             }
@@ -42,8 +44,8 @@ namespace Eyer
             }
 
             eventQueue.Lock();
-            if(eventQueue.Size() > 0){
-                Event * event = eventQueue.FrontPop();
+            while (eventQueue.Size() > 0){
+                EyerPlayerEvent * event = eventQueue.FrontPop();
                 ProcessEvent(event);
                 if(event != nullptr){
                     delete event;
@@ -52,6 +54,19 @@ namespace Eyer
             }
             eventQueue.Unlock();
         }
+
+        // 结束之前再来一次
+        eventQueue.Lock();
+        while (eventQueue.Size() > 0){
+            EyerPlayerEvent * event = eventQueue.FrontPop();
+            ProcessEvent(event);
+            if(event != nullptr){
+                delete event;
+                event = nullptr;
+            }
+        }
+        eventQueue.Unlock();
+
         EyerLog("ThreadEventLoop End\n");
     }
 
@@ -63,32 +78,33 @@ namespace Eyer
         return 0;
     }
 
-    int EventControlThread::ProcessEvent(Event * event)
+    int EventControlThread::ProcessEvent(EyerPlayerEvent * event)
     {
         if(event == nullptr){
             return -1;
         }
 
         EyerLog("Loop, %s\n", event->type.typeStr.c_str());
+
         if(event->type == EventType::PLAY_REQUEST){
-            if(threadReader != nullptr){
+            if(ioReadThread != nullptr){
                 // 报错
                 return -1;
             }
-            EventRequest_Play * eventRequestPlay = (EventRequest_Play *)event;
+            EyerPlayerEvent_Play * eventRequestPlay = (EyerPlayerEvent_Play *)event;
             playerContext.url = eventRequestPlay->url;
-            threadReader = new ThreadReader(&playerContext);
-            threadReader->Start();
+            ioReadThread = new IOReadThread(&playerContext);
+            ioReadThread->Start();
         }
         else if(event->type == EventType::STOP_REQUEST){
-            if(threadReader == nullptr){
+            if(ioReadThread == nullptr){
                 // 报错
                 return -1;
             }
-            if(threadReader != nullptr){
-                threadReader->Stop();
-                delete threadReader;
-                threadReader = nullptr;
+            if(ioReadThread != nullptr){
+                ioReadThread->Stop();
+                delete ioReadThread;
+                ioReadThread = nullptr;
             }
         }
 

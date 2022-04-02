@@ -6,10 +6,9 @@
 #include "EyerCore/EyerCore.hpp"
 
 #include "EyerEvent/EyerEventHeader.hpp"
-#include "ThreadReader.hpp"
-#include "ThreadPlayCtr.hpp"
-#include "QueueBox.hpp"
+
 #include "EyerPlayerContext.hpp"
+#include "IOReadThread.hpp"
 
 namespace Eyer
 {
@@ -19,20 +18,21 @@ namespace Eyer
         EventControlThread();
         ~EventControlThread();
 
-        int PushEvent(Event * event);
+        int PushEvent(EyerPlayerEvent * event);
 
         virtual void Run() override;
         virtual int SetStopFlag() override;
 
     private:
-        int ProcessEvent(Event * event);
+        int ProcessEvent(EyerPlayerEvent * event);
 
         std::mutex mtx;
         std::condition_variable cv;
-        EyerObserverQueue<Event *> eventQueue;
+        EyerObserverQueue<EyerPlayerEvent *> eventQueue;
 
         EyerPlayerContext playerContext;
-        ThreadReader * threadReader = nullptr;
+
+        IOReadThread * ioReadThread = nullptr;
     };
 }
 

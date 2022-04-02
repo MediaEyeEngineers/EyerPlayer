@@ -9,29 +9,14 @@ ADD_LIBRARY (
         EventType.hpp
         EventType.cpp
 
-        Event.hpp
-        Event.cpp
+        EyerPlayerEvent.hpp
+        EyerPlayerEvent.cpp
 
-        EventRequest.hpp
-        EventRequest.cpp
+        EyerPlayerEvent_Play.hpp
+        EyerPlayerEvent_Play.cpp
 
-        EventResponse.hpp
-        EventResponse.cpp
-
-        EventRequest_Play.hpp
-        EventRequest_Play.cpp
-
-        EventRequest_Stop.hpp
-        EventRequest_Stop.cpp
-
-        EventRequest_Pause.hpp
-        EventRequest_Pause.cpp
-
-        EventRequest_Resume.hpp
-        EventRequest_Resume.cpp
-
-        EventRequest_Seek.hpp
-        EventRequest_Seek.cpp
+        EyerPlayerEvent_Stop.hpp
+        EyerPlayerEvent_Stop.cpp
 )
 
 SET(HEAD_FILES

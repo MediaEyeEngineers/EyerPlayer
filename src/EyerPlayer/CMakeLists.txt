@@ -6,6 +6,15 @@ ADD_LIBRARY (
 
         EyerPlayer.hpp
         EyerPlayer.cpp
+
+        EventControlThread.hpp
+        EventControlThread.cpp
+
+        EyerPlayerContext.hpp
+        EyerPlayerContext.cpp
+
+        IOReadThread.hpp
+        IOReadThread.cpp
 )
 
 SET(HEAD_FILES
