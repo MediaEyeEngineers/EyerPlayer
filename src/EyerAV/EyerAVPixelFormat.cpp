@@ -16,7 +16,7 @@ namespace Eyer
     EyerAVPixelFormat::EyerAVPixelFormat()
         : EyerAVPixelFormat(3, AV_PIX_FMT_RGB24)
     {
-
+        
     }
 
     EyerAVPixelFormat::EyerAVPixelFormat(int _id, int _ffmpegId)
