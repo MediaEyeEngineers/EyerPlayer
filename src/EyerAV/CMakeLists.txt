@@ -106,6 +106,9 @@ ADD_LIBRARY(
 
         EyerAVDecoderLineAudio.hpp
         EyerAVDecoderLineAudio.cpp
+
+        EyerAVAudioFifo.hpp
+        EyerAVAudioFifo.cpp
 )
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -157,6 +160,7 @@ SET(HEAD_FILES
         EyerImageUtil.hpp
         EyerAVSEIUtil.hpp
         EyerAVDecoderLineAudio.hpp
+        EyerAVAudioFifo.hpp
 )
 
 INSTALL(FILES ${HEAD_FILES} DESTINATION include/EyerAV)

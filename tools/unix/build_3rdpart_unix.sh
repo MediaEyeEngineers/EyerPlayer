@@ -34,8 +34,8 @@ export COMMON_FF_CFG_FLAGS=
 cd ${basepath}/Eyer3rdpart/ffmpeg-4.4/
 ./configure \
 $COMMON_FF_CFG_FLAGS \
---extra-cflags="-I${basepath}/Lib/openssl_install/include/" \
---extra-ldflags="-L${basepath}/Lib/openssl_install/lib/" \
+--extra-cflags="-I${basepath}/Eyer3rdpart/openssl-1.1.1k/openssl_install/include/" \
+--extra-ldflags="-L${basepath}/Eyer3rdpart/openssl-1.1.1k/openssl_install/lib/" \
 --prefix=./ffmpeg_install
 
 make clean

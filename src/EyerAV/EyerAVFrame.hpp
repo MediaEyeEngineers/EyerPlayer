@@ -21,12 +21,18 @@ namespace Eyer
 
         int SetPTS(int64_t pts);
         int64_t GetPTS();
+
         double GetSecPTS();
+        int SetSecPTS(double pts);
 
         int SetWidth(int width);
         int SetHeight(int height);
+        int SetPixelFormat(const EyerAVPixelFormat & pixelFormat);
+
         int GetWidth();
         int GetHeight();
+
+        int GetBuffer(int align = 1);
 
         int SetVideoData420P(unsigned char * _y, unsigned char * _u, unsigned char * _v, int _width, int _height);
 
@@ -46,6 +52,7 @@ namespace Eyer
         int Mirror(EyerAVFrame & frame, int type);
 
         uint8_t * GetData(int index = 0);
+        int SetLinesize(int index, int linesize);
         int GetLinesize(int index = 0);
 
         EyerAVPixelFormat GetPixelFormat();
@@ -54,6 +61,14 @@ namespace Eyer
         EyerAVChannelLayout GetChannelLayout();
         EyerAVSampleFormat GetSampleFormat();
         int GetSampleNB();
+
+        int SetSampleRate(int sampleRate);
+        int SetChannelLayout(EyerAVChannelLayout channelLayout);
+        int SetSampleFormat(EyerAVSampleFormat sampleFormat);
+        int SetSampleNB(int sampleNB);
+
+        bool GetLastFrameFlag();
+        int SetLastFrameFlag(bool flag);
 
     public:
         EyerAVFramePrivate * piml = nullptr;

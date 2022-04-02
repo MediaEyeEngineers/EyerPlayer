@@ -7,8 +7,6 @@ ADD_EXECUTABLE(
 )
 
 TARGET_LINK_LIBRARIES(EyerPlayerTest EyerPlayer)
-TARGET_LINK_LIBRARIES(EyerPlayerTest EyerEvent)
-TARGET_LINK_LIBRARIES(EyerPlayerTest EyerDeocdeQueue)
 TARGET_LINK_LIBRARIES(EyerPlayerTest EyerAV)
 TARGET_LINK_LIBRARIES(EyerPlayerTest EyerCore)
 TARGET_LINK_LIBRARIES(EyerPlayerTest EyerThread)

@@ -107,7 +107,6 @@ namespace Eyer {
     {
         int ret = av_read_frame(piml->formatCtx, packet->piml->packet);
         if(!ret){
-<<<<<<< HEAD
 
             int streamIndex = packet->GetStreamIndex();
 
@@ -115,10 +114,6 @@ namespace Eyer {
             packet->piml->packet->pts -= start_time;
 
             int64_t pts = packet->GetPTS();
-=======
-            int64_t pts = packet->GetPTS();
-            int streamIndex = packet->GetStreamIndex();
->>>>>>> f9fc630cc716281f2013a5411e7628052060cdbb
             packet->piml->secPTS = pts * av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
         }
         return ret;
@@ -128,7 +123,6 @@ namespace Eyer {
     {
         int ret = av_read_frame(piml->formatCtx, packet.piml->packet);
         if(!ret){
-<<<<<<< HEAD
             int streamIndex = packet.GetStreamIndex();
             int64_t start_time = piml->formatCtx->streams[streamIndex]->start_time;
 
@@ -142,11 +136,6 @@ namespace Eyer {
             if(pts != AV_NOPTS_VALUE){
                 packet.piml->secPTS = pts * av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
             }
-=======
-            int64_t pts = packet.GetPTS();
-            int streamIndex = packet.GetStreamIndex();
-            packet.piml->secPTS = pts * av_q2d(piml->formatCtx->streams[streamIndex]->time_base);
->>>>>>> f9fc630cc716281f2013a5411e7628052060cdbb
         }
         return ret;
     }

@@ -135,7 +135,6 @@ namespace Eyer
             }
         }
 
-
         UninitDeocder();
 
         writer.WriteTrailer();
