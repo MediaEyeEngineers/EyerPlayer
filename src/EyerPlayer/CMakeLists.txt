@@ -15,6 +15,9 @@ ADD_LIBRARY (
 
         IOReadThread.hpp
         IOReadThread.cpp
+
+        AVDecodeQueueBox.hpp
+        AVDecodeQueueBox.cpp
 )
 
 SET(HEAD_FILES
