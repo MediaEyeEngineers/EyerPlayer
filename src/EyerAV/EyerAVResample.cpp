@@ -93,6 +93,7 @@ namespace Eyer
                             frame.piml->frame->nb_samples
                             );
 
+
         while(1){
             int inputSize = av_audio_fifo_size(piml->inputFifo);
             if(inputSize < piml->inputBlockSize) {
@@ -106,7 +107,8 @@ namespace Eyer
             inputFrame.piml->frame->sample_rate         = piml->inputSamplerate;
             inputFrame.piml->frame->format              = piml->inputSampleFormat.ffmpegId;
             inputFrame.piml->frame->nb_samples          = piml->inputBlockSize;
-            av_frame_get_buffer(inputFrame.piml->frame, 16);
+            av_frame_get_buffer(inputFrame.piml->frame, 1);
+
             av_audio_fifo_read(piml->inputFifo, (void **)inputFrame.piml->frame->data, inputFrame.piml->frame->nb_samples);
 
             EyerAVFrame outputFrame;
@@ -190,7 +192,7 @@ namespace Eyer
         frame.piml->frame->sample_rate          = piml->outputSamplerate;
         frame.piml->frame->format               = piml->outputSampleFormat.ffmpegId;
         frame.piml->frame->nb_samples           = frameSize;
-        av_frame_get_buffer(frame.piml->frame, 16);
+        av_frame_get_buffer(frame.piml->frame, 1);
 
         av_audio_fifo_read(piml->outputFifo, (void **)frame.piml->frame->data, frame.piml->frame->nb_samples);
 

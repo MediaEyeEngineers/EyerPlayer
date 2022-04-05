@@ -29,5 +29,6 @@
 #include "EyerImageUtil.hpp"
 #include "EyerAVSEIUtil.hpp"
 #include "EyerAVDecoderLineAudio.hpp"
+#include "EyerAVAudioFifo.hpp"
 
 #endif //EYERLIB_EYERAV_HPP

@@ -64,6 +64,12 @@ namespace Eyer
         return piml->secPTS;
     }
 
+    int EyerAVFrame::SetSecPTS(double pts)
+    {
+        piml->secPTS = pts;
+        return 0;
+    }
+
     int EyerAVFrame::GetWidth()
     {
         return piml->frame->width;
@@ -83,6 +89,23 @@ namespace Eyer
     int EyerAVFrame::SetHeight(int height)
     {
         piml->frame->height = height;
+        return 0;
+    }
+
+    int EyerAVFrame::SetPixelFormat(const EyerAVPixelFormat & pixelFormat)
+    {
+        piml->frame->format = pixelFormat.ffmpegId;
+        return 0;
+    }
+    int EyerAVFrame::SetLinesize(int index, int linesize)
+    {
+        piml->frame->linesize[index] = linesize;
+        return 0;
+    }
+
+    int EyerAVFrame::GetBuffer(int align)
+    {
+        av_frame_get_buffer(piml->frame, align);
         return 0;
     }
 
@@ -134,7 +157,7 @@ namespace Eyer
         else if(type == 2){
             for(int i=0;i<height;i++){
                 uint8_t * dist = frame.piml->frame->data[0] + frame.piml->frame->linesize[0] * i;
-                uint8_t * src  = piml->frame->data[0] + piml->frame->linesize[0] * (height - i);
+                uint8_t * src  = piml->frame->data[0] + piml->frame->linesize[0] * (height - 1 - i);
                 memcpy(dist, src, width * 4);
             }
         }
@@ -286,12 +309,11 @@ namespace Eyer
         int srcH = GetHeight();
         AVPixelFormat srcFormat = (AVPixelFormat)(piml->frame->format);
 
-        SwsContext * swsContext = sws_getContext(srcW, srcH, srcFormat, dstW, dstH, distFormat, SWS_POINT, NULL, NULL, NULL);
+        SwsContext * swsContext = sws_getContext(srcW, srcH, srcFormat, dstW, dstH, distFormat, SWS_SINC, NULL, NULL, NULL);
 
         if(swsContext == nullptr){
             return -1;
         }
-
 
         sws_scale(
                 swsContext,
@@ -330,7 +352,7 @@ namespace Eyer
         int srcH = GetHeight();
         AVPixelFormat srcFormat = (AVPixelFormat)(piml->frame->format);
 
-        SwsContext * swsContext = sws_getContext(srcW, srcH, srcFormat, dstW, dstH, distFormat, SWS_POINT, NULL, NULL, NULL);
+        SwsContext * swsContext = sws_getContext(srcW, srcH, srcFormat, dstW, dstH, distFormat, SWS_SINC, NULL, NULL, NULL);
 
         if(swsContext == nullptr){
             return -1;
@@ -388,5 +410,41 @@ namespace Eyer
     int EyerAVFrame::GetSampleNB()
     {
         return piml->frame->nb_samples;
+    }
+
+    int EyerAVFrame::SetSampleRate(int sampleRate)
+    {
+        piml->frame->sample_rate = sampleRate;
+        return 0;
+    }
+
+    int EyerAVFrame::SetChannelLayout(EyerAVChannelLayout channelLayout)
+    {
+        piml->frame->channel_layout = channelLayout.ffmpegId;
+        piml->frame->channels = av_get_channel_layout_nb_channels(piml->frame->channel_layout);
+        return 0;
+    }
+
+    int EyerAVFrame::SetSampleFormat(EyerAVSampleFormat sampleFormat)
+    {
+        piml->frame->format = sampleFormat.ffmpegId;
+        return 0;
+    }
+
+    int EyerAVFrame::SetSampleNB(int sampleNB)
+    {
+        piml->frame->nb_samples = sampleNB;
+        return 0;
+    }
+
+    bool EyerAVFrame::GetLastFrameFlag()
+    {
+        return piml->LAST_FRAME_FLAG;
+    }
+
+    int EyerAVFrame::SetLastFrameFlag(bool flag)
+    {
+        piml->LAST_FRAME_FLAG = flag;
+        return 0;
     }
 }

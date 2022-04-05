@@ -54,6 +54,31 @@ namespace Eyer {
             piml->codecContext->time_base.num = param.timebase.num;
         }
 
+
+        if (param.codecId == CodecId::CODEC_ID_H265) {
+            codec = avcodec_find_encoder(AV_CODEC_ID_H265);
+
+            if (piml->codecContext != nullptr) {
+                if (avcodec_is_open(piml->codecContext)) {
+                    avcodec_close(piml->codecContext);
+                }
+                avcodec_free_context(&piml->codecContext);
+                piml->codecContext = nullptr;
+
+                return -1;
+            }
+
+            piml->codecContext = avcodec_alloc_context3(codec);
+
+            piml->codecContext->codec_type = AVMEDIA_TYPE_VIDEO;
+            piml->codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
+            piml->codecContext->width = param.width;
+            piml->codecContext->height = param.height;
+
+            piml->codecContext->time_base.den = param.timebase.den;
+            piml->codecContext->time_base.num = param.timebase.num;
+        }
+
         if (param.codecId == CodecId::CODEC_ID_JPEG) {
             codec = avcodec_find_encoder(AV_CODEC_ID_MJPEG);
 
@@ -102,8 +127,9 @@ namespace Eyer {
             piml->codecContext->time_base.num = param.timebase.num;
         }
 
-        if (param.codecId == CodecId::CODEC_ID_AAC) {
-            codec = avcodec_find_encoder(AV_CODEC_ID_AAC);
+        if (param.codecId == CodecId::CODEC_ID_FDK_AAC) {
+            // codec = avcodec_find_encoder(AV_CODEC_ID_AAC);
+            codec = avcodec_find_encoder_by_name("libfdk_aac");
 
             if (piml->codecContext != nullptr) {
                 if (avcodec_is_open(piml->codecContext)) {
@@ -118,11 +144,39 @@ namespace Eyer {
             piml->codecContext = avcodec_alloc_context3(codec);
 
             piml->codecContext->codec_type = AVMEDIA_TYPE_AUDIO;
-            piml->codecContext->sample_fmt = AV_SAMPLE_FMT_FLTP;
+            piml->codecContext->sample_fmt = (AVSampleFormat)param.sampleFormat.ffmpegId;
 
             piml->codecContext->sample_rate = param.sample_rate;
 
-            piml->codecContext->channel_layout = AV_CH_LAYOUT_STEREO;
+            piml->codecContext->channel_layout = param.channelLayout.ffmpegId;
+            piml->codecContext->channels = av_get_channel_layout_nb_channels(piml->codecContext->channel_layout);
+
+            piml->codecContext->time_base.den = param.sample_rate;
+            piml->codecContext->time_base.num = 1;
+        }
+
+        if (param.codecId == CodecId::CODEC_ID_AAC) {
+            codec = avcodec_find_encoder(AV_CODEC_ID_AAC);
+            // codec = avcodec_find_encoder_by_name("libfdk_aac");
+
+            if (piml->codecContext != nullptr) {
+                if (avcodec_is_open(piml->codecContext)) {
+                    avcodec_close(piml->codecContext);
+                }
+                avcodec_free_context(&piml->codecContext);
+                piml->codecContext = nullptr;
+
+                return -1;
+            }
+
+            piml->codecContext = avcodec_alloc_context3(codec);
+
+            piml->codecContext->codec_type = AVMEDIA_TYPE_AUDIO;
+            piml->codecContext->sample_fmt = (AVSampleFormat)param.sampleFormat.ffmpegId;
+
+            piml->codecContext->sample_rate = param.sample_rate;
+
+            piml->codecContext->channel_layout = param.channelLayout.ffmpegId;
             piml->codecContext->channels = av_get_channel_layout_nb_channels(piml->codecContext->channel_layout);
 
             piml->codecContext->time_base.den = param.sample_rate;

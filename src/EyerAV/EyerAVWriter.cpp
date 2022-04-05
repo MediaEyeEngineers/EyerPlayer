@@ -45,6 +45,7 @@ namespace Eyer
 
     int EyerAVWriter::AddStream(EyerAVEncoder & encoder)
     {
+
         AVStream * avStream = avformat_new_stream(piml->formatCtx, encoder.piml->codecContext->codec);
 
         avStream->time_base = encoder.piml->codecContext->time_base;
@@ -66,9 +67,7 @@ namespace Eyer
     EyerAVRational EyerAVWriter::GetTimebase(int streamIndex)
     {
         EyerAVRational timebase;
-
         GetTimebase(timebase, streamIndex);
-
         return timebase;
     }
 

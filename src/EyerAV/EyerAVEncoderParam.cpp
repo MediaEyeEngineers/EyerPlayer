@@ -31,20 +31,59 @@ namespace Eyer
         return *this;
     }
 
-    int EyerAVEncoderParam::InitH264(int _width, int _height, const EyerAVRational & _timebas)
+    int EyerAVEncoderParam::InitH264(int width, int height, int fps)
+    {
+        Eyer::EyerAVRational videoTimebase;
+        videoTimebase.num = 1;
+        videoTimebase.den = fps;
+
+        return InitH264(width, height, videoTimebase);
+    }
+
+    int EyerAVEncoderParam::InitH264(int _width, int _height, const EyerAVRational & _timebase)
     {
         codecId         = CodecId::CODEC_ID_H264;
         width           = _width;
         height          = _height;
-        timebase        = _timebas;
+        timebase        = _timebase;
 
         return 0;
     }
 
-    int EyerAVEncoderParam::InitAAC(int _sample_rate)
+    int EyerAVEncoderParam::InitH265(int width, int height, int fps)
+    {
+        Eyer::EyerAVRational videoTimebase;
+        videoTimebase.num = 1;
+        videoTimebase.den = fps;
+
+        return InitH265(width, height, videoTimebase);
+    }
+
+    int EyerAVEncoderParam::InitH265(int _width, int _height, const EyerAVRational & _timebase)
+    {
+        codecId         = CodecId::CODEC_ID_H265;
+        width           = _width;
+        height          = _height;
+        timebase        = _timebase;
+
+        return 0;
+    }
+
+    int EyerAVEncoderParam::InitAAC(EyerAVChannelLayout _channelLayout, EyerAVSampleFormat _sampleFormat, int _sample_rate)
     {
         codecId         = CodecId::CODEC_ID_AAC;
+        channelLayout   = _channelLayout;
         sample_rate     = _sample_rate;
+        sampleFormat    = _sampleFormat;
+        return 0;
+    }
+
+    int EyerAVEncoderParam::InitFDKAAC(EyerAVChannelLayout _channelLayout, EyerAVSampleFormat _sampleFormat, int _sample_rate)
+    {
+        codecId         = CodecId::CODEC_ID_FDK_AAC;
+        channelLayout   = _channelLayout;
+        sample_rate     = _sample_rate;
+        sampleFormat    = _sampleFormat;
         return 0;
     }
 
