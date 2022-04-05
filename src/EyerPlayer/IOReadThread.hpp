@@ -2,6 +2,7 @@
 #define EYERPLAYER_IOREADTHREAD_HPP
 
 #include "EyerCore/EyerCore.hpp"
+#include "EyerAV/EyerAV.hpp"
 
 #include "EyerPlayerContext.hpp"
 
@@ -16,6 +17,7 @@ namespace Eyer
         virtual void Run() override;
 
         EyerPlayerContext * playerContext = nullptr;
+        EyerAVReader * reader = nullptr;
     };
 }
 

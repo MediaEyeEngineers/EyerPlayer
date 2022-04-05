@@ -9,7 +9,7 @@ int main()
 
     player.Play();
 
-    Eyer::EyerTime::EyerSleepMilliseconds(5 * 1000);
+    Eyer::EyerTime::EyerSleepMilliseconds(15 * 1000);
 
     player.Stop();
     return 0;
